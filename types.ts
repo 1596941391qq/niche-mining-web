@@ -22,6 +22,7 @@ export interface Translations {
   features: {
     heading: string;
     subheading: string;
+    description?: string;
     steps: {
       title: string;
       desc: string;

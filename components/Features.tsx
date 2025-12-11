@@ -21,6 +21,11 @@ const Features: React.FC = () => {
             <p className="text-zinc-400 text-lg">
               {t.features.subheading}
             </p>
+            {t.features.description && (
+              <p className="text-primary text-base mt-4 font-medium">
+                {t.features.description}
+              </p>
+            )}
           </div>
           <div className="h-px bg-zinc-800 flex-1 md:mx-12 self-center hidden md:block"></div>
           <div className="text-primary font-mono text-sm whitespace-nowrap bg-primary/10 px-3 py-1 border border-primary/20 rounded">

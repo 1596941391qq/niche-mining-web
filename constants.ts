@@ -21,6 +21,7 @@ export const CONTENT: Record<string, Translations> = {
     features: {
       heading: 'Protocol',
       subheading: 'Our autonomous agents don\'t just search; they excavate until a profitable vacuum is found.',
+      description: 'Tested and proven: keyword mining through this platform, followed by page optimization, can achieve first-page rankings within three days.',
       steps: [
         { title: 'Recursive Loop', desc: 'Expands root keywords into thousands of long-tail variations automatically.' },
         { title: 'SERP Analysis', desc: 'Scans top 10 results for Domain Authority and content types in real-time.' },
@@ -237,6 +238,7 @@ export const CONTENT: Record<string, Translations> = {
     features: {
       heading: '挖掘协议',
       subheading: '我们的自动化 Agent 不仅仅是搜索，它们会持续挖掘，直到发现市场中的真空地带。',
+      description: '经过测试，通过此平台进行词挖掘，优化页面后，能在三天后排在首页',
       steps: [
         { title: '循环裂变', desc: '基于种子词，自动裂变出数千个长尾变体，层层下钻。' },
         { title: '竞争对手分析', desc: '实时扫描 SERP 前10名结果，分析域名权重(DA)与内容类型。' },
