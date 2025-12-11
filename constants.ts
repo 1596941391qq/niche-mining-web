@@ -55,6 +55,73 @@ export const CONTENT: Record<string, Translations> = {
         },
       ],
     },
+    howItWorks: {
+      badge: 'Core Workflow & Value Summary (3-Second Insight)',
+      coreValue: {
+        title: 'Core Value',
+        subtitle: 'Find and Verify "Blue Ocean SEO Opportunities"',
+        description: 'Your tool automates three critical steps—keyword discovery, intent analysis, and competition assessment—through AI agents + SEO toolchain, efficiently identifying high-potential, low-competition niche markets and keywords.',
+      },
+      workflow: {
+        title: 'Detailed Workflow Breakdown',
+        description: 'Your tool breaks down complex SEO strategy and execution into a series of automated steps (workflows) that combine AI agents and external SEO tools/APIs.',
+        customizable: {
+          title: 'Customizable Mining Workflow',
+          description: 'The platform supports flexible configuration of mining workflows. You can customize workflow steps, adjust AI agent parameters, and select different SEO tool combinations based on your business needs, creating a dedicated mining strategy tailored to your project.',
+          features: [
+            'Flexibly configure workflow step order and combinations',
+            'Customize AI agent parameters and decision rules',
+            'Select different SEO tools and API combinations',
+            'Save and reuse custom mining workflow templates',
+            'Monitor and adjust mining strategy effectiveness in real-time',
+          ],
+        },
+        steps: [
+          {
+            id: '1',
+            title: 'Discover Opportunities (Keyword Mining Workflow)',
+            description: '',
+            agents: [
+              { name: 'Keyword Generation Agent', desc: 'Generates high-potential keyword lists.' },
+              { name: 'SERP Analysis Agent', desc: 'Assesses ranking difficulty, predicts ranking probability, and identifies low-competition opportunities.' },
+            ],
+            tools: [
+              { name: 'SEO Research Tool', desc: 'Retrieves quantitative data such as keyword difficulty, search volume, CPC, etc.' },
+              { name: 'SERP Search Tool', desc: 'Retrieves real-time Google search results.' },
+            ],
+          },
+          {
+            id: '2',
+            title: 'Expand Opportunities (Batch Translation Workflow)',
+            description: '',
+            agents: [
+              { name: 'Translation Agent', desc: 'Ensures keyword translations preserve search intent and match target language conventions.' },
+              { name: 'Intent Analysis Agent', desc: 'Verifies whether user search intent matches SERP results.' },
+              { name: 'Competition Analysis Agent', desc: 'Assigns competition probability.' },
+            ],
+            tools: [
+              { name: 'SEO Research Tool', desc: 'Re-uses SEO research tool to verify competition level and authenticity of translated keywords.' },
+              { name: 'SERP Search Tool', desc: 'Re-uses SERP search tool to verify competition level and authenticity of translated keywords.' },
+            ],
+            value: 'Quickly expands discovered niche markets to international markets, key to finding global blue oceans.',
+          },
+          {
+            id: '3',
+            title: 'Leverage Opportunities (Deep Dive Strategy Workflow)',
+            description: '',
+            agents: [
+              { name: 'Content Strategy Agent', desc: 'Generates comprehensive SEO content strategies.' },
+              { name: 'Core Keyword Extractor', desc: 'Extracts 5-6 most important core keywords from strategies.' },
+              { name: 'Intent & Probability Agent', desc: 'Re-analyzes intent and ranking probability.' },
+            ],
+            tools: [
+              { name: 'SERP Verification Tool', desc: 'Re-verifies real-time ranking probability of keywords.' },
+            ],
+            value: 'Transforms discovered blue ocean opportunities into executable content production plans, ensuring content precisely matches user needs and has high ranking potential.',
+          },
+        ],
+      },
+    },
     footer: {
       tagline: 'Automated SEO warfare for the modern age.',
       product: 'Product',
@@ -271,6 +338,73 @@ export const CONTENT: Record<string, Translations> = {
           features: ['桌面端用户聚焦', '低竞争蓝海扫描', '高消费人群画像'],
         },
       ],
+    },
+    howItWorks: {
+      badge: '核心工作原理和价值总结 (3 秒洞察)',
+      coreValue: {
+        title: '核心价值',
+        subtitle: '找到并验证"蓝海 SEO 机会"',
+        description: '您的工具通过 AI 代理 + SEO 工具链，将关键词发现、意图分析、竞争评估这三个关键步骤自动化，从而高效地确定高潜力、低竞争的利基市场和关键词。',
+      },
+      workflow: {
+        title: '详细工作流解析',
+        description: '您的工具是将复杂的 SEO 战略和执行过程分解为一系列自动化步骤（工作流），其中结合了AI 代理 (Agent) 和外部 SEO 工具/API。',
+        customizable: {
+          title: '可自定义挖掘流程',
+          description: '平台支持灵活配置挖掘流程，您可以根据业务需求自定义工作流步骤、调整AI代理参数、选择不同的SEO工具组合，打造最适合您项目的专属挖掘策略。',
+          features: [
+            '灵活配置工作流步骤顺序和组合',
+            '自定义AI代理参数和决策规则',
+            '选择不同的SEO工具和API组合',
+            '保存和复用自定义挖掘流程模板',
+            '实时监控和调整挖掘策略效果',
+          ],
+        },
+        steps: [
+          {
+            id: '1',
+            title: '发现机会 (Keyword Mining Workflow / 挖掘工作流)',
+            description: '',
+            agents: [
+              { name: 'Keyword Generation Agent (关键词生成)', desc: '负责产生高潜力关键词列表。' },
+              { name: 'SERP Analysis Agent (SERP 分析代理)', desc: '评估排名难度，预测排名概率，找出低竞争机会。' },
+            ],
+            tools: [
+              { name: 'SEO Research Tool (SEO 词典工具)', desc: '获取关键词难度、搜索量、CPC 等量化数据。' },
+              { name: 'SERP Search Tool (SERP 搜索工具)', desc: '获取实时的 Google 搜索结果。' },
+            ],
+          },
+          {
+            id: '2',
+            title: '扩大机会 (Batch Translation Workflow / 批量翻译工作流)',
+            description: '',
+            agents: [
+              { name: 'Translation Agent (翻译代理)', desc: '确保关键词翻译时保留搜索意图，并符合目标语言习惯。' },
+              { name: 'Intent Analysis Agent (意图分析代理)', desc: '验证用户搜索意图是否与 SERP 结果匹配。' },
+              { name: 'Competition Analysis Agent (竞争分析代理)', desc: '分配竞争概率。' },
+            ],
+            tools: [
+              { name: 'SEO Research Tool', desc: '再次使用 SEO 词典工具验证翻译后关键词的竞争度和真实性。' },
+              { name: 'SERP Search Tool', desc: '再次使用 SERP 搜索工具验证翻译后关键词的竞争度和真实性。' },
+            ],
+            value: '快速将发现的利基市场扩展到国际市场，是寻找全球蓝海的关键。',
+          },
+          {
+            id: '3',
+            title: '利用机会 (Deep Dive Strategy Workflow / 深度策略工作流)',
+            description: '',
+            agents: [
+              { name: 'Content Strategy Agent (内容策略代理)', desc: '生成全面的 SEO 内容策略。' },
+              { name: 'Core Keyword Extractor (核心关键词提取器)', desc: '从策略中提取 5-6 个最重要的核心关键词。' },
+              { name: 'Intent & Probability Agent', desc: '再次分析意图和排名概率。' },
+            ],
+            tools: [
+              { name: 'SERP Verification Tool', desc: '再次验证关键词的实时排名概率。' },
+            ],
+            value: '将发现的蓝海机会转化为可执行的内容生产方案，确保内容能精准匹配用户需求并具有高排名潜力。',
+          },
+        ],
+      },
     },
     footer: {
       tagline: '现代 SEO 战争的自动化武器。',

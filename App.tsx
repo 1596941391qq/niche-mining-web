@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Features from './components/Features';
 import ToolSelector from './components/ToolSelector';
+import HowItWorks from './components/HowItWorks';
 import Footer from './components/Footer';
 import Privacy from './components/Privacy';
 import Terms from './components/Terms';
@@ -57,6 +58,7 @@ function App() {
             <Hero />
             <Features />
             <ToolSelector />
+            <HowItWorks />
           </>
         );
     }

@@ -8,7 +8,7 @@ const Features: React.FC = () => {
   const icons = [RefreshCcw, Layers, Box, Target];
 
   return (
-    <section id="how-it-works" className="py-24 bg-surface border-y border-border relative">
+    <section id="features" className="py-24 bg-surface border-y border-border relative">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.05)_0%,transparent_70%)]"></div>
 

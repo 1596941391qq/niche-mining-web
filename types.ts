@@ -40,6 +40,37 @@ export interface Translations {
       features: string[];
     }[];
   };
+  howItWorks: {
+    badge: string;
+    coreValue: {
+      title: string;
+      subtitle: string;
+      description: string;
+    };
+      workflow: {
+        title: string;
+        description: string;
+        customizable?: {
+          title: string;
+          description: string;
+          features?: string[];
+        };
+        steps: {
+          id: string;
+          title: string;
+          description: string;
+          agents: {
+            name: string;
+            desc: string;
+          }[];
+          tools: {
+            name: string;
+            desc: string;
+          }[];
+          value?: string;
+        }[];
+      };
+  };
   footer: {
     tagline: string;
     product: string;
