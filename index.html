@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Niche Mining | 利基市场挖掘 | Blue Ocean SEO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+            colors: {
+              background: '#09090b',
+              surface: '#18181b',
+              border: '#27272a',
+              primary: {
+                DEFAULT: '#10b981', // Cyber Green (Emerald-500)
+                dim: 'rgba(16, 185, 129, 0.1)',
+                glow: 'rgba(16, 185, 129, 0.5)',
+              },
+              secondary: {
+                DEFAULT: '#3f3f46',
+              }
+            },
+            backgroundImage: {
+              'grid-pattern': "linear-gradient(to right, #27272a 1px, transparent 1px), linear-gradient(to bottom, #27272a 1px, transparent 1px)",
+            },
+            animation: {
+              'scan': 'scan 4s linear infinite',
+              'blink': 'blink 1s step-end infinite',
+              'hover-float': 'float 3s ease-in-out infinite',
+            },
+            keyframes: {
+              scan: {
+                '0%': { transform: 'translateY(-100%)' },
+                '100%': { transform: 'translateY(100%)' },
+              },
+              blink: {
+                '0%, 100%': { opacity: '1' },
+                '50%': { opacity: '0' },
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              }
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+      
+      body {
+        background-color: #09090b;
+        color: #e4e4e7;
+      }
+      
+      .grid-bg {
+        background-size: 40px 40px;
+        mask-image: linear-gradient(to bottom, transparent, 10%, black, 90%, transparent);
+        -webkit-mask-image: linear-gradient(to bottom, transparent, 5%, black, 95%, transparent);
+      }
+
+      .tech-border {
+        border: 1px solid #27272a;
+        position: relative;
+      }
+      
+      .tech-border::after {
+        content: '';
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        width: 10px;
+        height: 10px;
+        border-top: 2px solid #52525b;
+        border-left: 2px solid #52525b;
+        transition: all 0.3s ease;
+      }
+
+      .tech-border::before {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        right: -1px;
+        width: 10px;
+        height: 10px;
+        border-bottom: 2px solid #52525b;
+        border-right: 2px solid #52525b;
+        transition: all 0.3s ease;
+      }
+
+      .group:hover .tech-border::after,
+      .group:hover .tech-border::before {
+        border-color: #10b981;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "react": "https://aistudiocdn.com/react@^19.2.1"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="antialiased selection:bg-primary selection:text-black">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
