@@ -1,3 +1,20 @@
+// 在本地开发环境中加载 .env.local 文件
+import { config } from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+// 只在本地开发且未设置 VERCEL 环境变量时加载
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL && !process.env.VERCEL_ENV) {
+  try {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const projectRoot = join(__dirname, '../..');
+    config({ path: join(projectRoot, '.env.local') });
+  } catch (error) {
+    // dotenv 加载失败不影响运行
+  }
+}
+
 export interface GoogleUserInfo {
   id: string;
   email: string;
@@ -11,51 +28,68 @@ export interface GoogleUserInfo {
 /**
  * Google OAuth 配置
  */
-export const GOOGLE_OAUTH_CONFIG = {
-  clientId: process.env.GOOGLE_CLIENT_ID || '',
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-  redirectUri: process.env.GOOGLE_REDIRECT_URI || 
+// 获取 Google OAuth 配置
+function getGoogleOAuthConfig() {
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  
+  if (!clientId) {
+    throw new Error('GOOGLE_CLIENT_ID environment variable is not set');
+  }
+  if (!clientSecret) {
+    throw new Error('GOOGLE_CLIENT_SECRET environment variable is not set');
+  }
+  
+  const redirectUri = process.env.GOOGLE_REDIRECT_URI || 
     (process.env.VERCEL_URL 
       ? `https://${process.env.VERCEL_URL}/api/auth/google/callback`
-      : 'http://localhost:3000/api/auth/google/callback'),
-  authUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
-  tokenUrl: 'https://oauth2.googleapis.com/token',
-  userInfoUrl: 'https://www.googleapis.com/oauth2/v2/userinfo',
-  scope: 'openid email profile',
-};
+      : 'http://localhost:3000/api/auth/google/callback');
+  
+  return {
+    clientId,
+    clientSecret,
+    redirectUri,
+    authUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
+    tokenUrl: 'https://oauth2.googleapis.com/token',
+    userInfoUrl: 'https://www.googleapis.com/oauth2/v2/userinfo',
+    scope: 'openid email profile',
+  };
+}
 
 /**
  * 生成 Google OAuth 授权 URL
  */
 export function generateGoogleAuthUrl(state: string): string {
+  const config = getGoogleOAuthConfig();
   const params = new URLSearchParams({
-    client_id: GOOGLE_OAUTH_CONFIG.clientId,
-    redirect_uri: GOOGLE_OAUTH_CONFIG.redirectUri,
+    client_id: config.clientId,
+    redirect_uri: config.redirectUri,
     response_type: 'code',
-    scope: GOOGLE_OAUTH_CONFIG.scope,
+    scope: config.scope,
     access_type: 'offline',
     prompt: 'consent',
     state: state,
   });
 
-  return `${GOOGLE_OAUTH_CONFIG.authUrl}?${params.toString()}`;
+  return `${config.authUrl}?${params.toString()}`;
 }
 
 /**
  * 用授权码换取 access token
  */
 export async function exchangeCodeForToken(code: string): Promise<string> {
-  const response = await fetch(GOOGLE_OAUTH_CONFIG.tokenUrl, {
+  const config = getGoogleOAuthConfig();
+  const response = await fetch(config.tokenUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: new URLSearchParams({
-      client_id: GOOGLE_OAUTH_CONFIG.clientId,
-      client_secret: GOOGLE_OAUTH_CONFIG.clientSecret,
+      client_id: config.clientId,
+      client_secret: config.clientSecret,
       code: code,
       grant_type: 'authorization_code',
-      redirect_uri: GOOGLE_OAUTH_CONFIG.redirectUri,
+      redirect_uri: config.redirectUri,
     }),
   });
 
@@ -72,7 +106,8 @@ export async function exchangeCodeForToken(code: string): Promise<string> {
  * 使用 access token 获取用户信息
  */
 export async function getUserInfo(accessToken: string): Promise<GoogleUserInfo> {
-  const response = await fetch(GOOGLE_OAUTH_CONFIG.userInfoUrl, {
+  const config = getGoogleOAuthConfig();
+  const response = await fetch(config.userInfoUrl, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
