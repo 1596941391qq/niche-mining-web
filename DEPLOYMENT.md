@@ -56,11 +56,29 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 
 ### 5. 初始化数据库
 
-数据库表会在首次用户登录时自动创建。如果需要手动初始化：
+**✨ 好消息：数据库表会在首次用户登录时自动创建！**
+
+代码中已经包含了自动初始化逻辑，当你第一次有用户通过 Google 登录时，`users` 表会自动创建。**所以你实际上不需要手动执行这一步！**
+
+#### 如果你想手动初始化（可选），有以下几种方法：
+
+##### 方法 1：使用 Prisma Studio（推荐，最简单）
+
+1. 在 Vercel Dashboard 的数据库页面，点击 **"Open in Prisma"** 按钮
+2. 这会打开 Prisma Studio（如果还没安装，会提示你安装 Prisma CLI）
+3. 在 Prisma Studio 中，你可以使用 SQL 查询功能执行下面的 SQL 语句
+
+##### 方法 2：部署后访问 API 端点（最简单）
 
 1. 部署项目到 Vercel
-2. 访问 `/api/init-db` 端点，或
-3. 在 Vercel Dashboard 的数据库控制台中执行 SQL：
+2. 在浏览器访问：`https://niche-mining-web.vercel.app/api/init-db`
+3. 如果成功，会返回：`{"message":"Database initialized successfully","tables":["users"]}`
+
+##### 方法 3：通过数据库客户端工具
+
+1. 从 Vercel Dashboard 复制 `POSTGRES_URL`（点击 "Show secret"）
+2. 使用 PostgreSQL 客户端（如 pgAdmin、DBeaver、或命令行 `psql`）连接数据库
+3. 执行下面的 SQL 语句：
 
 ```sql
 CREATE TABLE IF NOT EXISTS users (
@@ -77,6 +95,10 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_google_id ON users(google_id);
 ```
+
+#### ⚠️ 推荐做法
+
+**直接跳过手动初始化**，部署后直接测试登录功能，表会自动创建！这是最省事的方法。
 
 ## 本地开发
 
