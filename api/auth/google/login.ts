@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { generateGoogleAuthUrl, generateState } from '../../lib/google-oauth';
+import { generateGoogleAuthUrl, generateState } from '../../lib/google-oauth.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
