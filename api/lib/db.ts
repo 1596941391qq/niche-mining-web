@@ -1,76 +1,58 @@
-import { createPool } from '@vercel/postgres';
-
 /**
  * 环境变量分析：
  * 
  * 1. POSTGRES_URL: postgres://...@db.prisma.io:5432/... (直接连接，端口 5432)
- * 2. DATABASE_URL: postgres://...@db.prisma.io:5432/... (直接连接，端口 5432，和 POSTGRES_URL 相同)
- * 3. PRISMA_DATABASE_URL: prisma+postgres://accelerate.prisma-data.net/... (Prisma Accelerate，不适用于 @vercel/postgres)
+ * 2. DATABASE_URL: postgres://...@db.prisma.io:5432/... (直接连接，端口 5432)
+ * 3. PRISMA_DATABASE_URL: prisma+postgres://accelerate.prisma-data.net/... (Prisma Accelerate)
  * 
- * 问题：Vercel Prisma Postgres 只提供了直接连接字符串，没有提供连接池字符串。
+ * 问题：Vercel Prisma Postgres 提供的是直接连接字符串，@vercel/postgres 的 createPool 需要连接池字符串。
  * 
- * 解决方案：将端口从 5432 改为 6543（Vercel Postgres 连接池端口）
- * 
- * 注意：这不是最佳实践，理想情况下 Vercel 应该提供 POSTGRES_URL（连接池版本）
- * 但在当前情况下，这是可行的解决方案。
+ * 解决方案：使用标准的 pg 库 (node-postgres)
+ * 这样可以接受直接连接字符串，并在 Serverless 环境中工作
  */
-function convertToPooledConnectionString(connectionString: string): string {
-  try {
-    const url = new URL(connectionString);
+import { Client } from 'pg';
 
-    // 跳过 Prisma Accelerate URL（不适用于 @vercel/postgres）
-    if (url.protocol === 'prisma+postgres:') {
-      throw new Error('PRISMA_DATABASE_URL (Accelerate) is not supported by @vercel/postgres');
-    }
-
-    // 如果端口是 5432（直接连接），改为 6543（连接池）
-    if (url.port === '5432') {
-      url.port = '6543';
-    }
-
-    // 确保 sslmode 参数存在
-    if (!url.searchParams.has('sslmode')) {
-      url.searchParams.set('sslmode', 'require');
-    }
-
-    return url.toString();
-  } catch (error) {
-    console.error('Error parsing connection string:', error);
-    throw error;
-  }
-}
-
-// 获取连接字符串（优先使用 POSTGRES_URL，跳过 PRISMA_DATABASE_URL）
+// 获取连接字符串
 const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
 
 if (!connectionString) {
   throw new Error(
     'No database connection string found. ' +
-    'Please ensure POSTGRES_URL or DATABASE_URL is set. ' +
-    'Note: PRISMA_DATABASE_URL (Accelerate) is not supported by @vercel/postgres.'
+    'Please ensure POSTGRES_URL or DATABASE_URL is set.'
   );
 }
 
-// 转换为连接池字符串（将端口从 5432 改为 6543）
-const pooledConnectionString = convertToPooledConnectionString(connectionString);
+// 创建 sql 模板字符串函数
+// 每次调用创建新的客户端连接（在 Serverless 环境中这是可接受的）
+export const sql = async <T = any>(
+  strings: TemplateStringsArray,
+  ...values: any[]
+): Promise<{ rows: T[] }> => {
+  const client = new Client({ connectionString });
 
-// 创建连接池
-const pool = createPool({ connectionString: pooledConnectionString });
+  try {
+    await client.connect();
 
-// 创建 sql 包装函数以支持模板字符串语法
-// @vercel/postgres 的 pool 对象需要通过 query 方法使用
-export const sql = <T = any>(strings: TemplateStringsArray, ...values: any[]): Promise<{ rows: T[] }> => {
-  // 构建 SQL 查询字符串
-  let queryText = '';
-  for (let i = 0; i < strings.length; i++) {
-    queryText += strings[i];
-    if (i < values.length) {
-      queryText += `$${i + 1}`;
+    // 构建参数化查询
+    let queryText = '';
+    const params: any[] = [];
+    let paramIndex = 1;
+
+    for (let i = 0; i < strings.length; i++) {
+      queryText += strings[i];
+      if (i < values.length) {
+        queryText += `$${paramIndex}`;
+        params.push(values[i]);
+        paramIndex++;
+      }
     }
-  }
 
-  // 使用 pool.query 执行查询
-  return pool.query<T>(queryText, values);
+    // 执行查询
+    const result = await client.query<T>(queryText, params);
+    return { rows: result.rows };
+  } finally {
+    await client.end();
+  }
 };
 
 export interface User {
