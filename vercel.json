@@ -4,11 +4,6 @@
   "devCommand": "vite",
   "installCommand": "npm install",
   "framework": "vite",
-  "functions": {
-    "api/**/*.ts": {
-      "runtime": "@vercel/node"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
