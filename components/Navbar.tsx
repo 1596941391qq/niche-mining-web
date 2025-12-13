@@ -1,9 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Pickaxe, Menu, X, Globe } from 'lucide-react';
+import { Pickaxe, Menu, X, Globe, LogIn, LogOut, User } from 'lucide-react';
 import { LanguageContext } from '../App';
+import { useAuth } from '../contexts/AuthContext';
 
 const Navbar: React.FC = () => {
   const { lang, setLang, t } = useContext(LanguageContext);
+  const { user, authenticated, login, logout, loading } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -73,9 +75,47 @@ const Navbar: React.FC = () => {
             <span className={lang === 'cn' ? 'text-white font-bold' : ''}>CN</span>
           </button>
 
-          <button className="px-6 py-2.5 bg-zinc-100 text-black hover:bg-primary hover:text-black rounded-sm text-xs font-bold transition-all shadow-[0_0_10px_rgba(255,255,255,0.1)] hover:shadow-[0_0_20px_rgba(16,185,129,0.6)] uppercase tracking-wider">
-            {t.nav.start}
-          </button>
+          {/* Auth Section */}
+          {!loading && (
+            <>
+              {authenticated && user ? (
+                <div className="flex items-center gap-4">
+                  {/* User Info */}
+                  <div className="flex items-center gap-2 text-xs font-mono">
+                    {user.picture ? (
+                      <img
+                        src={user.picture}
+                        alt={user.name || user.email}
+                        className="w-8 h-8 rounded-full border border-primary/30"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
+                        <User className="w-4 h-4 text-primary" />
+                      </div>
+                    )}
+                    <span className="text-zinc-300 hidden lg:block max-w-[120px] truncate">
+                      {user.name || user.email}
+                    </span>
+                  </div>
+                  <button
+                    onClick={logout}
+                    className="flex items-center gap-2 px-4 py-2 text-xs font-mono text-zinc-400 hover:text-primary border border-zinc-800 hover:border-primary/50 rounded-sm transition-all uppercase tracking-wider"
+                  >
+                    <LogOut className="w-3 h-3" />
+                    <span className="hidden sm:inline">Logout</span>
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={login}
+                  className="flex items-center gap-2 px-6 py-2.5 bg-zinc-100 text-black hover:bg-primary hover:text-black rounded-sm text-xs font-bold transition-all shadow-[0_0_10px_rgba(255,255,255,0.1)] hover:shadow-[0_0_20px_rgba(16,185,129,0.6)] uppercase tracking-wider"
+                >
+                  <LogIn className="w-4 h-4" />
+                  <span>Login</span>
+                </button>
+              )}
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -108,9 +148,54 @@ const Navbar: React.FC = () => {
               {link.name}
             </a>
           ))}
-          <button className="w-full py-4 bg-primary text-black font-bold rounded-sm mt-6 uppercase tracking-wider">
-            {t.nav.start}
-          </button>
+          {!loading && (
+            <>
+              {authenticated && user ? (
+                <div className="mt-6 space-y-3">
+                  <div className="flex items-center gap-3 px-4 py-3 bg-surface/50 rounded-sm border border-border">
+                    {user.picture ? (
+                      <img
+                        src={user.picture}
+                        alt={user.name || user.email}
+                        className="w-10 h-10 rounded-full border border-primary/30"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
+                        <User className="w-5 h-5 text-primary" />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white font-bold text-sm truncate">
+                        {user.name || user.email}
+                      </p>
+                      <p className="text-zinc-500 text-xs truncate">{user.email}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full py-4 bg-transparent border border-zinc-800 text-zinc-300 hover:border-primary hover:text-primary font-bold rounded-sm uppercase tracking-wider flex items-center justify-center gap-2"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => {
+                    login();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full py-4 bg-primary text-black font-bold rounded-sm mt-6 uppercase tracking-wider flex items-center justify-center gap-2"
+                >
+                  <LogIn className="w-4 h-4" />
+                  <span>Login</span>
+                </button>
+              )}
+            </>
+          )}
         </div>
       )}
     </nav>

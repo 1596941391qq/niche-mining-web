@@ -1,0 +1,11 @@
+# 不需要部署到 Vercel 的文件
+node_modules
+.git
+.env.local
+.env*.local
+dist
+.vite
+*.log
+.vscode
+.idea
+

@@ -9,6 +9,7 @@ import Privacy from './components/Privacy';
 import Terms from './components/Terms';
 import { Language, Translations } from './types';
 import { CONTENT } from './constants';
+import { AuthProvider } from './contexts/AuthContext';
 
 export const LanguageContext = createContext<{
   lang: Language;
@@ -65,15 +66,17 @@ function App() {
   };
 
   return (
-    <LanguageContext.Provider value={{ lang, t, setLang }}>
-      <div className="min-h-screen bg-background text-zinc-300 font-sans selection:bg-primary selection:text-black flex flex-col">
-        <Navbar />
-        <main className="flex-grow flex flex-col">
-          {renderPage()}
-        </main>
-        <Footer />
-      </div>
-    </LanguageContext.Provider>
+    <AuthProvider>
+      <LanguageContext.Provider value={{ lang, t, setLang }}>
+        <div className="min-h-screen bg-background text-zinc-300 font-sans selection:bg-primary selection:text-black flex flex-col">
+          <Navbar />
+          <main className="flex-grow flex flex-col">
+            {renderPage()}
+          </main>
+          <Footer />
+        </div>
+      </LanguageContext.Provider>
+    </AuthProvider>
   );
 }
 

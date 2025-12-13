@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { ExternalLink, ArrowRight, Cpu, Radio, Crosshair } from 'lucide-react';
 import { LanguageContext } from '../App';
+import { useAuth } from '../contexts/AuthContext';
 
 // --- Custom SVG Droid Illustrations ---
 
@@ -89,6 +90,7 @@ const BingDroneGraphic = () => (
 
 const ToolSelector: React.FC = () => {
   const { t } = useContext(LanguageContext);
+  const { authenticated, getToken, login } = useAuth();
 
   const getGraphic = (id: string) => {
     switch(id) {
@@ -114,6 +116,27 @@ const ToolSelector: React.FC = () => {
       case 'yandex': return 'https://yandex-seo-agents.vercel.app/';
       case 'bing': return 'https://bing-seo-agen-ts-lans.vercel.app/';
       default: return '#';
+    }
+  }
+
+  const handleToolClick = (e: React.MouseEvent<HTMLAnchorElement>, toolId: string) => {
+    // 检查登录状态
+    if (!authenticated) {
+      e.preventDefault();
+      // 可以显示提示或直接跳转登录
+      if (window.confirm('Please login first to access this tool. Do you want to login now?')) {
+        login();
+      }
+      return;
+    }
+
+    // 获取 token 并添加到 URL
+    const token = getToken();
+    if (token) {
+      const baseUrl = getAgentUrl(toolId);
+      const urlWithToken = `${baseUrl}?token=${encodeURIComponent(token)}`;
+      window.open(urlWithToken, '_blank', 'noopener,noreferrer');
+      e.preventDefault();
     }
   }
 
@@ -196,12 +219,17 @@ const ToolSelector: React.FC = () => {
 
                     <a 
                       href={getAgentUrl(tool.id)}
+                      onClick={(e) => handleToolClick(e, tool.id)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full py-4 bg-transparent border border-zinc-600 text-zinc-300 font-bold text-sm hover:bg-primary hover:text-black hover:border-primary transition-all flex items-center justify-between px-6 uppercase tracking-wider group/btn"
+                      className={`w-full py-4 bg-transparent border ${
+                        authenticated 
+                          ? 'border-zinc-600 text-zinc-300 hover:bg-primary hover:text-black hover:border-primary' 
+                          : 'border-zinc-800 text-zinc-600 cursor-not-allowed'
+                      } font-bold text-sm transition-all flex items-center justify-between px-6 uppercase tracking-wider group/btn`}
                     >
                         <span>{t.tools.action}</span>
-                        <ExternalLink className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" />
+                        <ExternalLink className={`w-4 h-4 transform ${authenticated ? 'group-hover/btn:translate-x-1' : ''} transition-transform`} />
                     </a>
                 </div>
               </div>
