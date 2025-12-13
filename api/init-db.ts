@@ -15,14 +15,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const hasDbUrl = !!(
       process.env.POSTGRES_URL || 
       process.env.DATABASE_URL || 
-      process.env.POSTGRES_PRISMA_URL
+      process.env.PRISMA_DATABASE_URL
     );
 
     if (!hasDbUrl) {
       return res.status(500).json({ 
         error: 'Database connection not configured',
-        message: 'Missing POSTGRES_URL, DATABASE_URL, or POSTGRES_PRISMA_URL environment variable',
-        hint: 'Please ensure your Prisma Postgres database is connected to this project in Vercel Dashboard'
+        message: 'Missing POSTGRES_URL, DATABASE_URL, or PRISMA_DATABASE_URL environment variable',
+        hint: 'Please ensure your Prisma Postgres database is connected to this project in Vercel Dashboard',
+        availableVars: Object.keys(process.env).filter(k => k.includes('POSTGRES') || k.includes('DATABASE'))
       });
     }
 
