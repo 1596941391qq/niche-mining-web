@@ -9,6 +9,11 @@ const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // 检测是否是预览部署
+  const isPreviewDeployment = typeof window !== 'undefined' &&
+    window.location.hostname.includes('vercel.app') &&
+    !window.location.hostname.startsWith('niche-mining-web.vercel.app');
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -16,6 +21,20 @@ const Navbar: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleLogin = () => {
+    if (isPreviewDeployment) {
+      alert(
+        'OAuth login is disabled in preview deployments.\n\n' +
+        'Reason: Google OAuth does not support dynamic preview URLs.\n\n' +
+        'Please test login on:\n' +
+        '• Production: https://niche-mining-web.vercel.app\n' +
+        '• Local dev: http://localhost:3000'
+      );
+      return;
+    }
+    login();
+  };
 
   const navLinks = [
     { name: t.nav.features, href: '#features' },
@@ -107,7 +126,7 @@ const Navbar: React.FC = () => {
                 </div>
               ) : (
                 <button
-                  onClick={login}
+                  onClick={handleLogin}
                   className="flex items-center gap-2 px-6 py-2.5 bg-zinc-100 text-black hover:bg-primary hover:text-black rounded-sm text-xs font-bold transition-all shadow-[0_0_10px_rgba(255,255,255,0.1)] hover:shadow-[0_0_20px_rgba(16,185,129,0.6)] uppercase tracking-wider"
                 >
                   <LogIn className="w-4 h-4" />
@@ -185,7 +204,7 @@ const Navbar: React.FC = () => {
               ) : (
                 <button
                   onClick={() => {
-                    login();
+                    handleLogin();
                     setMobileMenuOpen(false);
                   }}
                   className="w-full py-4 bg-primary text-black font-bold rounded-sm mt-6 uppercase tracking-wider flex items-center justify-center gap-2"

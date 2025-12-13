@@ -120,17 +120,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // 初始化：检查 URL 中的 token 和刷新会话
   useEffect(() => {
     const initAuth = async () => {
-      // 检查 URL 中是否有 token（来自 OAuth 回调）
+      // 检查 URL 中是否有错误（来自 OAuth）
       const urlParams = new URLSearchParams(window.location.search);
+      const error = urlParams.get('error');
+
+      // 检查是否是预览部署的 OAuth 错误
+      if (error === 'oauth_disabled_in_preview') {
+        console.warn('OAuth is disabled in preview deployments. Please test on production or local development.');
+        // 清除 URL 参数
+        window.history.replaceState({}, document.title, window.location.pathname);
+        setLoading(false);
+        return;
+      }
+
+      // 检查 URL 中是否有 token（来自 OAuth 回调）
       const token = urlParams.get('token');
-      
+
       if (token) {
         // 保存 token
         saveToken(token);
-        
+
         // 清除 URL 中的 token
         window.history.replaceState({}, document.title, window.location.pathname);
-        
+
         // 刷新会话
         await refreshSession();
       } else {

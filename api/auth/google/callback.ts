@@ -30,16 +30,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // 验证 state（CSRF 防护）
     const cookies = req.headers.cookie || '';
-    const stateCookie = cookies
-      .split(';')
-      .find(c => c.trim().startsWith('oauth_state='))
-      ?.split('=')[1];
-    
+    const cookiePairs = cookies.split(';').map(c => c.trim());
+    const stateCookie = cookiePairs
+      .find(c => c.startsWith('oauth_state='))
+      ?.substring('oauth_state='.length);
+
+    console.log('State verification:', {
+      receivedState: state,
+      cookieState: stateCookie,
+      allCookies: cookies,
+    });
+
     if (!stateCookie || stateCookie !== state) {
-      const baseUrl = process.env.VERCEL_URL 
-        ? `https://${process.env.VERCEL_URL}` 
+      const baseUrl = process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
         : 'http://localhost:3000';
-      return res.redirect(`${baseUrl}/?error=invalid_state`);
+      console.error('State mismatch!', {
+        expected: stateCookie,
+        received: state,
+      });
+      return res.redirect(`${baseUrl}/?error=invalid_state&debug=1`);
     }
 
     // 用授权码换取 access token
@@ -63,15 +73,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     // 构建前端 URL
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}` 
+    const baseUrl = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
       : 'http://localhost:3000';
     const frontendUrl = `${baseUrl}/?token=${token}`;
-    
+
+    // 根据环境设置 cookie（与 login.ts 保持一致）
+    const isSecure = process.env.VERCEL_ENV === 'production' || process.env.VERCEL_URL?.startsWith('https');
+    const secureCookie = isSecure ? 'Secure; ' : '';
+
     // 设置响应头
     res.setHeader('Set-Cookie', [
-      `oauth_state=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0`, // 清除 state
-      `auth_token=${token}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=${60 * 60 * 24}`, // 设置 token
+      `oauth_state=; HttpOnly; ${secureCookie}SameSite=Lax; Path=/; Max-Age=0`, // 清除 state
+      `auth_token=${token}; HttpOnly; ${secureCookie}SameSite=Lax; Path=/; Max-Age=${60 * 60 * 24}`, // 设置 token
     ]);
     
     res.redirect(frontendUrl);
