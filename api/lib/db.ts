@@ -1,10 +1,47 @@
-import { sql } from '@vercel/postgres';
+import { createPool } from '@vercel/postgres';
 
-// @vercel/postgres 的 sql 函数会自动使用 POSTGRES_URL 环境变量
-// Vercel Prisma Postgres 会自动设置 POSTGRES_URL（连接池字符串）
-// 这个环境变量已经在你的 Vercel 项目中配置好了
+// Vercel Prisma Postgres 提供的 POSTGRES_URL 可能是直接连接字符串（端口 5432）
+// 我们需要将其转换为连接池字符串（端口 6543）
 
-export { sql };
+function convertToPooledConnectionString(connectionString: string): string {
+  try {
+    const url = new URL(connectionString);
+    
+    // 如果端口是 5432（直接连接），改为 6543（连接池）
+    if (url.port === '5432' || (!url.port && url.protocol === 'postgres:')) {
+      url.port = '6543';
+    }
+    
+    // 确保 sslmode 参数存在（如果需要）
+    if (!url.searchParams.has('sslmode')) {
+      url.searchParams.set('sslmode', 'require');
+    }
+    
+    return url.toString();
+  } catch (error) {
+    // 如果 URL 解析失败，返回原字符串
+    console.error('Error parsing connection string:', error);
+    return connectionString;
+  }
+}
+
+// 获取连接字符串
+const connectionString = process.env.POSTGRES_URL 
+  || process.env.DATABASE_URL 
+  || process.env.PRISMA_DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error('No database connection string found. Please set POSTGRES_URL, DATABASE_URL, or PRISMA_DATABASE_URL');
+}
+
+// 转换为连接池字符串
+const pooledConnectionString = convertToPooledConnectionString(connectionString);
+
+// 创建连接池
+const pool = createPool({ connectionString: pooledConnectionString });
+
+// 导出 sql 函数
+export const sql = pool;
 
 export interface User {
   id: string;
