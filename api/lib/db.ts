@@ -1,4 +1,11 @@
-import { sql } from '@vercel/postgres';
+import { sql as vercelSql } from '@vercel/postgres';
+
+// Vercel Prisma Postgres 会自动设置环境变量
+// @vercel/postgres 的 sql 函数会自动查找 POSTGRES_URL 环境变量
+// 如果使用 POSTGRES_PRISMA_URL（直接连接），需要确保 Vercel 也设置了 POSTGRES_URL
+
+// 导出 sql 函数（会自动使用 POSTGRES_URL 环境变量）
+export const sql = vercelSql;
 
 export interface User {
   id: string;
