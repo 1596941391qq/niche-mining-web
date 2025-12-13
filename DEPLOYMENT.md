@@ -25,8 +25,12 @@ npm install
 2. 点击 **Storage** → **Create Database** → **Prisma Postgres**（或 **Postgres**，如果有这个选项）
    - **注意**：Vercel 现在主要提供 Prisma Postgres，它和标准 Postgres 完全兼容
    - 选择 Prisma Postgres 即可，`@vercel/postgres` 包可以正常使用
-3. 创建数据库后，点击 **Connect** 将数据库连接到你的项目
-4. 数据库环境变量（如 `DATABASE_URL`）会自动配置
+3. 创建数据库后，**必须点击 "Connect Project"** 将数据库连接到你的项目
+   - ⚠️ **重要**：如果不连接，环境变量不会被自动添加到项目中
+4. 连接后，数据库环境变量会自动添加到项目中：
+   - `POSTGRES_URL`
+   - `DATABASE_URL` (或 `POSTGRES_PRISMA_URL`)
+   - 这些变量会自动配置，无需手动添加
 
 ### 4. 配置环境变量
 

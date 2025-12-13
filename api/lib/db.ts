@@ -16,6 +16,9 @@ export interface User {
  */
 export async function initUsersTable() {
   try {
+    // 先测试数据库连接
+    await sql`SELECT 1`;
+    
     await sql`
       CREATE TABLE IF NOT EXISTS users (
         id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -40,7 +43,8 @@ export async function initUsersTable() {
     console.log('Users table initialized successfully');
   } catch (error) {
     console.error('Error initializing users table:', error);
-    throw error;
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    throw new Error(`Database initialization failed: ${errorMessage}`);
   }
 }
 
