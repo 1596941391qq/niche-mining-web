@@ -61,6 +61,16 @@ function getGoogleOAuthConfig() {
  */
 export function generateGoogleAuthUrl(state: string): string {
   const config = getGoogleOAuthConfig();
+
+  // 详细日志：检查实际参数
+  console.log('=== Google OAuth URL Generation ===');
+  console.log('Client ID:', config.clientId);
+  console.log('Redirect URI:', config.redirectUri);
+  console.log('Redirect URI length:', config.redirectUri.length);
+  console.log('Redirect URI bytes:', Buffer.from(config.redirectUri).toString('hex'));
+  console.log('Scope:', config.scope);
+  console.log('State:', state);
+
   const params = new URLSearchParams({
     client_id: config.clientId,
     redirect_uri: config.redirectUri,
@@ -71,7 +81,11 @@ export function generateGoogleAuthUrl(state: string): string {
     state: state,
   });
 
-  return `${config.authUrl}?${params.toString()}`;
+  const authUrl = `${config.authUrl}?${params.toString()}`;
+  console.log('Full Auth URL:', authUrl);
+  console.log('===================================');
+
+  return authUrl;
 }
 
 /**
