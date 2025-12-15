@@ -6,7 +6,8 @@ const JWT_SECRET = new TextEncoder().encode(
 
 const JWT_EXPIRES_IN = 24 * 60 * 60; // 24 hours in seconds
 
-export interface JWTPayload {
+// 重命名为 AppJWTPayload 避免与 jose 库的 JWTPayload 冲突
+export interface AppJWTPayload {
   userId: string;
   email: string;
   iat?: number;
@@ -16,7 +17,7 @@ export interface JWTPayload {
 /**
  * 生成 JWT token
  */
-export async function generateToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): Promise<string> {
+export async function generateToken(payload: Omit<AppJWTPayload, 'iat' | 'exp'>): Promise<string> {
   const token = await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -29,10 +30,11 @@ export async function generateToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): P
 /**
  * 验证 JWT token
  */
-export async function verifyToken(token: string): Promise<JWTPayload | null> {
+export async function verifyToken(token: string): Promise<AppJWTPayload | null> {
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET);
-    return payload as JWTPayload;
+    // 使用 unknown 作为中间类型来避免类型冲突
+    return payload as unknown as AppJWTPayload;
   } catch (error) {
     console.error('Token verification failed:', error);
     return null;

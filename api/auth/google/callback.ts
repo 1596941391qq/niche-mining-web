@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { exchangeCodeForToken, getUserInfo } from '../../lib/google-oauth';
-import { findOrCreateUser } from '../../lib/db';
-import { generateToken } from '../../lib/auth';
+import { exchangeCodeForToken, getUserInfo } from '../../lib/google-oauth.js';
+import { findOrCreateUser } from '../../lib/db.js';
+import { generateToken } from '../../lib/auth.js';
 
 // 获取前端 URL（避免重定向到预览域名）
 function getFrontendUrl(): string {
