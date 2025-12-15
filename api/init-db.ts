@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { initUsersTable } from './lib/db.js';
+import { initUsersTable } from './lib/db';
 
 /**
  * 初始化数据库表的 API 端点

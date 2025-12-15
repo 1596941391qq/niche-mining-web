@@ -1,7 +1,17 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { exchangeCodeForToken, getUserInfo } from '../../lib/google-oauth.js';
-import { findOrCreateUser } from '../../lib/db.js';
-import { generateToken } from '../../lib/auth.js';
+import { exchangeCodeForToken, getUserInfo } from '../../lib/google-oauth';
+import { findOrCreateUser } from '../../lib/db';
+import { generateToken } from '../../lib/auth';
+
+// 获取前端 URL（避免重定向到预览域名）
+function getFrontendUrl(): string {
+  // 本地开发
+  if (!process.env.VERCEL_ENV) {
+    return 'http://localhost:3000';
+  }
+  // 生产环境和预览环境都使用生产域名
+  return 'https://niche-mining-web.vercel.app';
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
@@ -14,17 +24,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // 处理 OAuth 错误
     if (error) {
       console.error('OAuth error:', error);
-      const baseUrl = process.env.VERCEL_URL 
-        ? `https://${process.env.VERCEL_URL}` 
-        : 'http://localhost:3000';
+      const baseUrl = getFrontendUrl();
       return res.redirect(`${baseUrl}/?error=oauth_failed`);
     }
 
     // 验证必要参数
     if (!code || !state) {
-      const baseUrl = process.env.VERCEL_URL 
-        ? `https://${process.env.VERCEL_URL}` 
-        : 'http://localhost:3000';
+      const baseUrl = getFrontendUrl();
       return res.redirect(`${baseUrl}/?error=invalid_request`);
     }
 
@@ -42,9 +48,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     if (!stateCookie || stateCookie !== state) {
-      const baseUrl = process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : 'http://localhost:3000';
+      const baseUrl = getFrontendUrl();
       console.error('State mismatch!', {
         expected: stateCookie,
         received: state,
@@ -73,9 +77,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     // 构建前端 URL
-    const baseUrl = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : 'http://localhost:3000';
+    const baseUrl = getFrontendUrl();
     const frontendUrl = `${baseUrl}/?token=${token}`;
 
     // 根据环境设置 cookie（与 login.ts 保持一致）
@@ -87,13 +89,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       `oauth_state=; HttpOnly; ${secureCookie}SameSite=Lax; Path=/; Max-Age=0`, // 清除 state
       `auth_token=${token}; HttpOnly; ${secureCookie}SameSite=Lax; Path=/; Max-Age=${60 * 60 * 24}`, // 设置 token
     ]);
-    
+
     res.redirect(frontendUrl);
   } catch (error) {
     console.error('Google callback error:', error);
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}` 
-      : 'http://localhost:3000';
+    const baseUrl = getFrontendUrl();
     return res.redirect(`${baseUrl}/?error=auth_failed`);
   }
 }
