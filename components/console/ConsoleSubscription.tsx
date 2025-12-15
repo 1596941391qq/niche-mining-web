@@ -106,11 +106,11 @@ const ConsoleSubscription: React.FC = () => {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div>
+      <div className="border-l-4 border-accent-orange pl-4">
         <h1 className="text-3xl font-bold text-white mb-2 font-mono uppercase tracking-tight">
           {lang === 'cn' ? '订阅套餐' : 'Subscription'}
         </h1>
-        <p className="text-zinc-400 text-sm">
+        <p className="text-zinc-400 text-sm font-mono">
           {lang === 'cn'
             ? '升级套餐以获取更多 Credits 和高级功能'
             : 'Upgrade your plan for more credits and advanced features'}
@@ -118,22 +118,25 @@ const ConsoleSubscription: React.FC = () => {
       </div>
 
       {/* Current Plan with Credits */}
-      <div className="bg-gradient-to-br from-primary/20 via-surface/50 to-surface/50 backdrop-blur-sm border border-primary/30 rounded-sm p-8">
+      <div className="bg-gradient-to-br from-primary/20 via-surface/50 to-surface/50 border border-primary/30 p-8 relative">
+        <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-accent-orange"></div>
+        <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-accent-orange"></div>
+
         <div className="flex items-start justify-between mb-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/20 border border-primary/30 rounded text-xs font-mono text-primary uppercase tracking-wider mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/20 border border-primary/30 text-xs font-mono text-primary uppercase tracking-wider mb-3">
               <Crown className="w-3 h-3" />
               {lang === 'cn' ? '当前套餐' : 'Current Plan'}
             </div>
-            <h2 className="text-3xl font-bold text-white mb-2">
+            <h2 className="text-3xl font-bold text-white mb-2 font-mono">
               {lang === 'cn' ? '免费版' : 'Free Plan'}
             </h2>
-            <p className="text-zinc-400">
+            <p className="text-zinc-400 font-mono">
               {lang === 'cn' ? '适合入门使用' : 'Perfect for getting started'}
             </p>
           </div>
           <div className="text-right">
-            <p className="text-4xl font-bold text-white">$0</p>
+            <p className="text-4xl font-bold text-white data-value">$0</p>
             <p className="text-zinc-500 text-sm font-mono">
               /{lang === 'cn' ? '月' : 'month'}
             </p>
@@ -141,40 +144,40 @@ const ConsoleSubscription: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-surface/50 border border-border rounded p-4">
+          <div className="bg-surface/50 border border-border p-4">
             <p className="text-xs text-zinc-500 font-mono uppercase tracking-wider mb-1">
               {lang === 'cn' ? '本月已用 Credits' : 'Credits Used This Month'}
             </p>
             <div className="flex items-baseline gap-2">
-              <p className="text-2xl font-bold text-white">420</p>
-              <span className="text-zinc-500 text-sm">/ 2000</span>
+              <p className="text-2xl font-bold text-white data-value">420</p>
+              <span className="text-zinc-500 text-sm data-value">/ 2000</span>
             </div>
-            <div className="mt-2 h-1.5 bg-border rounded-full overflow-hidden">
-              <div className="h-full bg-primary rounded-full" style={{ width: '21%' }}></div>
+            <div className="mt-2 h-1.5 bg-border overflow-hidden">
+              <div className="h-full bg-primary" style={{ width: '21%' }}></div>
             </div>
           </div>
-          <div className="bg-surface/50 border border-border rounded p-4">
+          <div className="bg-surface/50 border border-border p-4">
             <p className="text-xs text-zinc-500 font-mono uppercase tracking-wider mb-1">
               {lang === 'cn' ? '剩余 Credits' : 'Remaining Credits'}
             </p>
             <div className="flex items-baseline gap-2">
-              <p className="text-2xl font-bold text-primary">1,580</p>
+              <p className="text-2xl font-bold text-primary data-value">1,580</p>
               <span className="text-zinc-500 text-sm">credits</span>
             </div>
-            <p className="text-xs text-zinc-500 mt-2">
+            <p className="text-xs text-zinc-500 mt-2 font-mono">
               {lang === 'cn' ? '下月 1 日重置' : 'Resets on 1st'}
             </p>
           </div>
-          <div className="bg-surface/50 border border-border rounded p-4">
+          <div className="bg-surface/50 border border-border p-4">
             <p className="text-xs text-zinc-500 font-mono uppercase tracking-wider mb-1">
               {lang === 'cn' ? 'API 密钥' : 'API Keys'}
             </p>
             <div className="flex items-baseline gap-2">
-              <p className="text-2xl font-bold text-white">1</p>
-              <span className="text-zinc-500 text-sm">/ 1</span>
+              <p className="text-2xl font-bold text-white data-value">1</p>
+              <span className="text-zinc-500 text-sm data-value">/ 1</span>
             </div>
-            <div className="mt-2 h-1.5 bg-border rounded-full overflow-hidden">
-              <div className="h-full bg-primary rounded-full" style={{ width: '100%' }}></div>
+            <div className="mt-2 h-1.5 bg-border overflow-hidden">
+              <div className="h-full bg-primary" style={{ width: '100%' }}></div>
             </div>
           </div>
         </div>
@@ -190,7 +193,7 @@ const ConsoleSubscription: React.FC = () => {
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className={`relative bg-surface/50 backdrop-blur-sm border rounded-sm p-6 transition-all ${
+              className={`relative bg-surface border p-6 transition-all ${
                 plan.current
                   ? 'border-primary/50 opacity-50'
                   : plan.popular
@@ -198,9 +201,19 @@ const ConsoleSubscription: React.FC = () => {
                   : 'border-border hover:border-primary/30'
               }`}
             >
+              {/* Corner Markers */}
+              {plan.popular && (
+                <>
+                  <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-accent-orange"></div>
+                  <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-accent-orange"></div>
+                  <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-accent-orange"></div>
+                  <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-accent-orange"></div>
+                </>
+              )}
+
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <div className="flex items-center gap-2 px-3 py-1 bg-primary border border-primary/30 rounded text-xs font-mono text-black uppercase tracking-wider">
+                  <div className="flex items-center gap-2 px-3 py-1 bg-primary border border-primary/30 text-xs font-mono text-black uppercase tracking-wider">
                     <Sparkles className="w-3 h-3" />
                     {lang === 'cn' ? '推荐' : 'Recommended'}
                   </div>
@@ -209,7 +222,7 @@ const ConsoleSubscription: React.FC = () => {
 
               {plan.current && (
                 <div className="absolute -top-3 right-6">
-                  <div className="px-3 py-1 bg-surface border border-border rounded text-xs font-mono text-zinc-400 uppercase tracking-wider">
+                  <div className="px-3 py-1 bg-surface border border-border text-xs font-mono text-zinc-400 uppercase tracking-wider">
                     {lang === 'cn' ? '当前套餐' : 'Current Plan'}
                   </div>
                 </div>
@@ -220,16 +233,16 @@ const ConsoleSubscription: React.FC = () => {
                   {plan.name}
                 </h3>
                 <div className="flex items-baseline justify-center gap-2 mb-4">
-                  <span className="text-4xl font-bold text-white">{plan.price}</span>
+                  <span className="text-4xl font-bold text-white data-value">{plan.price}</span>
                   <span className="text-zinc-500 text-sm font-mono">/{plan.period}</span>
                 </div>
               </div>
 
               {/* Credits Display */}
-              <div className="text-center mb-6 py-4 bg-primary/5 border border-primary/20 rounded">
+              <div className="text-center mb-6 py-4 bg-primary/5 border border-primary/20">
                 <div className="flex items-center justify-center gap-2 mb-1">
                   <Zap className="w-5 h-5 text-primary" />
-                  <span className="text-3xl font-bold text-white">
+                  <span className="text-3xl font-bold text-white data-value">
                     {plan.credits === 999999
                       ? '∞'
                       : plan.credits.toLocaleString()}
@@ -251,7 +264,7 @@ const ConsoleSubscription: React.FC = () => {
 
               <button
                 disabled={plan.current}
-                className={`w-full py-3 rounded-sm text-sm font-mono uppercase tracking-wider transition-all ${
+                className={`w-full py-3 text-sm font-mono uppercase tracking-wider transition-all ${
                   plan.current
                     ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
                     : plan.popular
@@ -273,7 +286,7 @@ const ConsoleSubscription: React.FC = () => {
       </div>
 
       {/* Comparison Table */}
-      <div className="bg-surface/50 backdrop-blur-sm border border-border rounded-sm p-6">
+      <div className="bg-surface border border-border p-6">
         <h2 className="text-lg font-bold text-white mb-6 font-mono uppercase tracking-wider">
           {lang === 'cn' ? '功能对比' : 'Feature Comparison'}
         </h2>
@@ -352,16 +365,16 @@ const ConsoleSubscription: React.FC = () => {
       </div>
 
       {/* FAQ */}
-      <div className="bg-surface/50 backdrop-blur-sm border border-border rounded-sm p-6">
+      <div className="bg-surface border border-border p-6">
         <h2 className="text-lg font-bold text-white mb-6 font-mono uppercase tracking-wider">
           {lang === 'cn' ? '常见问题' : 'Frequently Asked Questions'}
         </h2>
         <div className="space-y-4">
           <div>
-            <h3 className="text-white font-bold mb-2">
+            <h3 className="text-white font-bold mb-2 font-mono">
               {lang === 'cn' ? '我可以随时更改套餐吗？' : 'Can I change my plan anytime?'}
             </h3>
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm text-zinc-400 font-mono">
               {lang === 'cn'
                 ? '是的，您可以随时升级或降级套餐。更改将在下一个计费周期生效。'
                 : 'Yes, you can upgrade or downgrade your plan at any time. Changes will be reflected in your next billing cycle.'}

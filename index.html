@@ -12,23 +12,37 @@
           extend: {
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
-              mono: ['JetBrains Mono', 'monospace'],
+              mono: ['JetBrains Mono', 'Courier New', 'monospace'],
+              data: ['JetBrains Mono', 'Courier New', 'monospace'],
             },
             colors: {
-              background: '#09090b',
-              surface: '#18181b',
-              border: '#27272a',
+              background: 'var(--color-background)',
+              surface: 'var(--color-surface)',
+              border: 'var(--color-border)',
+              'text-primary': 'var(--color-text-primary)',
+              'text-secondary': 'var(--color-text-secondary)',
+              'text-tertiary': 'var(--color-text-tertiary)',
               primary: {
-                DEFAULT: '#10b981', // Cyber Green (Emerald-500)
+                DEFAULT: '#10b981', // Electric Green
                 dim: 'rgba(16, 185, 129, 0.1)',
                 glow: 'rgba(16, 185, 129, 0.5)',
               },
+              accent: {
+                orange: '#FF6B35', // Safety Orange
+                green: '#00FF41', // Matrix Green
+                yellow: '#FFD23F', // Warning Yellow
+              },
               secondary: {
                 DEFAULT: '#3f3f46',
+              },
+              grid: {
+                DEFAULT: 'var(--grid-color)',
+                dim: '#141416',
               }
             },
             backgroundImage: {
-              'grid-pattern': "linear-gradient(to right, #27272a 1px, transparent 1px), linear-gradient(to bottom, #27272a 1px, transparent 1px)",
+              'grid-pattern': "linear-gradient(to right, #1a1a1d 1px, transparent 1px), linear-gradient(to bottom, #1a1a1d 1px, transparent 1px)",
+              'grid-small': "linear-gradient(to right, #1a1a1d 0.5px, transparent 0.5px), linear-gradient(to bottom, #1a1a1d 0.5px, transparent 0.5px)",
             },
             animation: {
               'scan': 'scan 4s linear infinite',
@@ -54,24 +68,146 @@
       }
     </script>
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-      
-      body {
-        background-color: #09090b;
-        color: #e4e4e7;
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+      * {
+        border-radius: 0 !important; /* Remove all rounded corners */
       }
-      
+
+      /* CSS Variables for Theming */
+      :root {
+        --color-background: #09090b;
+        --color-surface: #18181b;
+        --color-border: #27272a;
+        --color-text-primary: #e4e4e7;
+        --color-text-secondary: #a1a1aa;
+        --color-text-tertiary: #71717a;
+        --grid-color: #1a1a1d;
+        --grid-alpha: rgba(26, 26, 29, 0.5);
+      }
+
+      html.light {
+        --color-background: #f8f9fa;
+        --color-surface: #ffffff;
+        --color-border: #e5e7eb;
+        --color-text-primary: #1f2937;
+        --color-text-secondary: #6b7280;
+        --color-text-tertiary: #9ca3af;
+        --grid-color: #e5e7eb;
+        --grid-alpha: rgba(229, 231, 235, 0.6);
+      }
+
+      /* Dark Theme (Default) */
+      body {
+        background-color: var(--color-background);
+        background-image:
+          linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+          linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+        background-size: 20px 20px;
+        color: var(--color-text-primary);
+      }
+
+      /* Grid Backgrounds */
       .grid-bg {
+        background-image:
+          linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+          linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
         background-size: 40px 40px;
-        mask-image: linear-gradient(to bottom, transparent, 10%, black, 90%, transparent);
-        -webkit-mask-image: linear-gradient(to bottom, transparent, 5%, black, 95%, transparent);
+      }
+
+      .grid-bg-small {
+        background-image:
+          linear-gradient(to right, var(--grid-alpha) 0.5px, transparent 0.5px),
+          linear-gradient(to bottom, var(--grid-alpha) 0.5px, transparent 0.5px);
+        background-size: 10px 10px;
+      }
+
+      /* Text Color Overrides for Light Theme */
+      html.light .text-white,
+      html.light h1,
+      html.light h2,
+      html.light h3,
+      html.light h4,
+      html.light h5,
+      html.light h6 {
+        color: #1f2937 !important;
+      }
+
+      html.light .text-zinc-300,
+      html.light .text-zinc-400 {
+        color: #6b7280 !important;
+      }
+
+      html.light .text-zinc-500 {
+        color: #9ca3af !important;
+      }
+
+      html.light .bg-background {
+        background-color: #f8f9fa !important;
+      }
+
+      html.light .bg-surface {
+        background-color: #ffffff !important;
+      }
+
+      html.light .bg-surface\/50 {
+        background-color: #f3f4f6 !important;
+      }
+
+      html.light .border-border {
+        border-color: #e5e7eb !important;
+      }
+
+      /* Industrial Corner Markers */
+      .corner-markers {
+        position: relative;
+      }
+
+      .corner-markers::before {
+        content: '';
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        width: 12px;
+        height: 12px;
+        border-top: 2px solid #FF6B35;
+        border-left: 2px solid #FF6B35;
+      }
+
+      .corner-markers::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        right: -1px;
+        width: 12px;
+        height: 12px;
+        border-bottom: 2px solid #FF6B35;
+        border-right: 2px solid #FF6B35;
+      }
+
+      /* Data Display */
+      .data-value {
+        font-family: 'JetBrains Mono', 'Courier New', monospace;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.02em;
+      }
+
+      /* Sharp Borders */
+      .sharp-border {
+        border: 1px solid #27272a;
+        box-shadow: 0 0 0 1px rgba(255, 107, 53, 0.1);
+      }
+
+      .sharp-border-accent {
+        border: 1px solid #FF6B35;
+        box-shadow: 0 0 10px rgba(255, 107, 53, 0.2);
       }
 
       .tech-border {
         border: 1px solid #27272a;
         position: relative;
       }
-      
+
       .tech-border::after {
         content: '';
         position: absolute;
@@ -99,6 +235,31 @@
       .group:hover .tech-border::after,
       .group:hover .tech-border::before {
         border-color: #10b981;
+      }
+
+      /* Status Indicators */
+      .status-indicator {
+        position: relative;
+        display: inline-block;
+      }
+
+      .status-indicator::before {
+        content: '█';
+        margin-right: 6px;
+        font-size: 8px;
+        animation: blink 1.5s ease-in-out infinite;
+      }
+
+      .status-active::before {
+        color: #00FF41;
+      }
+
+      .status-warning::before {
+        color: #FFD23F;
+      }
+
+      .status-error::before {
+        color: #FF6B35;
       }
 
       @keyframes flow {

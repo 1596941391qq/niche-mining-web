@@ -67,64 +67,64 @@ const ConsoleAPI: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2 font-mono uppercase tracking-tight">
+        <div className="border-l-2 border-primary pl-3">
+          <h1 className="text-2xl font-bold text-white mb-1 font-mono uppercase tracking-tight">
             API Keys
           </h1>
-          <p className="text-zinc-400 text-sm">
+          <p className="text-zinc-400 text-xs font-mono">
             Manage your API keys for authentication
           </p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 px-6 py-3 bg-primary text-black font-bold text-sm uppercase tracking-wider rounded-sm hover:bg-primary/90 transition-all"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-black font-bold text-xs uppercase tracking-wider hover:bg-primary/90 transition-all"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-3 h-3" />
           Create New Key
         </button>
       </div>
 
       {/* Warning Banner */}
-      <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-sm p-4 flex items-start gap-3">
-        <AlertTriangle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
+      <div className="bg-accent-yellow/10 border border-accent-yellow/30 p-3 flex items-start gap-2">
+        <AlertTriangle className="w-4 h-4 text-accent-yellow flex-shrink-0 mt-0.5" />
         <div>
-          <p className="text-sm text-yellow-200 font-medium mb-1">
+          <p className="text-xs text-yellow-200 font-medium mb-1 font-mono">
             Keep your API keys secure
           </p>
-          <p className="text-xs text-yellow-300/80">
+          <p className="text-[10px] text-yellow-300/80 font-mono">
             Never share your API keys publicly. Treat them like passwords and store them securely.
           </p>
         </div>
       </div>
 
       {/* API Keys List */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         {apiKeys.map((apiKey) => (
           <div
             key={apiKey.id}
-            className="bg-surface/50 backdrop-blur-sm border border-border rounded-sm p-6 hover:border-primary/30 transition-all"
+            className="bg-surface border border-border p-4 hover:border-primary/30 transition-all"
           >
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-primary/10 border border-primary/30 rounded">
-                  <Key className="w-5 h-5 text-primary" />
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-primary/10 border border-primary/30">
+                  <Key className="w-4 h-4 text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white font-mono">{apiKey.name}</h3>
-                  <div className="flex items-center gap-3 mt-1">
-                    <span className="text-xs text-zinc-500 font-mono">
+                  <h3 className="text-sm font-bold text-white font-mono">{apiKey.name}</h3>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="text-[10px] text-zinc-500 font-mono">
                       Created {apiKey.created}
                     </span>
-                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono ${
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs font-mono ${
                       apiKey.status === 'active'
                         ? 'bg-primary/10 text-primary border border-primary/30'
                         : 'bg-zinc-800 text-zinc-500 border border-zinc-700'
                     }`}>
-                      <div className={`w-1.5 h-1.5 rounded-full ${
-                        apiKey.status === 'active' ? 'bg-primary' : 'bg-zinc-500'
+                      <div className={`w-1.5 h-1.5 ${
+                        apiKey.status === 'active' ? 'bg-accent-green' : 'bg-zinc-500'
                       }`} />
                       {apiKey.status}
                     </span>
@@ -136,7 +136,7 @@ const ConsoleAPI: React.FC = () => {
               </button>
             </div>
 
-            <div className="bg-black/30 border border-border rounded p-4 mb-4 font-mono">
+            <div className="bg-black/30 border border-border p-4 mb-4 font-mono">
               <div className="flex items-center justify-between gap-4">
                 <code className="text-sm text-zinc-300 flex-1 overflow-x-auto">
                   {visibleKeys.has(apiKey.id) ? apiKey.key : maskApiKey(apiKey.key)}
@@ -169,13 +169,13 @@ const ConsoleAPI: React.FC = () => {
                 <p className="text-xs text-zinc-500 font-mono uppercase tracking-wider mb-1">
                   Last Used
                 </p>
-                <p className="text-sm text-white font-mono">{apiKey.lastUsed}</p>
+                <p className="text-sm text-white font-mono data-value">{apiKey.lastUsed}</p>
               </div>
               <div>
                 <p className="text-xs text-zinc-500 font-mono uppercase tracking-wider mb-1">
                   Total Calls
                 </p>
-                <p className="text-sm text-white font-mono">{apiKey.calls.toLocaleString()}</p>
+                <p className="text-sm text-white font-mono data-value">{apiKey.calls.toLocaleString()}</p>
               </div>
             </div>
           </div>
@@ -183,24 +183,24 @@ const ConsoleAPI: React.FC = () => {
       </div>
 
       {/* Documentation */}
-      <div className="bg-surface/50 backdrop-blur-sm border border-border rounded-sm p-6">
+      <div className="bg-surface border border-border p-6">
         <div className="flex items-center gap-3 mb-4">
           <Shield className="w-5 h-5 text-primary" />
           <h2 className="text-lg font-bold text-white font-mono uppercase tracking-wider">
             API Documentation
           </h2>
         </div>
-        <div className="space-y-4 text-sm text-zinc-300">
+        <div className="space-y-4 text-sm text-zinc-300 font-mono">
           <div>
             <h3 className="text-white font-bold mb-2">Authentication</h3>
             <p className="mb-2">Include your API key in the request header:</p>
-            <div className="bg-black/30 border border-border rounded p-3 font-mono text-xs overflow-x-auto">
+            <div className="bg-black/30 border border-border p-3 font-mono text-xs overflow-x-auto">
               <code className="text-primary">Authorization: Bearer YOUR_API_KEY</code>
             </div>
           </div>
           <div>
             <h3 className="text-white font-bold mb-2">Example Request</h3>
-            <div className="bg-black/30 border border-border rounded p-3 font-mono text-xs overflow-x-auto">
+            <div className="bg-black/30 border border-border p-3 font-mono text-xs overflow-x-auto">
               <code>
                 <span className="text-blue-400">curl</span>{' '}
                 <span className="text-zinc-400">-X POST</span>{' '}
@@ -225,7 +225,10 @@ const ConsoleAPI: React.FC = () => {
       {/* Create Key Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-surface border border-border rounded-sm p-8 max-w-md w-full mx-4">
+          <div className="bg-surface border border-border p-8 max-w-md w-full mx-4 relative">
+            <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary"></div>
+            <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-primary"></div>
+
             <h2 className="text-2xl font-bold text-white mb-6 font-mono uppercase tracking-wider">
               Create API Key
             </h2>
@@ -237,7 +240,7 @@ const ConsoleAPI: React.FC = () => {
                 <input
                   type="text"
                   placeholder="Production API"
-                  className="w-full px-4 py-3 bg-background border border-border rounded-sm text-white placeholder-zinc-600 focus:border-primary/50 focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-background border border-border text-white placeholder-zinc-600 focus:border-primary/50 focus:outline-none transition-colors"
                 />
               </div>
               <div>
@@ -247,20 +250,20 @@ const ConsoleAPI: React.FC = () => {
                 <textarea
                   placeholder="API key for production environment..."
                   rows={3}
-                  className="w-full px-4 py-3 bg-background border border-border rounded-sm text-white placeholder-zinc-600 focus:border-primary/50 focus:outline-none transition-colors resize-none"
+                  className="w-full px-4 py-3 bg-background border border-border text-white placeholder-zinc-600 focus:border-primary/50 focus:outline-none transition-colors resize-none"
                 />
               </div>
             </div>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="flex-1 px-6 py-3 bg-transparent border border-border text-zinc-300 hover:border-primary/50 hover:text-white rounded-sm text-sm font-mono uppercase tracking-wider transition-all"
+                className="flex-1 px-6 py-3 bg-transparent border border-border text-zinc-300 hover:border-primary/50 hover:text-white text-sm font-mono uppercase tracking-wider transition-all"
               >
                 Cancel
               </button>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="flex-1 px-6 py-3 bg-primary text-black font-bold text-sm uppercase tracking-wider rounded-sm hover:bg-primary/90 transition-all"
+                className="flex-1 px-6 py-3 bg-primary text-black font-bold text-sm uppercase tracking-wider hover:bg-primary/90 transition-all"
               >
                 Create Key
               </button>

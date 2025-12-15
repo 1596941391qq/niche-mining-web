@@ -11,6 +11,7 @@ import Console from './components/Console';
 import { Language, Translations } from './types';
 import { CONTENT } from './constants';
 import { AuthProvider } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 export const LanguageContext = createContext<{
   lang: Language;
@@ -69,17 +70,19 @@ function App() {
   };
 
   return (
-    <AuthProvider>
-      <LanguageContext.Provider value={{ lang, t, setLang }}>
-        <div className="min-h-screen bg-background text-zinc-300 font-sans selection:bg-primary selection:text-black flex flex-col">
-          {currentPage !== 'console' && <Navbar />}
-          <main className="flex-grow flex flex-col">
-            {renderPage()}
-          </main>
-          {currentPage !== 'console' && <Footer />}
-        </div>
-      </LanguageContext.Provider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <LanguageContext.Provider value={{ lang, t, setLang }}>
+          <div className="min-h-screen bg-background text-zinc-300 font-sans selection:bg-primary selection:text-black flex flex-col">
+            {currentPage !== 'console' && <Navbar />}
+            <main className="flex-grow flex flex-col">
+              {renderPage()}
+            </main>
+            {currentPage !== 'console' && <Footer />}
+          </div>
+        </LanguageContext.Provider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

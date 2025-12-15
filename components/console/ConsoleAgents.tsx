@@ -9,9 +9,49 @@ import {
   Target
 } from 'lucide-react';
 import { LanguageContext } from '../../App';
+import { useAuth } from '../../contexts/AuthContext';
 
 const ConsoleAgents: React.FC = () => {
   const { t, lang } = useContext(LanguageContext);
+  const { getToken } = useAuth();
+
+  // 🔧 开发模式检测
+  const isDevelopment = typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+  const handleLaunchAgent = async (agentUrl: string) => {
+    try {
+      // 1. 获取当前用户的 JWT token
+      const token = getToken();
+      if (!token) {
+        alert(lang === 'cn' ? '请先登录' : 'Please login first');
+        return;
+      }
+
+      // 2. 调用 API 生成 Transfer Token
+      const response = await fetch('/api/auth/create-transfer-token', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create transfer token');
+      }
+
+      const { transferToken } = await response.json();
+
+      // 3. 在新标签页打开子项目，传递 Transfer Token
+      const url = `${agentUrl}?tt=${transferToken}`;
+      window.open(url, '_blank');
+
+    } catch (error) {
+      console.error('Launch agent error:', error);
+      alert(lang === 'cn' ? '启动失败，请稍后重试' : 'Launch failed, please try again later');
+    }
+  };
 
   const agents = [
     {
@@ -24,7 +64,7 @@ const ConsoleAgents: React.FC = () => {
       features: lang === 'cn'
         ? ['NLP 意图匹配', '零点击搜索分析', 'US/UK/AU 数据库']
         : ['NLP Intent Matching', 'Zero-Click Analysis', 'US/UK/AU Databases'],
-      url: 'https://google-agent.vercel.app',
+      url: isDevelopment ? 'http://localhost:3001' : 'https://google-agent.vercel.app',
       color: 'primary',
       stats: {
         label: lang === 'cn' ? '已挖掘关键词' : 'Keywords Mined',
@@ -41,7 +81,7 @@ const ConsoleAgents: React.FC = () => {
       features: lang === 'cn'
         ? ['ICS 权重分析', '区域地理定位', '俄语语义核心映射']
         : ['ICS Score Check', 'Regional Geo-Filter', 'Cyrillic Core Mapping'],
-      url: 'https://yandex-agent.vercel.app',
+      url: isDevelopment ? 'http://localhost:3002' : 'https://yandex-agent.vercel.app',
       color: 'red',
       stats: {
         label: lang === 'cn' ? '已挖掘关键词' : 'Keywords Mined',
@@ -58,7 +98,7 @@ const ConsoleAgents: React.FC = () => {
       features: lang === 'cn'
         ? ['桌面端用户聚焦', '低竞争蓝海扫描', '高消费人群画像']
         : ['Desktop User Focus', 'Low-Competition Scan', 'Affluent Demographic'],
-      url: 'https://bing-agent.vercel.app',
+      url: isDevelopment ? 'http://localhost:3003' : 'https://bing-agent.vercel.app',
       color: 'blue',
       stats: {
         label: lang === 'cn' ? '已挖掘关键词' : 'Keywords Mined',
@@ -92,13 +132,13 @@ const ConsoleAgents: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2 font-mono uppercase tracking-tight">
+      <div className="border-l-2 border-primary pl-3">
+        <h1 className="text-2xl font-bold text-white mb-1 font-mono uppercase tracking-tight">
           {lang === 'cn' ? 'SEO Agents' : 'SEO Agents'}
         </h1>
-        <p className="text-zinc-400 text-sm">
+        <p className="text-zinc-400 text-xs font-mono">
           {lang === 'cn'
             ? '启动专属 Agent 进行关键词挖掘和竞争分析'
             : 'Launch specialized agents for keyword mining and competition analysis'}
@@ -106,109 +146,110 @@ const ConsoleAgents: React.FC = () => {
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-surface/50 backdrop-blur-sm border border-border rounded-sm p-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-surface border border-border p-4">
           <div className="flex items-center justify-between mb-2">
-            <Zap className="w-5 h-5 text-primary" />
-            <span className="text-xs text-zinc-500 font-mono uppercase tracking-wider">
+            <Zap className="w-4 h-4 text-primary" />
+            <span className="text-[10px] text-zinc-500 font-mono uppercase tracking-wider">
               {lang === 'cn' ? '总计' : 'Total'}
             </span>
           </div>
-          <p className="text-3xl font-bold text-white">27,498</p>
-          <p className="text-xs text-zinc-500 mt-1">
+          <p className="text-2xl font-bold text-white data-value">27,498</p>
+          <p className="text-[10px] text-zinc-500 mt-1 font-mono uppercase tracking-wider">
             {lang === 'cn' ? '已挖掘关键词' : 'Keywords Mined'}
           </p>
         </div>
-        <div className="bg-surface/50 backdrop-blur-sm border border-border rounded-sm p-6">
+        <div className="bg-surface border border-border p-4">
           <div className="flex items-center justify-between mb-2">
-            <TrendingUp className="w-5 h-5 text-primary" />
-            <span className="text-xs text-zinc-500 font-mono uppercase tracking-wider">
+            <TrendingUp className="w-4 h-4 text-accent-green" />
+            <span className="text-[10px] text-zinc-500 font-mono uppercase tracking-wider">
               {lang === 'cn' ? '成功率' : 'Success'}
             </span>
           </div>
-          <p className="text-3xl font-bold text-white">94.2%</p>
-          <p className="text-xs text-zinc-500 mt-1">
+          <p className="text-2xl font-bold text-white data-value">94.2%</p>
+          <p className="text-[10px] text-zinc-500 mt-1 font-mono uppercase tracking-wider">
             {lang === 'cn' ? '蓝海机会识别' : 'Blue Ocean Identification'}
           </p>
         </div>
-        <div className="bg-surface/50 backdrop-blur-sm border border-border rounded-sm p-6">
+        <div className="bg-surface border border-border p-4">
           <div className="flex items-center justify-between mb-2">
-            <Target className="w-5 h-5 text-primary" />
-            <span className="text-xs text-zinc-500 font-mono uppercase tracking-wider">
+            <Target className="w-4 h-4 text-primary" />
+            <span className="text-[10px] text-zinc-500 font-mono uppercase tracking-wider">
               {lang === 'cn' ? '活跃' : 'Active'}
             </span>
           </div>
-          <p className="text-3xl font-bold text-white">3</p>
-          <p className="text-xs text-zinc-500 mt-1">
+          <p className="text-2xl font-bold text-white data-value">3</p>
+          <p className="text-[10px] text-zinc-500 mt-1 font-mono uppercase tracking-wider">
             {lang === 'cn' ? '可用 Agents' : 'Available Agents'}
           </p>
         </div>
       </div>
 
       {/* Agents Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {agents.map((agent) => {
           const colorClasses = getColorClasses(agent.color);
           return (
             <div
               key={agent.id}
-              className={`bg-surface/50 backdrop-blur-sm border rounded-sm p-6 transition-all ${colorClasses.border} ${colorClasses.hover}`}
+              className={`bg-surface border p-4 transition-all ${colorClasses.border} ${colorClasses.hover}`}
             >
               {/* Icon */}
-              <div className={`p-3 ${colorClasses.bg} border ${colorClasses.border} rounded mb-4 inline-flex ${colorClasses.text}`}>
-                {agent.icon}
+              <div className={`p-2 ${colorClasses.bg} border ${colorClasses.border} mb-3 inline-flex ${colorClasses.text}`}>
+                <span className="w-6 h-6 block">{agent.icon}</span>
               </div>
 
               {/* Name & Description */}
-              <h3 className="text-xl font-bold text-white mb-2 font-mono uppercase tracking-wider">
+              <h3 className="text-lg font-bold text-white mb-2 font-mono uppercase tracking-wider">
                 {agent.name}
               </h3>
-              <p className="text-sm text-zinc-400 mb-4">
+              <p className="text-xs text-zinc-400 mb-3">
                 {agent.desc}
               </p>
 
               {/* Features */}
-              <ul className="space-y-2 mb-6">
+              <ul className="space-y-1.5 mb-4">
                 {agent.features.map((feature, index) => (
-                  <li key={index} className="flex items-center gap-2 text-xs text-zinc-300">
-                    <div className={`w-1.5 h-1.5 rounded-full ${agent.color === 'primary' ? 'bg-primary' : agent.color === 'red' ? 'bg-red-400' : 'bg-blue-400'}`} />
+                  <li key={index} className="flex items-center gap-2 text-[10px] text-zinc-300 font-mono">
+                    <div className={`w-1 h-1 ${agent.color === 'primary' ? 'bg-primary' : agent.color === 'red' ? 'bg-red-400' : 'bg-blue-400'}`} />
                     <span>{feature}</span>
                   </li>
                 ))}
               </ul>
 
               {/* Stats */}
-              <div className={`p-3 ${colorClasses.bg} border ${colorClasses.border} rounded mb-4`}>
-                <p className="text-xs text-zinc-500 font-mono uppercase tracking-wider mb-1">
+              <div className={`p-2 ${colorClasses.bg} border ${colorClasses.border} mb-3`}>
+                <p className="text-[10px] text-zinc-500 font-mono uppercase tracking-wider mb-1">
                   {agent.stats.label}
                 </p>
-                <p className={`text-2xl font-bold ${colorClasses.text}`}>
+                <p className={`text-xl font-bold data-value ${colorClasses.text}`}>
                   {agent.stats.value}
                 </p>
               </div>
 
               {/* Launch Button */}
-              <a
-                href={agent.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`w-full py-3 ${colorClasses.bg} border ${colorClasses.border} ${colorClasses.text} hover:bg-opacity-20 rounded-sm text-sm font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-2 group`}
+              <button
+                onClick={() => handleLaunchAgent(agent.url)}
+                className={`w-full py-2 ${colorClasses.bg} border ${colorClasses.border} ${colorClasses.text} hover:bg-opacity-20 text-xs font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-2 group`}
               >
                 <span>{lang === 'cn' ? '启动 Agent' : 'Launch Agent'}</span>
                 <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </a>
+              </button>
             </div>
           );
         })}
       </div>
 
       {/* Info Box */}
-      <div className="bg-primary/5 border border-primary/20 rounded-sm p-6">
+      <div className="bg-primary/5 border border-primary/20 p-6 relative">
+        <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary"></div>
+        <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-primary"></div>
+
         <h2 className="text-lg font-bold text-white mb-3 font-mono uppercase tracking-wider flex items-center gap-2">
           <Zap className="w-5 h-5 text-primary" />
           {lang === 'cn' ? '使用说明' : 'How to Use'}
         </h2>
-        <ul className="space-y-2 text-sm text-zinc-300">
+        <ul className="space-y-2 text-sm text-zinc-300 font-mono">
           <li className="flex items-start gap-2">
             <span className="text-primary mt-1">1.</span>
             <span>

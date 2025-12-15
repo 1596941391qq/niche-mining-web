@@ -120,6 +120,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // 初始化：检查 URL 中的 token 和刷新会话
   useEffect(() => {
     const initAuth = async () => {
+      // 🔧 开发模式：本地环境自动登录
+      const isDevelopment = typeof window !== 'undefined' &&
+        (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+      if (isDevelopment) {
+        // 设置开发模式假用户
+        const devUser: User = {
+          id: 'dev_user_123',
+          email: 'dev@localhost',
+          name: '开发测试用户',
+          picture: null,
+          lastLoginAt: new Date(),
+        };
+
+        // 🔑 生成假的 JWT token 用于开发测试（特别是跨项目认证测试）
+        // 注意：这个 token 只在本地开发环境有效，不会泄露到生产环境
+        const fakeToken = 'dev_fake_jwt_token_for_local_testing_only';
+        saveToken(fakeToken);
+
+        console.log('🔧 Development Mode: Auto-login enabled with fake token');
+        setUser(devUser);
+        setLoading(false);
+        return;
+      }
+
       // 检查 URL 中是否有错误（来自 OAuth）
       const urlParams = new URLSearchParams(window.location.search);
       const error = urlParams.get('error');

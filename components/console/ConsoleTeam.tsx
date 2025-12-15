@@ -74,17 +74,17 @@ const ConsoleTeam: React.FC = () => {
     <div className="space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
+        <div className="border-l-4 border-accent-orange pl-4">
           <h1 className="text-3xl font-bold text-white mb-2 font-mono uppercase tracking-tight">
             Team
           </h1>
-          <p className="text-zinc-400 text-sm">
+          <p className="text-zinc-400 text-sm font-mono">
             Manage your team members and permissions
           </p>
         </div>
         <button
           onClick={() => setShowInviteModal(true)}
-          className="flex items-center gap-2 px-6 py-3 bg-primary text-black font-bold text-sm uppercase tracking-wider rounded-sm hover:bg-primary/90 transition-all"
+          className="flex items-center gap-2 px-6 py-3 bg-primary text-black font-bold text-sm uppercase tracking-wider hover:bg-primary/90 transition-all"
         >
           <UserPlus className="w-4 h-4" />
           Invite Member
@@ -93,40 +93,40 @@ const ConsoleTeam: React.FC = () => {
 
       {/* Team Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-surface/50 backdrop-blur-sm border border-border rounded-sm p-6">
+        <div className="bg-surface border border-border p-6">
           <div className="flex items-center justify-between mb-2">
             <Users className="w-5 h-5 text-primary" />
             <span className="text-xs text-zinc-500 font-mono uppercase tracking-wider">
               Total
             </span>
           </div>
-          <p className="text-3xl font-bold text-white">3</p>
-          <p className="text-xs text-zinc-500 mt-1">Team members</p>
+          <p className="text-3xl font-bold text-white data-value">3</p>
+          <p className="text-xs text-zinc-500 mt-1 font-mono">Team members</p>
         </div>
-        <div className="bg-surface/50 backdrop-blur-sm border border-border rounded-sm p-6">
+        <div className="bg-surface border border-border p-6">
           <div className="flex items-center justify-between mb-2">
-            <Check className="w-5 h-5 text-primary" />
+            <Check className="w-5 h-5 text-accent-green" />
             <span className="text-xs text-zinc-500 font-mono uppercase tracking-wider">
               Active
             </span>
           </div>
-          <p className="text-3xl font-bold text-white">2</p>
-          <p className="text-xs text-zinc-500 mt-1">Active members</p>
+          <p className="text-3xl font-bold text-white data-value">2</p>
+          <p className="text-xs text-zinc-500 mt-1 font-mono">Active members</p>
         </div>
-        <div className="bg-surface/50 backdrop-blur-sm border border-border rounded-sm p-6">
+        <div className="bg-surface border border-border p-6">
           <div className="flex items-center justify-between mb-2">
-            <Mail className="w-5 h-5 text-yellow-500" />
+            <Mail className="w-5 h-5 text-accent-yellow" />
             <span className="text-xs text-zinc-500 font-mono uppercase tracking-wider">
               Pending
             </span>
           </div>
-          <p className="text-3xl font-bold text-white">1</p>
-          <p className="text-xs text-zinc-500 mt-1">Pending invites</p>
+          <p className="text-3xl font-bold text-white data-value">1</p>
+          <p className="text-xs text-zinc-500 mt-1 font-mono">Pending invites</p>
         </div>
       </div>
 
       {/* Team Members List */}
-      <div className="bg-surface/50 backdrop-blur-sm border border-border rounded-sm">
+      <div className="bg-surface border border-border">
         <div className="p-6 border-b border-border">
           <h2 className="text-lg font-bold text-white font-mono uppercase tracking-wider">
             Team Members
@@ -192,13 +192,13 @@ const ConsoleTeam: React.FC = () => {
       </div>
 
       {/* Roles & Permissions */}
-      <div className="bg-surface/50 backdrop-blur-sm border border-border rounded-sm p-6">
+      <div className="bg-surface border border-border p-6">
         <h2 className="text-lg font-bold text-white mb-6 font-mono uppercase tracking-wider">
           Roles & Permissions
         </h2>
 
         <div className="space-y-4">
-          <div className="border border-border rounded-sm p-4">
+          <div className="border border-border p-4">
             <div className="flex items-center gap-3 mb-3">
               <Crown className="w-5 h-5 text-primary" />
               <h3 className="text-white font-bold font-mono uppercase tracking-wider">Owner</h3>
@@ -223,7 +223,7 @@ const ConsoleTeam: React.FC = () => {
             </ul>
           </div>
 
-          <div className="border border-border rounded-sm p-4">
+          <div className="border border-border p-4">
             <div className="flex items-center gap-3 mb-3">
               <Shield className="w-5 h-5 text-blue-400" />
               <h3 className="text-white font-bold font-mono uppercase tracking-wider">Admin</h3>
@@ -248,7 +248,7 @@ const ConsoleTeam: React.FC = () => {
             </ul>
           </div>
 
-          <div className="border border-border rounded-sm p-4">
+          <div className="border border-border p-4">
             <div className="flex items-center gap-3 mb-3">
               <Users className="w-5 h-5 text-zinc-400" />
               <h3 className="text-white font-bold font-mono uppercase tracking-wider">Member</h3>
@@ -278,7 +278,10 @@ const ConsoleTeam: React.FC = () => {
       {/* Invite Modal */}
       {showInviteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-surface border border-border rounded-sm p-8 max-w-md w-full mx-4">
+          <div className="bg-surface border border-border p-8 max-w-md w-full mx-4 relative">
+            <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary"></div>
+            <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-primary"></div>
+
             <h2 className="text-2xl font-bold text-white mb-6 font-mono uppercase tracking-wider">
               Invite Team Member
             </h2>
@@ -290,14 +293,14 @@ const ConsoleTeam: React.FC = () => {
                 <input
                   type="email"
                   placeholder="colleague@example.com"
-                  className="w-full px-4 py-3 bg-background border border-border rounded-sm text-white placeholder-zinc-600 focus:border-primary/50 focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-background border border-border text-white placeholder-zinc-600 focus:border-primary/50 focus:outline-none transition-colors"
                 />
               </div>
               <div>
                 <label className="block text-sm text-zinc-400 font-mono uppercase tracking-wider mb-2">
                   Role
                 </label>
-                <select className="w-full px-4 py-3 bg-background border border-border rounded-sm text-white focus:border-primary/50 focus:outline-none transition-colors">
+                <select className="w-full px-4 py-3 bg-background border border-border text-white focus:border-primary/50 focus:outline-none transition-colors">
                   <option value="member">Member</option>
                   <option value="admin">Admin</option>
                 </select>
@@ -306,13 +309,13 @@ const ConsoleTeam: React.FC = () => {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowInviteModal(false)}
-                className="flex-1 px-6 py-3 bg-transparent border border-border text-zinc-300 hover:border-primary/50 hover:text-white rounded-sm text-sm font-mono uppercase tracking-wider transition-all"
+                className="flex-1 px-6 py-3 bg-transparent border border-border text-zinc-300 hover:border-primary/50 hover:text-white text-sm font-mono uppercase tracking-wider transition-all"
               >
                 Cancel
               </button>
               <button
                 onClick={() => setShowInviteModal(false)}
-                className="flex-1 px-6 py-3 bg-primary text-black font-bold text-sm uppercase tracking-wider rounded-sm hover:bg-primary/90 transition-all"
+                className="flex-1 px-6 py-3 bg-primary text-black font-bold text-sm uppercase tracking-wider hover:bg-primary/90 transition-all"
               >
                 Send Invite
               </button>

@@ -66,6 +66,15 @@ export interface User {
   last_login_at: Date | null;
 }
 
+export interface Session {
+  id: number;
+  user_id: string;
+  token_hash: string;
+  created_at: Date;
+  expires_at: Date;
+  last_used_at: Date;
+}
+
 /**
  * 初始化用户表（如果不存在）
  */
@@ -177,6 +186,47 @@ export async function getUserByEmail(email: string): Promise<User | null> {
     return result.rows[0] || null;
   } catch (error) {
     console.error('Error getting user by email:', error);
+    throw error;
+  }
+}
+
+/**
+ * 初始化 sessions 表（用于跨项目认证）
+ */
+export async function initSessionsTable() {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS sessions (
+        id SERIAL PRIMARY KEY,
+        user_id UUID NOT NULL,
+        token_hash VARCHAR(64) UNIQUE NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        expires_at TIMESTAMP NOT NULL,
+        last_used_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+        CONSTRAINT fk_sessions_user FOREIGN KEY (user_id)
+          REFERENCES users(id) ON DELETE CASCADE
+      )
+    `;
+
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_sessions_token_hash
+      ON sessions(token_hash)
+    `;
+
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_sessions_user_id
+      ON sessions(user_id)
+    `;
+
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_sessions_expires_at
+      ON sessions(expires_at)
+    `;
+
+    console.log('Sessions table initialized successfully');
+  } catch (error) {
+    console.error('Error initializing sessions table:', error);
     throw error;
   }
 }
