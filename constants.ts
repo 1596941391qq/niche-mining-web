@@ -8,6 +8,20 @@ export const CONTENT: Record<string, Translations> = {
       howItWorks: 'Process',
       start: 'Deploy Agent',
     },
+    console: {
+      sidebar: {
+        dashboard: 'Dashboard',
+        agents: 'Agents',
+        api: 'API Keys',
+        subscription: 'Subscription',
+        team: 'Team',
+        settings: 'Settings',
+        backHome: 'Back to Home',
+      },
+      userInfo: {
+        currentPlan: 'Current Plan',
+      },
+    },
     hero: {
       badge: 'SYSTEM ONLINE // V2.0',
       title: 'Stop Competing.\nStart Domination.',
@@ -291,6 +305,20 @@ export const CONTENT: Record<string, Translations> = {
       agents: '挖掘工具',
       howItWorks: '工作原理',
       start: '开始挖掘',
+    },
+    console: {
+      sidebar: {
+        dashboard: '仪表板',
+        agents: 'Agents',
+        api: 'API 密钥',
+        subscription: '订阅',
+        team: '团队',
+        settings: '设置',
+        backHome: '返回首页',
+      },
+      userInfo: {
+        currentPlan: '当前套餐',
+      },
     },
     hero: {
       badge: '系统在线 // V2.0',

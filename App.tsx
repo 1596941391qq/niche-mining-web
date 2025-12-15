@@ -72,7 +72,7 @@ function App() {
     <AuthProvider>
       <LanguageContext.Provider value={{ lang, t, setLang }}>
         <div className="min-h-screen bg-background text-zinc-300 font-sans selection:bg-primary selection:text-black flex flex-col">
-          <Navbar />
+          {currentPage !== 'console' && <Navbar />}
           <main className="flex-grow flex flex-col">
             {renderPage()}
           </main>

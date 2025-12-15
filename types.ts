@@ -9,6 +9,20 @@ export interface Translations {
     howItWorks: string;
     start: string;
   };
+  console?: {
+    sidebar?: {
+      dashboard?: string;
+      agents?: string;
+      api?: string;
+      subscription?: string;
+      team?: string;
+      settings?: string;
+      backHome?: string;
+    };
+    userInfo?: {
+      currentPlan?: string;
+    };
+  };
   hero: {
     badge: string;
     title: string;
