@@ -7,6 +7,7 @@ import HowItWorks from './components/HowItWorks';
 import Footer from './components/Footer';
 import Privacy from './components/Privacy';
 import Terms from './components/Terms';
+import Console from './components/Console';
 import { Language, Translations } from './types';
 import { CONTENT } from './constants';
 import { AuthProvider } from './contexts/AuthContext';
@@ -29,7 +30,7 @@ function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.slice(1);
-      if (hash === 'privacy' || hash === 'terms') {
+      if (hash === 'privacy' || hash === 'terms' || hash === 'console') {
         setCurrentPage(hash);
       } else {
         setCurrentPage('home');
@@ -53,6 +54,8 @@ function App() {
         return <Privacy />;
       case 'terms':
         return <Terms />;
+      case 'console':
+        return <Console />;
       default:
         return (
           <>
@@ -73,7 +76,7 @@ function App() {
           <main className="flex-grow flex flex-col">
             {renderPage()}
           </main>
-          <Footer />
+          {currentPage !== 'console' && <Footer />}
         </div>
       </LanguageContext.Provider>
     </AuthProvider>

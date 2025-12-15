@@ -116,6 +116,13 @@ const Navbar: React.FC = () => {
                       {user.name || user.email}
                     </span>
                   </div>
+                  <a
+                    href="#console"
+                    className="flex items-center gap-2 px-4 py-2 text-xs font-mono text-zinc-400 hover:text-white bg-primary/10 border border-primary/30 hover:border-primary/50 rounded-sm transition-all uppercase tracking-wider"
+                  >
+                    <User className="w-3 h-3" />
+                    <span className="hidden sm:inline">Console</span>
+                  </a>
                   <button
                     onClick={logout}
                     className="flex items-center gap-2 px-4 py-2 text-xs font-mono text-zinc-400 hover:text-primary border border-zinc-800 hover:border-primary/50 rounded-sm transition-all uppercase tracking-wider"
@@ -190,6 +197,14 @@ const Navbar: React.FC = () => {
                       <p className="text-zinc-500 text-xs truncate">{user.email}</p>
                     </div>
                   </div>
+                  <a
+                    href="#console"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full py-4 bg-primary/10 border border-primary/30 text-primary hover:text-white hover:border-primary/50 font-bold rounded-sm uppercase tracking-wider flex items-center justify-center gap-2"
+                  >
+                    <User className="w-4 h-4" />
+                    <span>Console</span>
+                  </a>
                   <button
                     onClick={() => {
                       logout();

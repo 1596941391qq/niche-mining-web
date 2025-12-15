@@ -1,0 +1,327 @@
+import React, { useState } from 'react';
+import {
+  Users,
+  UserPlus,
+  Mail,
+  Crown,
+  Shield,
+  Trash2,
+  MoreVertical,
+  Check,
+  X
+} from 'lucide-react';
+
+interface TeamMember {
+  id: string;
+  name: string;
+  email: string;
+  role: 'owner' | 'admin' | 'member';
+  avatar?: string;
+  status: 'active' | 'pending';
+  joinedDate: string;
+}
+
+const ConsoleTeam: React.FC = () => {
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [teamMembers] = useState<TeamMember[]>([
+    {
+      id: '1',
+      name: '锰',
+      email: 'x1596941391@gmail.com',
+      role: 'owner',
+      status: 'active',
+      joinedDate: '2025-12-01',
+    },
+    {
+      id: '2',
+      name: 'John Doe',
+      email: 'john@example.com',
+      role: 'admin',
+      status: 'active',
+      joinedDate: '2025-12-10',
+    },
+    {
+      id: '3',
+      name: 'Jane Smith',
+      email: 'jane@example.com',
+      role: 'member',
+      status: 'pending',
+      joinedDate: '2025-12-14',
+    },
+  ]);
+
+  const getRoleBadge = (role: string) => {
+    const styles = {
+      owner: 'bg-primary/20 text-primary border-primary/30',
+      admin: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+      member: 'bg-zinc-800 text-zinc-400 border-zinc-700',
+    };
+    return styles[role as keyof typeof styles] || styles.member;
+  };
+
+  const getRoleIcon = (role: string) => {
+    switch (role) {
+      case 'owner':
+        return <Crown className="w-3 h-3" />;
+      case 'admin':
+        return <Shield className="w-3 h-3" />;
+      default:
+        return <Users className="w-3 h-3" />;
+    }
+  };
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2 font-mono uppercase tracking-tight">
+            Team
+          </h1>
+          <p className="text-zinc-400 text-sm">
+            Manage your team members and permissions
+          </p>
+        </div>
+        <button
+          onClick={() => setShowInviteModal(true)}
+          className="flex items-center gap-2 px-6 py-3 bg-primary text-black font-bold text-sm uppercase tracking-wider rounded-sm hover:bg-primary/90 transition-all"
+        >
+          <UserPlus className="w-4 h-4" />
+          Invite Member
+        </button>
+      </div>
+
+      {/* Team Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-surface/50 backdrop-blur-sm border border-border rounded-sm p-6">
+          <div className="flex items-center justify-between mb-2">
+            <Users className="w-5 h-5 text-primary" />
+            <span className="text-xs text-zinc-500 font-mono uppercase tracking-wider">
+              Total
+            </span>
+          </div>
+          <p className="text-3xl font-bold text-white">3</p>
+          <p className="text-xs text-zinc-500 mt-1">Team members</p>
+        </div>
+        <div className="bg-surface/50 backdrop-blur-sm border border-border rounded-sm p-6">
+          <div className="flex items-center justify-between mb-2">
+            <Check className="w-5 h-5 text-primary" />
+            <span className="text-xs text-zinc-500 font-mono uppercase tracking-wider">
+              Active
+            </span>
+          </div>
+          <p className="text-3xl font-bold text-white">2</p>
+          <p className="text-xs text-zinc-500 mt-1">Active members</p>
+        </div>
+        <div className="bg-surface/50 backdrop-blur-sm border border-border rounded-sm p-6">
+          <div className="flex items-center justify-between mb-2">
+            <Mail className="w-5 h-5 text-yellow-500" />
+            <span className="text-xs text-zinc-500 font-mono uppercase tracking-wider">
+              Pending
+            </span>
+          </div>
+          <p className="text-3xl font-bold text-white">1</p>
+          <p className="text-xs text-zinc-500 mt-1">Pending invites</p>
+        </div>
+      </div>
+
+      {/* Team Members List */}
+      <div className="bg-surface/50 backdrop-blur-sm border border-border rounded-sm">
+        <div className="p-6 border-b border-border">
+          <h2 className="text-lg font-bold text-white font-mono uppercase tracking-wider">
+            Team Members
+          </h2>
+        </div>
+
+        <div className="divide-y divide-border">
+          {teamMembers.map((member) => (
+            <div
+              key={member.id}
+              className="p-6 hover:bg-surface/30 transition-colors"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4 flex-1">
+                  {/* Avatar */}
+                  <div className="w-12 h-12 rounded-full bg-primary/20 border-2 border-primary/30 flex items-center justify-center">
+                    <span className="text-primary font-bold text-lg">
+                      {member.name[0].toUpperCase()}
+                    </span>
+                  </div>
+
+                  {/* Info */}
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-1">
+                      <h3 className="text-white font-bold">{member.name}</h3>
+                      <span
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono border ${getRoleBadge(
+                          member.role
+                        )}`}
+                      >
+                        {getRoleIcon(member.role)}
+                        {member.role}
+                      </span>
+                      {member.status === 'pending' && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
+                          <Mail className="w-3 h-3" />
+                          Pending
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-zinc-400 font-mono">{member.email}</p>
+                    <p className="text-xs text-zinc-500 font-mono mt-1">
+                      Joined {member.joinedDate}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                {member.role !== 'owner' && (
+                  <div className="flex items-center gap-2">
+                    <button className="p-2 text-zinc-400 hover:text-white transition-colors">
+                      <MoreVertical className="w-5 h-5" />
+                    </button>
+                    <button className="p-2 text-zinc-400 hover:text-red-400 transition-colors">
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Roles & Permissions */}
+      <div className="bg-surface/50 backdrop-blur-sm border border-border rounded-sm p-6">
+        <h2 className="text-lg font-bold text-white mb-6 font-mono uppercase tracking-wider">
+          Roles & Permissions
+        </h2>
+
+        <div className="space-y-4">
+          <div className="border border-border rounded-sm p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <Crown className="w-5 h-5 text-primary" />
+              <h3 className="text-white font-bold font-mono uppercase tracking-wider">Owner</h3>
+            </div>
+            <ul className="space-y-2 text-sm text-zinc-400">
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-primary" />
+                Full access to all features
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-primary" />
+                Billing and subscription management
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-primary" />
+                Team member management
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-primary" />
+                API key management
+              </li>
+            </ul>
+          </div>
+
+          <div className="border border-border rounded-sm p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <Shield className="w-5 h-5 text-blue-400" />
+              <h3 className="text-white font-bold font-mono uppercase tracking-wider">Admin</h3>
+            </div>
+            <ul className="space-y-2 text-sm text-zinc-400">
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-primary" />
+                Create and manage API keys
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-primary" />
+                View team analytics
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-primary" />
+                Invite team members
+              </li>
+              <li className="flex items-center gap-2">
+                <X className="w-4 h-4 text-zinc-600" />
+                Billing management
+              </li>
+            </ul>
+          </div>
+
+          <div className="border border-border rounded-sm p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <Users className="w-5 h-5 text-zinc-400" />
+              <h3 className="text-white font-bold font-mono uppercase tracking-wider">Member</h3>
+            </div>
+            <ul className="space-y-2 text-sm text-zinc-400">
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-primary" />
+                Use existing API keys
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-primary" />
+                View analytics
+              </li>
+              <li className="flex items-center gap-2">
+                <X className="w-4 h-4 text-zinc-600" />
+                Create API keys
+              </li>
+              <li className="flex items-center gap-2">
+                <X className="w-4 h-4 text-zinc-600" />
+                Manage team
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Invite Modal */}
+      {showInviteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-surface border border-border rounded-sm p-8 max-w-md w-full mx-4">
+            <h2 className="text-2xl font-bold text-white mb-6 font-mono uppercase tracking-wider">
+              Invite Team Member
+            </h2>
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm text-zinc-400 font-mono uppercase tracking-wider mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  placeholder="colleague@example.com"
+                  className="w-full px-4 py-3 bg-background border border-border rounded-sm text-white placeholder-zinc-600 focus:border-primary/50 focus:outline-none transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-zinc-400 font-mono uppercase tracking-wider mb-2">
+                  Role
+                </label>
+                <select className="w-full px-4 py-3 bg-background border border-border rounded-sm text-white focus:border-primary/50 focus:outline-none transition-colors">
+                  <option value="member">Member</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowInviteModal(false)}
+                className="flex-1 px-6 py-3 bg-transparent border border-border text-zinc-300 hover:border-primary/50 hover:text-white rounded-sm text-sm font-mono uppercase tracking-wider transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => setShowInviteModal(false)}
+                className="flex-1 px-6 py-3 bg-primary text-black font-bold text-sm uppercase tracking-wider rounded-sm hover:bg-primary/90 transition-all"
+              >
+                Send Invite
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ConsoleTeam;
