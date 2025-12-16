@@ -5,7 +5,8 @@
       "Bash(vercel env ls:*)",
       "Bash(vercel env add:*)",
       "Bash(echo:*)",
-      "Bash(vercel env pull:*)"
+      "Bash(vercel env pull:*)",
+      "Bash(node -e:*)"
     ]
   }
 }

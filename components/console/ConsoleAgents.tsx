@@ -64,7 +64,7 @@ const ConsoleAgents: React.FC = () => {
       features: lang === 'cn'
         ? ['NLP 意图匹配', '零点击搜索分析', 'US/UK/AU 数据库']
         : ['NLP Intent Matching', 'Zero-Click Analysis', 'US/UK/AU Databases'],
-      url: isDevelopment ? 'http://localhost:3001' : 'https://google-agent.vercel.app',
+      url: isDevelopment ? 'http://localhost:3001' : 'https://google-seo-agen-ts-lans.vercel.app',
       color: 'primary',
       stats: {
         label: lang === 'cn' ? '已挖掘关键词' : 'Keywords Mined',
@@ -81,7 +81,7 @@ const ConsoleAgents: React.FC = () => {
       features: lang === 'cn'
         ? ['ICS 权重分析', '区域地理定位', '俄语语义核心映射']
         : ['ICS Score Check', 'Regional Geo-Filter', 'Cyrillic Core Mapping'],
-      url: isDevelopment ? 'http://localhost:3002' : 'https://yandex-agent.vercel.app',
+      url: isDevelopment ? 'http://localhost:3002' : 'https://yandex-seo-agents.vercel.app',
       color: 'red',
       stats: {
         label: lang === 'cn' ? '已挖掘关键词' : 'Keywords Mined',
@@ -98,7 +98,7 @@ const ConsoleAgents: React.FC = () => {
       features: lang === 'cn'
         ? ['桌面端用户聚焦', '低竞争蓝海扫描', '高消费人群画像']
         : ['Desktop User Focus', 'Low-Competition Scan', 'Affluent Demographic'],
-      url: isDevelopment ? 'http://localhost:3003' : 'https://bing-agent.vercel.app',
+      url: isDevelopment ? 'http://localhost:3003' : 'https://bing-seo-agen-ts-lans.vercel.app',
       color: 'blue',
       stats: {
         label: lang === 'cn' ? '已挖掘关键词' : 'Keywords Mined',
