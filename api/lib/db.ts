@@ -231,3 +231,112 @@ export async function initSessionsTable() {
   }
 }
 
+/**
+ * 初始化订阅系统相关表
+ */
+export async function initSubscriptionTables() {
+  try {
+    // 1. 订阅套餐表
+    await sql`
+      CREATE TABLE IF NOT EXISTS subscription_plans (
+        id SERIAL PRIMARY KEY,
+        plan_id VARCHAR(50) UNIQUE NOT NULL,
+        name_en VARCHAR(100) NOT NULL,
+        name_cn VARCHAR(100) NOT NULL,
+        price DECIMAL(10, 2) NOT NULL,
+        currency VARCHAR(3) DEFAULT 'USD',
+        credits_monthly INT NOT NULL,
+        credits_rollover BOOLEAN DEFAULT FALSE,
+        api_keys_limit INT NOT NULL,
+        team_members_limit INT NOT NULL,
+        features JSONB DEFAULT '{}',
+        is_active BOOLEAN DEFAULT TRUE,
+        sort_order INT DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+
+    // 插入默认套餐（如果不存在）
+    await sql`
+      INSERT INTO subscription_plans (plan_id, name_en, name_cn, price, credits_monthly, api_keys_limit, team_members_limit, features)
+      VALUES
+        ('free', 'Free', '免费版', 0.00, 2000, 1, 1, '{"basic_support": true, "community_access": true}'),
+        ('pro', 'Professional', '专业版', 49.00, 50000, 5, 3, '{"priority_support": true, "advanced_analytics": true, "custom_webhooks": true}'),
+        ('enterprise', 'Enterprise', '企业版', 199.00, 999999, 999999, 999999, '{"dedicated_support": true, "sla": "99.9%", "custom_integrations": true, "on_premise": true}')
+      ON CONFLICT (plan_id) DO NOTHING
+    `;
+
+    // 2. 用户订阅表
+    await sql`
+      CREATE TABLE IF NOT EXISTS user_subscriptions (
+        id SERIAL PRIMARY KEY,
+        user_id UUID NOT NULL,
+        plan_id VARCHAR(50) NOT NULL,
+        status VARCHAR(20) NOT NULL,
+        billing_period VARCHAR(20) DEFAULT 'monthly',
+        current_period_start TIMESTAMP,
+        current_period_end TIMESTAMP,
+        payment_method VARCHAR(50),
+        stripe_subscription_id VARCHAR(255),
+        stripe_customer_id VARCHAR(255),
+        auto_renew BOOLEAN DEFAULT TRUE,
+        cancel_at_period_end BOOLEAN DEFAULT FALSE,
+        cancelled_at TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        CONSTRAINT fk_plan FOREIGN KEY (plan_id) REFERENCES subscription_plans(plan_id)
+      )
+    `;
+
+    await sql`CREATE INDEX IF NOT EXISTS idx_user_subscriptions_user_id ON user_subscriptions(user_id)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_user_subscriptions_status ON user_subscriptions(status)`;
+
+    // 3. Credits 账户表
+    await sql`
+      CREATE TABLE IF NOT EXISTS user_credits (
+        id SERIAL PRIMARY KEY,
+        user_id UUID NOT NULL UNIQUE,
+        total_credits INT DEFAULT 0,
+        used_credits INT DEFAULT 0,
+        bonus_credits INT DEFAULT 0,
+        last_reset_at TIMESTAMP,
+        next_reset_at TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT fk_credits_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `;
+
+    await sql`CREATE INDEX IF NOT EXISTS idx_user_credits_user_id ON user_credits(user_id)`;
+
+    // 4. Credits 交易记录表
+    await sql`
+      CREATE TABLE IF NOT EXISTS credits_transactions (
+        id SERIAL PRIMARY KEY,
+        user_id UUID NOT NULL,
+        type VARCHAR(20) NOT NULL,
+        credits_delta INT NOT NULL,
+        credits_before INT NOT NULL,
+        credits_after INT NOT NULL,
+        related_entity VARCHAR(50),
+        related_entity_id VARCHAR(255),
+        description TEXT,
+        metadata JSONB DEFAULT '{}',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT fk_transactions_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `;
+
+    await sql`CREATE INDEX IF NOT EXISTS idx_credits_transactions_user_id ON credits_transactions(user_id)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_credits_transactions_type ON credits_transactions(type)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_credits_transactions_created_at ON credits_transactions(created_at DESC)`;
+
+    console.log('Subscription tables initialized successfully');
+  } catch (error) {
+    console.error('Error initializing subscription tables:', error);
+    throw error;
+  }
+}
+

@@ -119,10 +119,11 @@ const ToolSelector: React.FC = () => {
     }
   }
 
-  const handleToolClick = (e: React.MouseEvent<HTMLAnchorElement>, toolId: string) => {
+  const handleToolClick = async (e: React.MouseEvent<HTMLAnchorElement>, toolId: string) => {
+    e.preventDefault();
+
     // 检查登录状态
     if (!authenticated) {
-      e.preventDefault();
       // 可以显示提示或直接跳转登录
       if (window.confirm('Please login first to access this tool. Do you want to login now?')) {
         login();
@@ -130,13 +131,37 @@ const ToolSelector: React.FC = () => {
       return;
     }
 
-    // 获取 token 并添加到 URL
-    const token = getToken();
-    if (token) {
+    try {
+      // 1. 获取当前用户的 JWT token
+      const token = getToken();
+      if (!token) {
+        alert('Please login first');
+        return;
+      }
+
+      // 2. 调用 API 生成 Transfer Token
+      const response = await fetch('/api/auth/create-transfer-token', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create transfer token');
+      }
+
+      const { transferToken } = await response.json();
+
+      // 3. 在新标签页打开子项目，传递 Transfer Token
       const baseUrl = getAgentUrl(toolId);
-      const urlWithToken = `${baseUrl}?token=${encodeURIComponent(token)}`;
+      const urlWithToken = `${baseUrl}?tt=${transferToken}`;
       window.open(urlWithToken, '_blank', 'noopener,noreferrer');
-      e.preventDefault();
+
+    } catch (error) {
+      console.error('Launch agent error:', error);
+      alert('Failed to launch agent. Please try again.');
     }
   }
 

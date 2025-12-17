@@ -43,7 +43,7 @@ INSERT INTO subscription_plans (plan_id, name_en, name_cn, price, credits_monthl
 -- 存储每个用户的当前订阅状态
 CREATE TABLE user_subscriptions (
   id SERIAL PRIMARY KEY,
-  user_id VARCHAR(255) NOT NULL,         -- 关联 users 表
+  user_id UUID NOT NULL,                 -- 关联 users.id (UUID)
   plan_id VARCHAR(50) NOT NULL,          -- 关联 subscription_plans.plan_id
 
   -- 订阅状态
@@ -68,7 +68,7 @@ CREATE TABLE user_subscriptions (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-  CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+  CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   CONSTRAINT fk_plan FOREIGN KEY (plan_id) REFERENCES subscription_plans(plan_id)
 );
 
@@ -80,7 +80,7 @@ CREATE INDEX idx_user_subscriptions_status ON user_subscriptions(status);
 -- 管理每个用户的 Credits 余额和使用情况
 CREATE TABLE user_credits (
   id SERIAL PRIMARY KEY,
-  user_id VARCHAR(255) NOT NULL UNIQUE,  -- 关联 users 表
+  user_id UUID NOT NULL UNIQUE,          -- 关联 users.id (UUID)
 
   -- Credits 余额
   total_credits INT DEFAULT 0,            -- 总可用 Credits
@@ -95,7 +95,7 @@ CREATE TABLE user_credits (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-  CONSTRAINT fk_credits_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+  CONSTRAINT fk_credits_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE INDEX idx_user_credits_user_id ON user_credits(user_id);
@@ -105,7 +105,7 @@ CREATE INDEX idx_user_credits_user_id ON user_credits(user_id);
 -- 详细记录每次 Credits 的消耗和充值
 CREATE TABLE credits_transactions (
   id SERIAL PRIMARY KEY,
-  user_id VARCHAR(255) NOT NULL,         -- 关联 users 表
+  user_id UUID NOT NULL,                 -- 关联 users.id (UUID)
 
   -- 交易类型
   type VARCHAR(20) NOT NULL,              -- 'usage', 'purchase', 'bonus', 'refund', 'reset'
@@ -126,7 +126,7 @@ CREATE TABLE credits_transactions (
   -- 时间戳
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-  CONSTRAINT fk_transactions_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+  CONSTRAINT fk_transactions_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE INDEX idx_credits_transactions_user_id ON credits_transactions(user_id);
@@ -138,7 +138,7 @@ CREATE INDEX idx_credits_transactions_created_at ON credits_transactions(created
 -- 统计 API 调用情况，用于 Dashboard 展示
 CREATE TABLE api_usage_stats (
   id SERIAL PRIMARY KEY,
-  user_id VARCHAR(255) NOT NULL,         -- 关联 users 表
+  user_id UUID NOT NULL,                 -- 关联 users.id (UUID)
 
   -- 时间维度
   date DATE NOT NULL,                     -- 统计日期
@@ -162,7 +162,7 @@ CREATE TABLE api_usage_stats (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-  CONSTRAINT fk_stats_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+  CONSTRAINT fk_stats_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   UNIQUE(user_id, date, hour)             -- 防止重复统计
 );
 
@@ -173,7 +173,7 @@ CREATE INDEX idx_api_usage_stats_user_date ON api_usage_stats(user_id, date DESC
 -- 记录所有订阅变更历史
 CREATE TABLE subscription_history (
   id SERIAL PRIMARY KEY,
-  user_id VARCHAR(255) NOT NULL,         -- 关联 users 表
+  user_id UUID NOT NULL,                 -- 关联 users.id (UUID)
 
   -- 变更类型
   action VARCHAR(50) NOT NULL,            -- 'created', 'upgraded', 'downgraded', 'cancelled', 'renewed', 'expired'
@@ -193,7 +193,7 @@ CREATE TABLE subscription_history (
   -- 时间戳
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-  CONSTRAINT fk_history_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+  CONSTRAINT fk_history_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE INDEX idx_subscription_history_user_id ON subscription_history(user_id);
@@ -207,7 +207,7 @@ CREATE INDEX idx_subscription_history_created_at ON subscription_history(created
 -- 用户订阅概览视图
 CREATE OR REPLACE VIEW v_user_subscription_overview AS
 SELECT
-  u.user_id,
+  u.id AS user_id,
   u.email,
   u.name,
   sp.plan_id,
@@ -224,9 +224,9 @@ SELECT
   (uc.total_credits - uc.used_credits) AS remaining_credits,
   uc.next_reset_at
 FROM users u
-LEFT JOIN user_subscriptions us ON u.user_id = us.user_id AND us.status = 'active'
+LEFT JOIN user_subscriptions us ON u.id = us.user_id AND us.status = 'active'
 LEFT JOIN subscription_plans sp ON us.plan_id = sp.plan_id
-LEFT JOIN user_credits uc ON u.user_id = uc.user_id;
+LEFT JOIN user_credits uc ON u.id = uc.user_id;
 
 
 -- ========================================

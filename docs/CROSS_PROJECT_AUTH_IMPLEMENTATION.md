@@ -323,9 +323,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // 4. 获取用户信息
     const userResult = await sql`
-      SELECT user_id, email, name, picture
+      SELECT id, email, name, picture
       FROM users
-      WHERE user_id = ${session.user_id}
+      WHERE id = ${session.user_id}
     `;
 
     if (userResult.rowCount === 0) {
@@ -338,14 +338,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await sql`DELETE FROM sessions WHERE id = ${session.id}`;
 
     // 6. 生成长期 JWT token (24小时)
-    const jwtToken = await generateToken(user.user_id, user.email);
+    const jwtToken = await generateToken(user.id, user.email);
 
     // 7. 返回用户数据和 JWT
     return res.status(200).json({
       success: true,
       token: jwtToken,
       user: {
-        userId: user.user_id,
+        userId: user.id,
         email: user.email,
         name: user.name,
         picture: user.picture,
@@ -720,11 +720,227 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 **下一步**:
 1. 测试完整的登录流程
 2. 监控数据库 sessions 表
-3. 配置 Cron Job 定期清理
+3. 配置 Cron Job 定期清理过期 sessions
 4. 根据需要扩展到更多子项目
+5. 集成 Credits 系统（见下文）
 
 ---
 
-**文档版本**: 1.0
+## 💳 第三步：Credits 系统集成
+
+子项目需要能够查询和扣除用户的 Credits 余额。
+
+### 3.1 查询用户 Credits
+
+**API 端点**: `GET https://niche-mining-web.vercel.app/api/user/credits`
+
+**请求示例**:
+```typescript
+const getUserCredits = async (jwtToken: string) => {
+  const response = await fetch('https://niche-mining-web.vercel.app/api/user/credits', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${jwtToken}`,
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch credits');
+  }
+
+  const data = await response.json();
+  return data;
+};
+```
+
+**响应格式**:
+```json
+{
+  "userId": "uuid-here",
+  "credits": {
+    "total": 10000,
+    "used": 1500,
+    "remaining": 8500,
+    "bonus": 0,
+    "lastResetAt": "2025-12-01T00:00:00Z",
+    "nextResetAt": "2026-01-01T00:00:00Z"
+  },
+  "subscription": {
+    "plan": "pro",
+    "planName": "Professional",
+    "status": "active",
+    "creditsMonthly": 50000,
+    "currentPeriodStart": "2025-12-01T00:00:00Z",
+    "currentPeriodEnd": "2026-01-01T00:00:00Z"
+  }
+}
+```
+
+### 3.2 在子项目中显示 Credits
+
+**示例组件** (React):
+```typescript
+import { useState, useEffect } from 'react';
+import { useAuth } from './contexts/AuthContext';
+
+const CreditsDisplay = () => {
+  const { getToken } = useAuth();
+  const [credits, setCredits] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCredits = async () => {
+      try {
+        const token = localStorage.getItem('auth_token');
+        if (!token) return;
+
+        const response = await fetch('https://niche-mining-web.vercel.app/api/user/credits', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setCredits(data.credits);
+        }
+      } catch (error) {
+        console.error('Failed to fetch credits:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCredits();
+  }, []);
+
+  if (loading) return <div>Loading credits...</div>;
+  if (!credits) return null;
+
+  return (
+    <div className="credits-display">
+      <p>Credits Remaining: {credits.remaining.toLocaleString()}</p>
+      <p>Total: {credits.total.toLocaleString()} | Used: {credits.used.toLocaleString()}</p>
+    </div>
+  );
+};
+```
+
+### 3.3 扣除 Credits (待实现)
+
+当子项目执行任务时，需要扣除相应的 Credits：
+
+**API 端点**: `POST https://niche-mining-web.vercel.app/api/user/use-credits` (待创建)
+
+**请求示例**:
+```typescript
+const useCredits = async (jwtToken: string, amount: number, description: string) => {
+  const response = await fetch('https://niche-mining-web.vercel.app/api/user/use-credits', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${jwtToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      credits: amount,
+      entity: 'google_agent',
+      entityId: 'task_123',
+      description: description
+    })
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Failed to use credits');
+  }
+
+  return await response.json();
+};
+```
+
+### 3.4 Credits 不足处理
+
+```typescript
+const checkAndUseCredits = async (requiredCredits: number) => {
+  const token = localStorage.getItem('auth_token');
+  if (!token) {
+    alert('Please login first');
+    return false;
+  }
+
+  try {
+    // 1. 查询当前余额
+    const response = await fetch('https://niche-mining-web.vercel.app/api/user/credits', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    const data = await response.json();
+
+    // 2. 检查余额是否足够
+    if (data.credits.remaining < requiredCredits) {
+      alert(`Insufficient credits. Required: ${requiredCredits}, Available: ${data.credits.remaining}`);
+      window.open('https://niche-mining-web.vercel.app/console#subscription', '_blank');
+      return false;
+    }
+
+    // 3. 扣除 credits
+    // await useCredits(token, requiredCredits, 'Task execution');
+    return true;
+
+  } catch (error) {
+    console.error('Credits check failed:', error);
+    return false;
+  }
+};
+```
+
+---
+
+## 📊 测试 Credits 系统
+
+### 创建测试账户
+
+使用测试 API 为用户设置 Credits：
+
+```bash
+curl -X POST https://niche-mining-web.vercel.app/api/test/setup-credits \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "your-user-uuid-here",
+    "plan": "pro",
+    "credits": 10000
+  }'
+```
+
+**响应示例**:
+```json
+{
+  "success": true,
+  "message": "Test credits setup successfully",
+  "data": {
+    "user": {
+      "id": "uuid-here",
+      "email": "user@example.com",
+      "name": "Test User"
+    },
+    "subscription": {
+      "plan": "pro",
+      "status": "active",
+      "periodStart": "2025-12-18T00:00:00Z",
+      "periodEnd": "2026-01-18T00:00:00Z"
+    },
+    "credits": {
+      "total": 10000,
+      "used": 0,
+      "remaining": 10000,
+      "nextReset": "2026-01-01T00:00:00Z"
+    }
+  }
+}
+```
+
+---
+
+**文档版本**: 1.1
 **创建日期**: 2025-12-16
+**更新日期**: 2025-12-18
 **维护者**: Niche Mining Team
