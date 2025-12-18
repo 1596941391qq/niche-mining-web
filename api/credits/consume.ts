@@ -6,14 +6,28 @@ import { verifyToken } from '../lib/auth.js';
  * 消费 Credits API
  * POST /api/credits/consume
  *
+ * ✅ 支持 CORS - 允许子应用调用
+ *
  * 从token中获取userId，确保安全性
  * Body: {
  *   "credits": 50,
  *   "description": "API Usage",
- *   "relatedEntity": "seo_agent"
+ *   "relatedEntity": "seo_agent",
+ *   "modeId": "keyword_mining"
  * }
  */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // 设置 CORS 头 - 允许子应用跨域访问
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Max-Age', '86400');
+
+  // 处理 CORS 预检请求
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }

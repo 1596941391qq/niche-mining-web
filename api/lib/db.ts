@@ -340,3 +340,88 @@ export async function initSubscriptionTables() {
   }
 }
 
+/**
+ * 确保用户拥有必需的 credits 和 subscription 记录
+ * 用于 OAuth 登录后自动初始化新用户数据
+ *
+ * @param userId - 用户 UUID
+ * @returns Promise<{ subscriptionCreated: boolean; creditsCreated: boolean }>
+ */
+export async function ensureUserHasCreditsAndSubscription(userId: string): Promise<{
+  subscriptionCreated: boolean;
+  creditsCreated: boolean;
+}> {
+  try {
+    let subscriptionCreated = false;
+    let creditsCreated = false;
+
+    // 1. 检查并创建 subscription 记录
+    const existingSubscription = await sql`
+      SELECT * FROM user_subscriptions
+      WHERE user_id = ${userId} AND status = 'active'
+    `;
+
+    if (existingSubscription.rows.length === 0) {
+      // 创建默认的 'free' 套餐订阅
+      const periodStart = new Date();
+      const periodEnd = new Date();
+      periodEnd.setFullYear(periodEnd.getFullYear() + 100); // Free 套餐设置为 100 年后过期
+
+      await sql`
+        INSERT INTO user_subscriptions
+          (user_id, plan_id, status, billing_period, current_period_start, current_period_end)
+        VALUES
+          (${userId}, 'free', 'active', 'lifetime', ${periodStart}, ${periodEnd})
+        ON CONFLICT DO NOTHING
+      `;
+      subscriptionCreated = true;
+      console.log('✅ Created default subscription for user:', userId);
+    }
+
+    // 2. 检查并创建 credits 记录
+    const existingCredits = await sql`
+      SELECT * FROM user_credits WHERE user_id = ${userId}
+    `;
+
+    if (existingCredits.rows.length === 0) {
+      // 获取 free 套餐的 credits 配额
+      const freePlan = await sql`
+        SELECT credits_monthly FROM subscription_plans WHERE plan_id = 'free'
+      `;
+
+      const initialCredits = freePlan.rows[0]?.credits_monthly || 2000; // 默认 2000
+
+      // 创建 credits 记录
+      const nextReset = new Date();
+      nextReset.setMonth(nextReset.getMonth() + 1);
+      nextReset.setDate(1); // 下月1号重置
+
+      await sql`
+        INSERT INTO user_credits
+          (user_id, total_credits, used_credits, bonus_credits, last_reset_at, next_reset_at)
+        VALUES
+          (${userId}, ${initialCredits}, 0, 0, ${new Date()}, ${nextReset})
+        ON CONFLICT (user_id) DO NOTHING
+      `;
+
+      // 创建初始积分发放的交易记录
+      await sql`
+        INSERT INTO credits_transactions
+          (user_id, type, credits_delta, credits_before, credits_after, description)
+        VALUES
+          (${userId}, 'subscription', ${initialCredits}, 0, ${initialCredits}, 'Initial credits from free plan')
+      `;
+
+      creditsCreated = true;
+      console.log('✅ Created initial credits for user:', userId, 'Amount:', initialCredits);
+    }
+
+    return { subscriptionCreated, creditsCreated };
+  } catch (error) {
+    console.error('Error ensuring user has credits and subscription:', error);
+    // 不抛出错误，避免阻止用户登录
+    // 只记录日志，让登录流程继续
+    return { subscriptionCreated: false, creditsCreated: false };
+  }
+}
+

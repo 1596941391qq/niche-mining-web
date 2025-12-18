@@ -94,93 +94,124 @@ const Console: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex" style={{ backgroundColor: 'var(--color-background)' }}>
+    <div className="flex min-h-screen bg-[#050505] font-sans selection:bg-emerald-500/30 selection:text-emerald-500">
+      {/* 网格背景 */}
+      <div className="fixed inset-0 grid-bg pointer-events-none opacity-40"></div>
+      {/* 扫描线动画 */}
+      <div className="scanline"></div>
+
       {/* Sidebar - Desktop */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-64 bg-surface border-r border-border">
-        {/* Logo/Header */}
-        <div className="p-4 border-b border-border relative">
-          <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-primary"></div>
-          <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-primary"></div>
-          <a href="#" className="flex items-center gap-2 group">
-            <div className="w-7 h-7 bg-primary flex items-center justify-center text-black border border-primary">
-              <span className="font-bold text-xs font-mono">NM</span>
+      <aside className="hidden lg:flex lg:flex-col lg:w-64 bg-[#050505] border-r border-[#1a1a1a] h-screen sticky top-0 z-40">
+        {/* Logo/Header - toUI Style */}
+        <div className="p-6 border-b border-[#1a1a1a]">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-emerald-500 flex items-center justify-center rounded-sm">
+              <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
             </div>
             <div>
-              <h2 className="text-white font-bold text-xs font-mono">NICHE MINING</h2>
-              <p className="text-[10px] text-zinc-500 font-mono">CONSOLE</p>
-            </div>
-          </a>
-        </div>
-
-        {/* User Info */}
-        <div className="p-3 border-b border-border">
-          <div className="flex items-center gap-2 px-2 py-2 bg-background border border-border">
-            {user?.picture ? (
-              <img
-                src={user.picture}
-                alt={user.name || user.email}
-                className="w-8 h-8 border border-primary"
-              />
-            ) : (
-              <div className="w-8 h-8 bg-primary/20 border border-primary flex items-center justify-center">
-                <span className="text-primary font-bold text-xs font-mono">
-                  {user?.name?.[0] || user?.email?.[0]}
-                </span>
-              </div>
-            )}
-            <div className="flex-1 min-w-0">
-              <p className="text-white text-xs font-bold truncate font-mono">
-                {user?.name || user?.email}
-              </p>
-              <p className="text-[10px] text-zinc-500 font-mono truncate">
-                <span className="text-accent-green">●</span> {t.console?.userInfo?.currentPlan || (lang === 'cn' ? '当前套餐' : 'Plan')}:{' '}
-                <span className="text-primary">{lang === 'cn' ? '免费版' : 'FREE'}</span>
-              </p>
+              <h1 className="text-sm font-bold tracking-tighter text-white uppercase">Niche Mining</h1>
+              <p className="text-[10px] text-emerald-500 font-mono tracking-tighter">BLUE OCEAN PROTOCOL</p>
             </div>
           </div>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-3 space-y-1">
+        {/* User Info - toUI Style */}
+        <div className="px-4 py-6">
+          <div className="bg-[#0a0a0a] border border-[#1a1a1a] p-3 rounded-sm relative overflow-hidden group">
+            <div className="flex items-center gap-3 relative z-10">
+              <div className="w-10 h-10 bg-[#151515] border border-[#252525] flex items-center justify-center rounded-sm text-emerald-500">
+                {user?.picture ? (
+                  <img
+                    src={user.picture}
+                    alt={user.name || user.email}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                )}
+              </div>
+              <div>
+                <p className="text-xs font-bold text-white">{user?.name || user?.email || (lang === 'cn' ? '本地开发测试用户' : 'Local Dev User')}</p>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                  <p className="text-[10px] text-emerald-500 font-mono">{lang === 'cn' ? '专业版: 有效' : 'Pro: Active'}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation - toUI Style */}
+        <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-mono uppercase tracking-wider transition-all border ${
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-sm transition-all duration-200 group relative ${
                 activeTab === tab.id
-                  ? 'bg-primary/10 text-primary border-primary'
-                  : 'text-zinc-400 hover:text-white bg-surface/50 border-border hover:border-primary/50'
+                  ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'
+                  : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
               }`}
             >
-              <span className="w-5 h-5">{tab.icon}</span>
-              <span>{tab.name}</span>
+              {tab.icon}
+              <span className="text-xs font-medium tracking-wide">{tab.name}</span>
+              {activeTab === tab.id && (
+                <div className="absolute left-0 w-1 h-2/3 bg-emerald-500 rounded-r-full"></div>
+              )}
             </button>
           ))}
         </nav>
 
-        {/* Language Toggle, Theme Toggle & Back Home */}
-        <div className="p-3 border-t border-border space-y-1">
-          <button
-            onClick={toggleTheme}
-            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-mono text-zinc-400 hover:text-white bg-surface/50 border border-border hover:border-primary/50 transition-all"
-          >
-            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            <span>{theme === 'dark' ? (lang === 'cn' ? '白天模式' : 'Light Mode') : (lang === 'cn' ? '夜间模式' : 'Dark Mode')}</span>
-          </button>
-          <button
-            onClick={() => setLang(lang === 'en' ? 'cn' : 'en')}
-            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-mono text-zinc-400 hover:text-white bg-surface/50 border border-border hover:border-primary/50 transition-all"
-          >
-            <Globe className="w-5 h-5" />
-            <span>{lang === 'en' ? 'English' : '中文'}</span>
-          </button>
-          <a
-            href="#"
-            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-mono text-zinc-400 hover:text-white bg-surface/50 border border-border hover:border-primary/50 transition-all"
-          >
-            <Home className="w-5 h-5" />
-            <span>{t.console?.sidebar?.backHome || (lang === 'cn' ? '返回首页' : 'Home')}</span>
-          </a>
+        {/* Bottom Utility Buttons - toUI Style */}
+        <div className="px-4 py-2 border-t border-[#1a1a1a]">
+          <div className="grid grid-cols-3 gap-2">
+            <a
+              href="#"
+              className="flex flex-col items-center justify-center p-2 rounded-sm bg-[#0a0a0a] border border-[#1a1a1a] text-gray-500 hover:text-emerald-500 hover:border-emerald-500/30 transition-all group"
+              title={lang === 'cn' ? '返回首页' : 'Home'}
+            >
+              <Home className="w-4 h-4" />
+              <span className="text-[8px] font-mono mt-1 opacity-60 group-hover:opacity-100">HOME</span>
+            </a>
+            <button
+              onClick={() => setLang(lang === 'en' ? 'cn' : 'en')}
+              className="flex flex-col items-center justify-center p-2 rounded-sm bg-[#0a0a0a] border border-[#1a1a1a] text-gray-500 hover:text-emerald-500 hover:border-emerald-500/30 transition-all group"
+              title={lang === 'cn' ? '中英切换' : 'Language'}
+            >
+              <Globe className="w-4 h-4" />
+              <span className="text-[8px] font-mono mt-1 opacity-60 group-hover:opacity-100">CN/EN</span>
+            </button>
+            <button
+              onClick={toggleTheme}
+              className="flex flex-col items-center justify-center p-2 rounded-sm bg-[#0a0a0a] border border-[#1a1a1a] text-gray-500 hover:text-emerald-500 hover:border-emerald-500/30 transition-all group"
+              title={lang === 'cn' ? '夜间模式' : 'Theme'}
+            >
+              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              <span className="text-[8px] font-mono mt-1 opacity-60 group-hover:opacity-100">NIGHT</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Footer Console Stats - toUI Style */}
+        <div className="p-4 border-t border-[#1a1a1a]">
+          <div className="text-[9px] font-mono text-gray-600 space-y-1">
+            <div className="flex justify-between">
+              <span>UPTIME</span>
+              <span className="text-emerald-900">99.98%</span>
+            </div>
+            <div className="flex justify-between">
+              <span>NODES</span>
+              <span className="text-emerald-900">ACTIVE: 124</span>
+            </div>
+            <div className="flex justify-between">
+              <span>VERSION</span>
+              <span className="text-emerald-900">V2.8.5</span>
+            </div>
+          </div>
         </div>
       </aside>
 
@@ -300,9 +331,33 @@ const Console: React.FC = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0">
+      <main className="flex-1 relative z-10 flex flex-col">
+        {/* Header - toUI Style (Desktop) */}
+        <header className="hidden lg:flex h-16 border-b border-[#1a1a1a] bg-[#050505]/80 backdrop-blur-md sticky top-0 z-30 items-center justify-between px-8">
+          <div className="flex items-center gap-4">
+            <div className="flex flex-col">
+              <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                {lang === 'cn' ? '仪表板' : 'Dashboard'}
+                <span className="text-[10px] bg-white/5 border border-white/10 px-1.5 py-0.5 rounded text-gray-500 font-mono">
+                  DASHBOARD_V2
+                </span>
+              </h2>
+              <p className="text-[10px] text-gray-500 font-mono uppercase tracking-widest">
+                {lang === 'cn' ? '账户活动和性能概览' : 'Overview of your account activity and performance'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/20 rounded-sm">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+              <span className="text-[10px] font-mono text-emerald-500">SYSTEM_ONLINE // STABLE</span>
+            </div>
+          </div>
+        </header>
+
         {/* Top Bar - Mobile */}
-        <div className="lg:hidden sticky top-0 z-30 bg-surface border-b border-border p-4">
+        <div className="lg:hidden sticky top-0 z-30 bg-[#050505] border-b border-[#1a1a1a] p-4">
           <div className="flex items-center justify-between">
             <button
               onClick={() => setSidebarOpen(true)}
@@ -324,10 +379,22 @@ const Console: React.FC = () => {
         </div>
 
         {/* Content Area with Grid Background */}
-        <div className="flex-1 p-4 lg:p-6 overflow-y-auto" style={{
-          backgroundImage: 'linear-gradient(to right, var(--grid-alpha) 0.5px, transparent 0.5px), linear-gradient(to bottom, var(--grid-alpha) 0.5px, transparent 0.5px)',
-          backgroundSize: '10px 10px'
-        }}>{renderContent()}</div>
+        <div className="p-8 max-w-[1600px] mx-auto w-full">
+          {renderContent()}
+        </div>
+
+        {/* Footer - toUI Style */}
+        <footer className="mt-auto border-t border-[#1a1a1a] bg-[#050505] px-8 py-3 flex items-center gap-4 text-[10px] font-mono text-gray-600">
+          <span className="text-emerald-500">root@miner:~#</span>
+          <span className="animate-pulse">_</span>
+          <div className="flex-1"></div>
+          <div className="flex gap-4">
+            <span className="flex items-center gap-1">
+              <span className="w-1 h-1 rounded-full bg-emerald-500"></span> LATENCY: 24ms
+            </span>
+            <span className="flex items-center gap-1 text-emerald-500">SECURE_PROTOCOL: ACTIVE</span>
+          </div>
+        </footer>
       </main>
     </div>
   );

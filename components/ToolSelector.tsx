@@ -91,6 +91,7 @@ const BingDroneGraphic = () => (
 const ToolSelector: React.FC = () => {
   const { t } = useContext(LanguageContext);
   const { authenticated, getToken, login } = useAuth();
+  const [loadingTool, setLoadingTool] = useState<string | null>(null); // 追踪正在加载的工具
 
   const getGraphic = (id: string) => {
     switch(id) {
@@ -131,11 +132,20 @@ const ToolSelector: React.FC = () => {
       return;
     }
 
+    // 防止重复点击
+    if (loadingTool) {
+      return;
+    }
+
     try {
+      // 设置 loading 状态
+      setLoadingTool(toolId);
+
       // 1. 获取当前用户的 JWT token
       const token = getToken();
       if (!token) {
         alert('Please login first');
+        setLoadingTool(null);
         return;
       }
 
@@ -159,9 +169,15 @@ const ToolSelector: React.FC = () => {
       const urlWithToken = `${baseUrl}?tt=${transferToken}`;
       window.open(urlWithToken, '_blank', 'noopener,noreferrer');
 
+      // 成功后延迟重置 loading（给用户视觉反馈）
+      setTimeout(() => {
+        setLoadingTool(null);
+      }, 1000);
+
     } catch (error) {
       console.error('Launch agent error:', error);
       alert('Failed to launch agent. Please try again.');
+      setLoadingTool(null);
     }
   }
 
@@ -242,19 +258,34 @@ const ToolSelector: React.FC = () => {
                         ))}
                     </div>
 
-                    <a 
+                    <a
                       href={getAgentUrl(tool.id)}
                       onClick={(e) => handleToolClick(e, tool.id)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`w-full py-4 bg-transparent border ${
-                        authenticated 
-                          ? 'border-zinc-600 text-zinc-300 hover:bg-primary hover:text-black hover:border-primary' 
-                          : 'border-zinc-800 text-zinc-600 cursor-not-allowed'
+                        !authenticated
+                          ? 'border-zinc-800 text-zinc-600 cursor-not-allowed'
+                          : loadingTool === tool.id
+                          ? 'border-primary/50 text-primary/70 cursor-wait'
+                          : 'border-zinc-600 text-zinc-300 hover:bg-primary hover:text-black hover:border-primary cursor-pointer'
                       } font-bold text-sm transition-all flex items-center justify-between px-6 uppercase tracking-wider group/btn`}
                     >
-                        <span>{t.tools.action}</span>
-                        <ExternalLink className={`w-4 h-4 transform ${authenticated ? 'group-hover/btn:translate-x-1' : ''} transition-transform`} />
+                        <span>
+                          {loadingTool === tool.id
+                            ? (t.tools.action === 'LAUNCH AGENT' ? 'LAUNCHING...' : '启动中...')
+                            : t.tools.action
+                          }
+                        </span>
+                        {loadingTool === tool.id ? (
+                          // Loading Spinner
+                          <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                        ) : (
+                          <ExternalLink className={`w-4 h-4 transform ${authenticated ? 'group-hover/btn:translate-x-1' : ''} transition-transform`} />
+                        )}
                     </a>
                 </div>
               </div>

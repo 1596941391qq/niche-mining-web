@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { exchangeCodeForToken, getUserInfo } from '../../lib/google-oauth.js';
-import { findOrCreateUser } from '../../lib/db.js';
+import { findOrCreateUser, ensureUserHasCreditsAndSubscription } from '../../lib/db.js';
 import { generateToken } from '../../lib/auth.js';
 
 // 获取前端 URL（避免重定向到预览域名）
@@ -69,6 +69,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       name: googleUserInfo.name,
       picture: googleUserInfo.picture,
     });
+
+    // 🔧 确保用户拥有必需的 credits 和 subscription 记录
+    // 对于新用户或缺少记录的老用户，会自动创建
+    const provisionResult = await ensureUserHasCreditsAndSubscription(user.id);
+
+    if (provisionResult.subscriptionCreated || provisionResult.creditsCreated) {
+      console.log('✅ Auto-provisioned user data:', {
+        userId: user.id,
+        subscriptionCreated: provisionResult.subscriptionCreated,
+        creditsCreated: provisionResult.creditsCreated,
+      });
+    }
 
     // 生成 JWT token
     const token = await generateToken({
