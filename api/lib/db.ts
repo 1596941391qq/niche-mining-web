@@ -10,7 +10,7 @@
  * 解决方案：使用标准的 pg 库 (node-postgres)
  * 这样可以接受直接连接字符串，并在 Serverless 环境中工作
  */
-import { Client } from 'pg';
+import { Client, QueryResultRow } from 'pg';
 
 // 获取连接字符串
 const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
@@ -24,7 +24,7 @@ if (!connectionString) {
 
 // 创建 sql 模板字符串函数
 // 每次调用创建新的客户端连接（在 Serverless 环境中这是可接受的）
-export const sql = async <T = any>(
+export const sql = async <T extends QueryResultRow = any>(
   strings: TemplateStringsArray,
   ...values: any[]
 ): Promise<{ rows: T[] }> => {

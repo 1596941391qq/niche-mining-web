@@ -11,7 +11,8 @@ import {
   Home,
   Globe,
   Sun,
-  Moon
+  Moon,
+  Zap
 } from 'lucide-react';
 import ConsoleDashboard from './console/ConsoleDashboard';
 import ConsoleAgents from './console/ConsoleAgents';
@@ -19,11 +20,12 @@ import ConsoleAPI from './console/ConsoleAPI';
 import ConsoleSubscription from './console/ConsoleSubscription';
 import ConsoleTeam from './console/ConsoleTeam';
 import ConsoleSettings from './console/ConsoleSettings';
+import MiningModes from './console/MiningModes';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { LanguageContext } from '../App';
 
-type TabType = 'dashboard' | 'agents' | 'api' | 'subscription' | 'team' | 'settings';
+type TabType = 'dashboard' | 'agents' | 'api' | 'subscription' | 'team' | 'settings' | 'modes';
 
 const Console: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
@@ -37,6 +39,11 @@ const Console: React.FC = () => {
       id: 'dashboard' as TabType,
       name: t.console?.sidebar?.dashboard || (lang === 'cn' ? '仪表板' : 'Dashboard'),
       icon: <LayoutDashboard className="w-5 h-5" />,
+    },
+    {
+      id: 'modes' as TabType,
+      name: lang === 'cn' ? '挖掘模式' : 'Mining Modes',
+      icon: <Zap className="w-5 h-5" />,
     },
     {
       id: 'agents' as TabType,
@@ -69,6 +76,8 @@ const Console: React.FC = () => {
     switch (activeTab) {
       case 'dashboard':
         return <ConsoleDashboard />;
+      case 'modes':
+        return <MiningModes />;
       case 'agents':
         return <ConsoleAgents />;
       case 'api':
@@ -85,7 +94,7 @@ const Console: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen flex" style={{ backgroundColor: 'var(--color-background)' }}>
       {/* Sidebar - Desktop */}
       <aside className="hidden lg:flex lg:flex-col lg:w-64 bg-surface border-r border-border">
         {/* Logo/Header */}
@@ -315,7 +324,10 @@ const Console: React.FC = () => {
         </div>
 
         {/* Content Area with Grid Background */}
-        <div className="flex-1 p-4 lg:p-6 overflow-y-auto grid-bg-small">{renderContent()}</div>
+        <div className="flex-1 p-4 lg:p-6 overflow-y-auto" style={{
+          backgroundImage: 'linear-gradient(to right, var(--grid-alpha) 0.5px, transparent 0.5px), linear-gradient(to bottom, var(--grid-alpha) 0.5px, transparent 0.5px)',
+          backgroundSize: '10px 10px'
+        }}>{renderContent()}</div>
       </main>
     </div>
   );

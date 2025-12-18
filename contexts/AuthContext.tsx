@@ -54,12 +54,77 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem('auth_token');
   };
 
+  // **预加载 Dashboard 数据（在后台静默加载）**
+  const preloadDashboardData = async (token: string) => {
+    try {
+      // 检查是否最近已经预加载过（5分钟内）
+      const lastPreload = localStorage.getItem('dashboard_preload_time');
+      const now = Date.now();
+      const fiveMinutes = 5 * 60 * 1000;
+
+      if (lastPreload && (now - parseInt(lastPreload)) < fiveMinutes) {
+        console.log('✅ Dashboard data already preloaded recently');
+        return;
+      }
+
+      console.log('🚀 Preloading dashboard and mining modes data...');
+
+      // **并发预加载 Dashboard 和 Mining Modes 数据**
+      const [dashboardResponse, miningModesResponse] = await Promise.all([
+        fetch('/api/user/dashboard', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }),
+        fetch('/api/stats/mining-modes', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+      ]);
+
+      // 缓存 Dashboard 数据
+      if (dashboardResponse.ok) {
+        const data = await dashboardResponse.json();
+        localStorage.setItem('dashboard_cache', JSON.stringify(data));
+        localStorage.setItem('dashboard_preload_time', now.toString());
+        console.log('✅ Dashboard data preloaded');
+      }
+
+      // 缓存 Mining Modes 数据
+      if (miningModesResponse.ok) {
+        const data = await miningModesResponse.json();
+        localStorage.setItem('mining_modes_cache', JSON.stringify(data));
+        localStorage.setItem('mining_modes_preload_time', now.toString());
+        console.log('✅ Mining modes data preloaded');
+      }
+    } catch (error) {
+      console.error('Preload failed (non-critical):', error);
+      // 预加载失败不影响用户体验
+    }
+  };
+
   // 刷新会话信息
   const refreshSession = async () => {
     try {
       const token = getToken();
       if (!token) {
         setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      // **缓存优化：检查是否在5分钟内已经刷新过会话**
+      const lastRefresh = localStorage.getItem('session_last_refresh');
+      const cachedUser = localStorage.getItem('cached_user');
+      const now = Date.now();
+      const fiveMinutes = 5 * 60 * 1000;
+
+      if (lastRefresh && cachedUser && (now - parseInt(lastRefresh)) < fiveMinutes) {
+        console.log('✅ Using cached user session');
+        setUser(JSON.parse(cachedUser));
         setLoading(false);
         return;
       }
@@ -74,17 +139,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
 
       const data = await response.json();
-      
+
       if (data.authenticated && data.user) {
         setUser(data.user);
+        // 缓存用户信息
+        localStorage.setItem('cached_user', JSON.stringify(data.user));
+        localStorage.setItem('session_last_refresh', now.toString());
+
+        // **预加载优化：登录成功后立即预加载 Dashboard 数据**
+        preloadDashboardData(token);
       } else {
         clearToken();
         setUser(null);
+        localStorage.removeItem('cached_user');
+        localStorage.removeItem('session_last_refresh');
       }
     } catch (error) {
       console.error('Failed to refresh session:', error);
       clearToken();
       setUser(null);
+      localStorage.removeItem('cached_user');
+      localStorage.removeItem('session_last_refresh');
     } finally {
       setLoading(false);
     }
@@ -120,29 +195,61 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // 初始化：检查 URL 中的 token 和刷新会话
   useEffect(() => {
     const initAuth = async () => {
-      // 🔧 开发模式：本地环境自动登录
+      // 🔧 开发模式：本地环境自动登录真实用户
       const isDevelopment = typeof window !== 'undefined' &&
         (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
       if (isDevelopment) {
-        // 设置开发模式假用户
-        const devUser: User = {
-          id: 'dev_user_123',
-          email: 'dev@localhost',
-          name: '开发测试用户',
-          picture: null,
-          lastLoginAt: new Date(),
-        };
+        // 检查是否已有token
+        const existingToken = getToken();
 
-        // 🔑 生成假的 JWT token 用于开发测试（特别是跨项目认证测试）
-        // 注意：这个 token 只在本地开发环境有效，不会泄露到生产环境
-        const fakeToken = 'dev_fake_jwt_token_for_local_testing_only';
-        saveToken(fakeToken);
+        if (!existingToken || existingToken === 'dev_fake_jwt_token_for_local_testing_only') {
+          // 检查是否已经初始化过（缓存）
+          const devUserInitialized = localStorage.getItem('dev_user_initialized');
+          const lastInitTime = localStorage.getItem('dev_user_init_time');
+          const now = Date.now();
+          const oneHour = 60 * 60 * 1000;
 
-        console.log('🔧 Development Mode: Auto-login enabled with fake token');
-        setUser(devUser);
-        setLoading(false);
-        return;
+          // 如果1小时内已经初始化过，跳过
+          if (devUserInitialized === 'true' && lastInitTime && (now - parseInt(lastInitTime)) < oneHour) {
+            console.log('🔧 Dev user already initialized recently, skipping...');
+            await refreshSession();
+            return;
+          }
+
+          console.log('🔧 Development Mode: Initializing real dev user...');
+
+          try {
+            // 调用API初始化开发用户并获取真实token
+            const response = await fetch('/api/test/init-dev-user');
+
+            if (response.ok) {
+              const data = await response.json();
+
+              // 保存真实的JWT token
+              saveToken(data.token);
+
+              // 标记已初始化
+              localStorage.setItem('dev_user_initialized', 'true');
+              localStorage.setItem('dev_user_init_time', now.toString());
+
+              console.log('✅ Dev user initialized:', data.user);
+              console.log('✅ Real JWT token generated and saved');
+
+              // 使用真实token刷新会话
+              await refreshSession();
+              return;
+            } else {
+              console.error('Failed to initialize dev user');
+            }
+          } catch (error) {
+            console.error('Dev user init error:', error);
+          }
+        } else {
+          // 已有真实token，直接刷新会话
+          await refreshSession();
+          return;
+        }
       }
 
       // 检查 URL 中是否有错误（来自 OAuth）

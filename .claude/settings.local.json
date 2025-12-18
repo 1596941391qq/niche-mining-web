@@ -6,7 +6,11 @@
       "Bash(vercel env add:*)",
       "Bash(echo:*)",
       "Bash(vercel env pull:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(node scripts/setup-user-credits.js:*)",
+      "Bash(curl:*)",
+      "Bash(python -m json.tool:*)",
+      "Bash(dir:*)"
     ]
   }
 }
