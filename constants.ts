@@ -140,10 +140,12 @@ export const CONTENT: Record<string, Translations> = {
       tagline: 'Automated SEO warfare for the modern age.',
       product: 'Product',
       legal: 'Legal',
-      rights: 'Niche Mining Inc. All rights reserved.',
+      rights: 'Soulcraft Limited. All rights reserved.',
       system: 'All Systems Operational',
       privacyLink: 'Privacy',
       termsLink: 'Terms',
+      company: 'Soulcraft Limited',
+      email: 'soulcraftlimited@galatea.bar',
     },
     privacy: {
       title: 'Privacy Policy',
@@ -207,7 +209,8 @@ export const CONTENT: Record<string, Translations> = {
       contact: {
         title: 'Contact Us',
         content: 'If you have any questions about this Privacy Policy, please contact us at:',
-        email: 'privacy@nichemining.com',
+        email: 'soulcraftlimited@galatea.bar',
+        company: 'Soulcraft Limited',
       },
     },
     terms: {
@@ -295,7 +298,8 @@ export const CONTENT: Record<string, Translations> = {
       contact: {
         title: 'Contact Us',
         content: 'If you have any questions about these Terms of Service, please contact us at:',
-        email: 'legal@nichemining.com',
+        email: 'soulcraftlimited@galatea.bar',
+        company: 'Soulcraft Limited',
       },
     },
   },
@@ -438,10 +442,12 @@ export const CONTENT: Record<string, Translations> = {
       tagline: '现代 SEO 战争的自动化武器。',
       product: '产品',
       legal: '法律',
-      rights: 'Niche Mining Inc. 保留所有权利。',
+      rights: 'Soulcraft Limited 保留所有权利。',
       system: '系统运行正常',
       privacyLink: '隐私政策',
       termsLink: '服务条款',
+      company: 'Soulcraft Limited',
+      email: 'soulcraftlimited@galatea.bar',
     },
     privacy: {
       title: '隐私政策',
@@ -505,7 +511,8 @@ export const CONTENT: Record<string, Translations> = {
       contact: {
         title: '联系我们',
         content: '如果您对本隐私政策有任何疑问，请通过以下方式联系我们：',
-        email: 'privacy@nichemining.com',
+        email: 'soulcraftlimited@galatea.bar',
+        company: 'Soulcraft Limited',
       },
     },
     terms: {
@@ -593,7 +600,8 @@ export const CONTENT: Record<string, Translations> = {
       contact: {
         title: '联系我们',
         content: '如果您对这些服务条款有任何疑问，请通过以下方式联系我们：',
-        email: 'legal@nichemining.com',
+        email: 'soulcraftlimited@galatea.bar',
+        company: 'Soulcraft Limited',
       },
     },
   },

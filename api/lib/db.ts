@@ -261,10 +261,18 @@ export async function initSubscriptionTables() {
     await sql`
       INSERT INTO subscription_plans (plan_id, name_en, name_cn, price, credits_monthly, api_keys_limit, team_members_limit, features)
       VALUES
-        ('free', 'Free', '免费版', 0.00, 2000, 1, 1, '{"basic_support": true, "community_access": true}'),
-        ('pro', 'Professional', '专业版', 49.00, 50000, 5, 3, '{"priority_support": true, "advanced_analytics": true, "custom_webhooks": true}'),
-        ('enterprise', 'Enterprise', '企业版', 199.00, 999999, 999999, 999999, '{"dedicated_support": true, "sla": "99.9%", "custom_integrations": true, "on_premise": true}')
-      ON CONFLICT (plan_id) DO NOTHING
+        ('free', 'Free', '免费版', 0.00, 200, 1, 1, '{"basic_support": true, "community_access": true, "keywords_estimate": "100"}'),
+        ('pro', 'Pro', 'Pro版', 30.00, 2000, 3, 3, '{"priority_support": true, "advanced_analytics": true, "custom_webhooks": true, "keywords_estimate": "1000"}'),
+        ('professional', 'Professional', '专业版', 150.00, 10000, 10, 10, '{"priority_support": true, "advanced_analytics": true, "custom_webhooks": true, "dedicated_support": true, "keywords_estimate": "5000"}'),
+        ('business', 'Business', '企业定制版', 0.00, 0, 999, 999, '{"contact_sales": true, "custom_solution": true, "dedicated_support": true, "sla": "99.9%", "on_premise": true}')
+      ON CONFLICT (plan_id) DO UPDATE SET
+        name_en = EXCLUDED.name_en,
+        name_cn = EXCLUDED.name_cn,
+        price = EXCLUDED.price,
+        credits_monthly = EXCLUDED.credits_monthly,
+        api_keys_limit = EXCLUDED.api_keys_limit,
+        team_members_limit = EXCLUDED.team_members_limit,
+        features = EXCLUDED.features
     `;
 
     // 2. 用户订阅表
@@ -323,6 +331,7 @@ export async function initSubscriptionTables() {
         related_entity VARCHAR(50),
         related_entity_id VARCHAR(255),
         description TEXT,
+        mode_id VARCHAR(50),
         metadata JSONB DEFAULT '{}',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT fk_transactions_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -331,6 +340,7 @@ export async function initSubscriptionTables() {
 
     await sql`CREATE INDEX IF NOT EXISTS idx_credits_transactions_user_id ON credits_transactions(user_id)`;
     await sql`CREATE INDEX IF NOT EXISTS idx_credits_transactions_type ON credits_transactions(type)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_credits_transactions_mode_id ON credits_transactions(mode_id)`;
     await sql`CREATE INDEX IF NOT EXISTS idx_credits_transactions_created_at ON credits_transactions(created_at DESC)`;
 
     console.log('Subscription tables initialized successfully');
@@ -389,7 +399,7 @@ export async function ensureUserHasCreditsAndSubscription(userId: string): Promi
         SELECT credits_monthly FROM subscription_plans WHERE plan_id = 'free'
       `;
 
-      const initialCredits = freePlan.rows[0]?.credits_monthly || 2000; // 默认 2000
+      const initialCredits = freePlan.rows[0]?.credits_monthly || 200; // 默认 200
 
       // 创建 credits 记录
       const nextReset = new Date();

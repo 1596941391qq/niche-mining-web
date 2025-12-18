@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { ExternalLink, ArrowRight, Cpu, Radio, Crosshair } from 'lucide-react';
 import { LanguageContext } from '../App';
 import { useAuth } from '../contexts/AuthContext';
@@ -122,6 +122,13 @@ const ToolSelector: React.FC = () => {
 
   const handleToolClick = async (e: React.MouseEvent<HTMLAnchorElement>, toolId: string) => {
     e.preventDefault();
+
+    // 检查 agent 是否可用（yandex 和 bing 暂未更新）
+    const availableAgents = ['google'];
+    if (!availableAgents.includes(toolId)) {
+      alert(t.tools.action === 'LAUNCH AGENT' ? 'Coming soon' : '暂未更新');
+      return;
+    }
 
     // 检查登录状态
     if (!authenticated) {
@@ -264,7 +271,9 @@ const ToolSelector: React.FC = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`w-full py-4 bg-transparent border ${
-                        !authenticated
+                        !['google'].includes(tool.id)
+                          ? 'border-zinc-800 text-zinc-600 cursor-not-allowed opacity-50'
+                          : !authenticated
                           ? 'border-zinc-800 text-zinc-600 cursor-not-allowed'
                           : loadingTool === tool.id
                           ? 'border-primary/50 text-primary/70 cursor-wait'
@@ -272,7 +281,9 @@ const ToolSelector: React.FC = () => {
                       } font-bold text-sm transition-all flex items-center justify-between px-6 uppercase tracking-wider group/btn`}
                     >
                         <span>
-                          {loadingTool === tool.id
+                          {!['google'].includes(tool.id)
+                            ? (t.tools.action === 'LAUNCH AGENT' ? 'COMING SOON' : '暂未更新')
+                            : loadingTool === tool.id
                             ? (t.tools.action === 'LAUNCH AGENT' ? 'LAUNCHING...' : '启动中...')
                             : t.tools.action
                           }
@@ -283,9 +294,9 @@ const ToolSelector: React.FC = () => {
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
-                        ) : (
+                        ) : ['google'].includes(tool.id) ? (
                           <ExternalLink className={`w-4 h-4 transform ${authenticated ? 'group-hover/btn:translate-x-1' : ''} transition-transform`} />
-                        )}
+                        ) : null}
                     </a>
                 </div>
               </div>

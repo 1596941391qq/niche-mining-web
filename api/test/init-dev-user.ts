@@ -10,20 +10,10 @@ import { generateToken } from '../lib/auth.js';
  * 在生产环境中此端点会返回 404
  */
 
-// 🚨 安全检查：在文件顶部立即阻止生产环境
-if (process.env.NODE_ENV === 'production') {
-  export default async function handler(req: VercelRequest, res: VercelResponse) {
-    return res.status(404).json({ error: 'Not found' });
-  }
-  throw new Error('⚠️ CRITICAL: Development endpoint api/test/init-dev-user was loaded in production!');
-}
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // 双重检查：即使通过了上面的检查，也要再次确认
-  const isDev = process.env.NODE_ENV !== 'production';
-
-  if (!isDev) {
-    return res.status(403).json({ error: 'This endpoint is only available in development' });
+  // 🚨 安全检查：在生产环境中立即阻止
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(404).json({ error: 'Not found' });
   }
 
   if (req.method !== 'GET' && req.method !== 'POST') {
@@ -31,6 +21,37 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    // 0. 自动数据库迁移：添加 mode_id 列（如果尚未添加）
+    try {
+      const checkColumn = await sql`
+        SELECT column_name
+        FROM information_schema.columns
+        WHERE table_name = 'credits_transactions'
+          AND column_name = 'mode_id'
+      `;
+
+      if (checkColumn.rows.length === 0) {
+        console.log('🔄 Running database migration: Adding mode_id column...');
+
+        await sql`
+          ALTER TABLE credits_transactions
+          ADD COLUMN mode_id VARCHAR(50)
+        `;
+
+        await sql`
+          CREATE INDEX IF NOT EXISTS idx_credits_transactions_mode_id
+          ON credits_transactions(mode_id)
+        `;
+
+        console.log('✅ Database migration completed: mode_id column added');
+      } else {
+        console.log('✅ mode_id column already exists, skipping migration');
+      }
+    } catch (migrationError) {
+      console.warn('⚠️ Database migration failed (non-critical):', migrationError);
+      // 不抛出错误，允许继续执行
+    }
+
     // 🔒 使用安全的开发用户标识符（包含环境标记，防止与生产数据冲突）
     const DEV_MARKER = '__DEVELOPMENT_ONLY_DO_NOT_USE_IN_PRODUCTION__';
     const devGoogleId = `dev_${DEV_MARKER}_local_test`;
@@ -135,6 +156,62 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           (${user.id}, 'bonus', 10000, 0, 10000, 'Initial dev credits')
       `;
       console.log('✅ Dev user credits created');
+    }
+
+    // 3.1. 创建测试交易记录（用于七天花费图表）
+    // 检查是否已有 usage 类型的交易记录
+    const usageCheck = await sql`
+      SELECT COUNT(*) as count FROM credits_transactions
+      WHERE user_id = ${user.id} AND type = 'usage'
+    `;
+
+    if (parseInt(usageCheck.rows[0].count) === 0) {
+      console.log('🔄 Creating test transaction data for 7-day chart...');
+
+      const testTransactions = [];
+      const now = new Date();
+
+      // 过去7天的测试数据
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date(now);
+        date.setDate(date.getDate() - i);
+        date.setHours(10, 0, 0, 0);
+
+        // 每天随机1-3个不同模式的交易
+        const modes = ['keyword_mining', 'batch_translation', 'deep_mining'];
+        const dailyModes = modes.sort(() => Math.random() - 0.5).slice(0, Math.floor(Math.random() * 2) + 1);
+
+        for (const mode of dailyModes) {
+          const credits = Math.floor(Math.random() * 50) + 10; // 10-60 credits
+          testTransactions.push({
+            date,
+            mode,
+            credits
+          });
+        }
+      }
+
+      // 插入测试交易
+      for (const tx of testTransactions) {
+        const description = `Test transaction for ${tx.mode}`;
+        await sql`
+          INSERT INTO credits_transactions
+            (user_id, type, credits_delta, credits_before, credits_after, description, mode_id, created_at, related_entity)
+          VALUES
+            (${user.id}, 'usage', ${-tx.credits}, 10000, ${10000 - tx.credits},
+             ${description}, ${tx.mode}, ${tx.date}, 'seo_agent')
+        `;
+      }
+
+      // 更新 used_credits
+      const totalUsed = testTransactions.reduce((sum, tx) => sum + tx.credits, 0);
+      await sql`
+        UPDATE user_credits
+        SET used_credits = ${totalUsed}
+        WHERE user_id = ${user.id}
+      `;
+
+      console.log(`✅ Created ${testTransactions.length} test transactions (total ${totalUsed} credits used)`);
     }
 
     // 4. 生成真实的JWT token

@@ -49,12 +49,15 @@ const Privacy: React.FC = () => {
             <div className="mt-12 pt-8 border-t border-border">
               <h2 className="text-xl font-bold text-white mb-4">{t.privacy.contact.title}</h2>
               <p className="text-zinc-300 mb-2">{t.privacy.contact.content}</p>
-              <a 
-                href={`mailto:${t.privacy.contact.email}`}
-                className="text-primary hover:text-[#34d399] transition-colors font-mono"
-              >
-                {t.privacy.contact.email}
-              </a>
+              <div className="space-y-2">
+                <p className="text-zinc-300 font-mono">{t.privacy.contact.company || 'Soulcraft Limited'}</p>
+                <a 
+                  href={`mailto:${t.privacy.contact.email}`}
+                  className="text-primary hover:text-[#34d399] transition-colors font-mono"
+                >
+                  {t.privacy.contact.email}
+                </a>
+              </div>
             </div>
           </div>
         </div>

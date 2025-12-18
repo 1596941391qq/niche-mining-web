@@ -140,14 +140,23 @@ const MiningModes: React.FC = () => {
 
               {/* Credits Badge */}
               <div className="mb-4">
-                <span className={`text-2xl font-bold font-mono ${
-                  mode.modeId === 'keyword_mining' ? 'text-blue-500' :
-                  mode.modeId === 'batch_translation' ? 'text-emerald-500' :
-                  'text-purple-500'
-                }`}>
-                  {mode.creditsPerUse}
-                </span>
-                <span className="text-[10px] text-gray-600 font-mono ml-2">CREDITS/USE</span>
+                <div className="flex items-baseline gap-2 mb-2">
+                  <span className={`text-2xl font-bold font-mono ${
+                    mode.modeId === 'keyword_mining' ? 'text-blue-500' :
+                    mode.modeId === 'batch_translation' ? 'text-emerald-500' :
+                    'text-purple-500'
+                  }`}>
+                    {mode.creditsPerUse}
+                  </span>
+                  <span className="text-[10px] text-gray-600 font-mono">CREDITS/USE</span>
+                </div>
+                {(mode.modeId === 'keyword_mining' || mode.modeId === 'batch_translation') && (
+                  <p className="text-[10px] text-gray-500 font-mono">
+                    {lang === 'cn' 
+                      ? `${mode.creditsPerUse} credit 一轮 = 挖 10 个 keyword` 
+                      : `${mode.creditsPerUse} credits per round = mine 10 keywords`}
+                  </p>
+                )}
               </div>
 
               {/* Stats */}

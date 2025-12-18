@@ -38,7 +38,12 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-zinc-900 pt-8 flex flex-col md:flex-row justify-between items-center text-zinc-600 font-mono text-xs">
-          <p>{t.footer.rights}</p>
+          <div className="flex flex-col gap-1">
+            <p>{t.footer.rights}</p>
+            <p className="text-zinc-500">
+              {t.footer.company || 'Soulcraft Limited'} | <a href={`mailto:${t.footer.email || 'soulcraftlimited@galatea.bar'}`} className="hover:text-primary transition-colors">{t.footer.email || 'soulcraftlimited@galatea.bar'}</a>
+            </p>
+          </div>
           <div className="flex items-center gap-2 mt-4 md:mt-0">
              <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
              <span>{t.footer.system}</span>

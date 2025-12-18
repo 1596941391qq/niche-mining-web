@@ -49,12 +49,15 @@ const Terms: React.FC = () => {
             <div className="mt-12 pt-8 border-t border-border">
               <h2 className="text-xl font-bold text-white mb-4">{t.terms.contact.title}</h2>
               <p className="text-zinc-300 mb-2">{t.terms.contact.content}</p>
-              <a 
-                href={`mailto:${t.terms.contact.email}`}
-                className="text-primary hover:text-[#34d399] transition-colors font-mono"
-              >
-                {t.terms.contact.email}
-              </a>
+              <div className="space-y-2">
+                <p className="text-zinc-300 font-mono">{t.terms.contact.company || 'Soulcraft Limited'}</p>
+                <a 
+                  href={`mailto:${t.terms.contact.email}`}
+                  className="text-primary hover:text-[#34d399] transition-colors font-mono"
+                >
+                  {t.terms.contact.email}
+                </a>
+              </div>
             </div>
           </div>
         </div>
