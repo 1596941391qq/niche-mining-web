@@ -59,44 +59,57 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const devName = '🔧 本地开发测试用户 (DEV ONLY)';
     const devPicture = 'https://api.dicebear.com/7.x/avataaars/svg?seed=DevUser&backgroundColor=10b981'; // emerald背景头像
 
-    // 1. 通过google_id查找开发用户（防御性查询：确保只匹配开发标记）
-    const existingUser = await sql`
+    // 1. 查找开发用户（兼容旧格式）
+    // 优先查找新格式，然后查找旧格式，最后查找 email
+    let existingUser = await sql`
       SELECT * FROM users
       WHERE google_id = ${devGoogleId}
-        AND google_id LIKE ${'%' + DEV_MARKER + '%'}
-        AND email LIKE '%.invalid'
+        OR email = 'dev@local.test'
+        OR email = ${devEmail}
+        OR google_id LIKE 'dev_%test%'
+      ORDER BY created_at ASC
+      LIMIT 1
     `;
 
     let user;
 
     if (existingUser.rows.length > 0) {
-      // 开发用户已存在，直接使用（不UPDATE，避免破坏数据）
+      // 开发用户已存在，更新到新格式并使用
       user = existingUser.rows[0];
 
-      // 更新last_login_at和picture（防御性更新：确保只更新开发用户）
-      if (!user.picture) {
+      // 更新为新的标准格式（如果还不是的话）
+      if (user.google_id !== devGoogleId || user.email !== devEmail) {
+        console.log('🔄 Updating dev user to new format:', {
+          oldGoogleId: user.google_id,
+          newGoogleId: devGoogleId,
+          oldEmail: user.email,
+          newEmail: devEmail
+        });
+
         const updated = await sql`
           UPDATE users
-          SET last_login_at = CURRENT_TIMESTAMP, picture = ${devPicture}
-          WHERE google_id = ${devGoogleId}
-            AND google_id LIKE ${'%' + DEV_MARKER + '%'}
-            AND email LIKE '%.invalid'
+          SET
+            google_id = ${devGoogleId},
+            email = ${devEmail},
+            name = ${devName},
+            picture = ${devPicture},
+            last_login_at = CURRENT_TIMESTAMP
+          WHERE id = ${user.id}
           RETURNING *
         `;
-        if (updated.rows.length > 0) {
-          user.picture = devPicture;
-        }
+        user = updated.rows[0];
+        console.log('✅ Dev user updated to new format');
       } else {
+        // 只更新 last_login_at
         await sql`
           UPDATE users
           SET last_login_at = CURRENT_TIMESTAMP
-          WHERE google_id = ${devGoogleId}
-            AND google_id LIKE ${'%' + DEV_MARKER + '%'}
-            AND email LIKE '%.invalid'
+          WHERE id = ${user.id}
         `;
+        console.log('✅ Dev user found (already in new format)');
       }
 
-      console.log('✅ Dev user found (safe):', user.id, user.email);
+      console.log('✅ Using existing dev user:', user.id, user.email);
     } else {
       // 创建新的开发用户（安全检查：再次确认不是生产环境）
       if (process.env.NODE_ENV === 'production') {
@@ -184,23 +197,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         for (const mode of dailyModes) {
           const credits = Math.floor(Math.random() * 50) + 10; // 10-60 credits
           testTransactions.push({
-            date,
+            date: new Date(date), // 创建新的 Date 对象，避免引用问题
             mode,
             credits
           });
         }
       }
 
+      console.log(`📊 Preparing ${testTransactions.length} test transactions...`);
+
       // 插入测试交易
+      let insertCount = 0;
       for (const tx of testTransactions) {
         const description = `Test transaction for ${tx.mode}`;
-        await sql`
-          INSERT INTO credits_transactions
-            (user_id, type, credits_delta, credits_before, credits_after, description, mode_id, created_at, related_entity)
-          VALUES
-            (${user.id}, 'usage', ${-tx.credits}, 10000, ${10000 - tx.credits},
-             ${description}, ${tx.mode}, ${tx.date}, 'seo_agent')
-        `;
+        try {
+          await sql`
+            INSERT INTO credits_transactions
+              (user_id, type, credits_delta, credits_before, credits_after, description, mode_id, created_at, related_entity)
+            VALUES
+              (${user.id}, 'usage', ${-tx.credits}, 10000, ${10000 - tx.credits},
+               ${description}, ${tx.mode}, ${tx.date}, 'seo_agent')
+          `;
+          insertCount++;
+        } catch (err) {
+          console.error('❌ Failed to insert transaction:', err);
+        }
       }
 
       // 更新 used_credits
@@ -211,7 +232,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         WHERE user_id = ${user.id}
       `;
 
-      console.log(`✅ Created ${testTransactions.length} test transactions (total ${totalUsed} credits used)`);
+      console.log(`✅ Created ${insertCount} test transactions (total ${totalUsed} credits used)`);
+
+      // 验证数据
+      const verifyData = await sql`
+        SELECT
+          DATE(created_at) as date,
+          mode_id,
+          COUNT(*) as count,
+          SUM(ABS(credits_delta)) as total_credits
+        FROM credits_transactions
+        WHERE user_id = ${user.id}
+          AND type = 'usage'
+          AND mode_id IS NOT NULL
+        GROUP BY DATE(created_at), mode_id
+        ORDER BY date ASC
+      `;
+      console.log('📈 Seven-day data verification:', verifyData.rows);
     }
 
     // 4. 生成真实的JWT token
