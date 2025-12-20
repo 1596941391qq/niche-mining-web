@@ -8,6 +8,8 @@ import Footer from './components/Footer';
 import Privacy from './components/Privacy';
 import Terms from './components/Terms';
 import Console from './components/Console';
+import PaymentSuccess from './components/payment/PaymentSuccess';
+import PaymentResult from './components/payment/PaymentResult';
 import { Language, Translations } from './types';
 import { CONTENT } from './constants';
 import { AuthProvider } from './contexts/AuthContext';
@@ -31,7 +33,7 @@ function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.slice(1);
-      if (hash === 'privacy' || hash === 'terms' || hash === 'console') {
+      if (hash === 'privacy' || hash === 'terms' || hash === 'console' || hash.startsWith('payment/') || hash === 'payresult') {
         setCurrentPage(hash);
       } else {
         setCurrentPage('home');
@@ -57,6 +59,10 @@ function App() {
         return <Terms />;
       case 'console':
         return <Console />;
+      case 'payment/success':
+        return <PaymentSuccess />;
+      case 'payresult':
+        return <PaymentResult />;
       default:
         return (
           <>

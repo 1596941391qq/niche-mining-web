@@ -170,15 +170,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         };
       }
       const credits = parseInt(row.credits_used);
-
-      // 调试日志
-      console.log(`📊 Processing row: date=${dateKey}, mode_id=${row.mode_id}, credits=${credits}`);
-
       sevenDayData[dateKey][row.mode_id] = credits;
       sevenDayData[dateKey].total += credits;
     });
-
-    console.log('📈 Seven day data aggregated:', JSON.stringify(sevenDayData, null, 2));
 
     // 填充缺失的日期
     const sevenDayArray = [];
@@ -195,8 +189,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         deep_mining: 0
       });
     }
-
-    console.log('📊 Final sevenDayArray:', JSON.stringify(sevenDayArray, null, 2));
 
     return res.status(200).json({
       userId,

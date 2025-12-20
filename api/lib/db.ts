@@ -351,6 +351,42 @@ export async function initSubscriptionTables() {
 }
 
 /**
+ * 初始化支付订单表
+ */
+export async function initPaymentTables() {
+  try {
+    // 支付订单表（移除外键约束，避免初始化时的依赖问题）
+    await sql`
+      CREATE TABLE IF NOT EXISTS payment_orders (
+        id SERIAL PRIMARY KEY,
+        checkout_id VARCHAR(255) UNIQUE NOT NULL,
+        user_id UUID NOT NULL,
+        plan_id VARCHAR(50) NOT NULL,
+        amount DECIMAL(10, 2) NOT NULL,
+        currency VARCHAR(3) DEFAULT 'USD',
+        status VARCHAR(20) NOT NULL DEFAULT 'pending',
+        request_id VARCHAR(255) UNIQUE NOT NULL,
+        metadata JSONB DEFAULT '{}',
+        payment_url TEXT,
+        paid_at TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+
+    await sql`CREATE INDEX IF NOT EXISTS idx_payment_orders_user_id ON payment_orders(user_id)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_payment_orders_checkout_id ON payment_orders(checkout_id)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_payment_orders_status ON payment_orders(status)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_payment_orders_created_at ON payment_orders(created_at DESC)`;
+
+    console.log('Payment tables initialized successfully');
+  } catch (error) {
+    console.error('Error initializing payment tables:', error);
+    throw error;
+  }
+}
+
+/**
  * 确保用户拥有必需的 credits 和 subscription 记录
  * 用于 OAuth 登录后自动初始化新用户数据
  *

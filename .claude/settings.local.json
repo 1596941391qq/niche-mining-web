@@ -10,7 +10,8 @@
       "Bash(node scripts/setup-user-credits.js:*)",
       "Bash(curl:*)",
       "Bash(python -m json.tool:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "WebFetch(domain:302ai.apifox.cn)"
     ]
   }
 }

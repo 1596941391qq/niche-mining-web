@@ -33,8 +33,11 @@ const ConsoleSubscription: React.FC = () => {
   const [credits, setCredits] = useState<CreditsData | null>(null);
   const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [paymentLoading, setPaymentLoading] = useState<string | null>(null); // 追踪正在支付的套餐
 
   useEffect(() => {
+    // 重置支付加载状态（用户返回时）
+    setPaymentLoading(null);
     fetchSubscriptionData();
   }, []);
 
@@ -62,6 +65,49 @@ const ConsoleSubscription: React.FC = () => {
       console.error('Failed to fetch subscription data:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleUpgrade = async (plan_id: string) => {
+    if (paymentLoading) return; // 防止重复点击
+
+    try {
+      setPaymentLoading(plan_id);
+
+      const token = getToken();
+      if (!token) {
+        alert(lang === 'cn' ? '请先登录' : 'Please login first');
+        setPaymentLoading(null);
+        return;
+      }
+
+      // 调用创建支付订单 API
+      const response = await fetch('/api/payment/create-checkout', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ plan_id })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create checkout');
+      }
+
+      const data = await response.json();
+
+      if (data.success && data.checkout_url) {
+        // 跳转到支付页面（在当前页跳转，不要打开新窗口）
+        window.location.href = data.checkout_url;
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert(lang === 'cn' ? '创建支付订单失败，请稍后再试' : 'Failed to create payment order');
+      setPaymentLoading(null);
     }
   };
 
@@ -420,14 +466,16 @@ const ConsoleSubscription: React.FC = () => {
               </ul>
 
               <button
-                disabled={plan.current}
+                disabled={plan.current || paymentLoading === plan.id}
                 onClick={() => {
                   if (plan.contactSales) {
                     window.location.href = 'mailto:soulcraftlimited@galatea.bar';
+                  } else if (!plan.current && plan.id !== 'free') {
+                    handleUpgrade(plan.id);
                   }
                 }}
                 className={`w-full py-3 text-sm font-mono uppercase tracking-wider transition-all ${
-                  plan.current
+                  plan.current || paymentLoading === plan.id
                     ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
                     : plan.contactSales
                     ? 'bg-accent-orange text-black hover:bg-accent-orange/90'
@@ -440,6 +488,10 @@ const ConsoleSubscription: React.FC = () => {
                   ? lang === 'cn'
                     ? '当前套餐'
                     : 'Current Plan'
+                  : paymentLoading === plan.id
+                  ? lang === 'cn'
+                    ? '跳转中...'
+                    : 'Redirecting...'
                   : plan.contactSales
                   ? lang === 'cn'
                     ? '联系销售'
