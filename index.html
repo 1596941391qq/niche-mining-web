@@ -3,73 +3,75 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NicheDigger | 利基市场挖掘 | Blue Ocean SEO</title>
+    <title>Niche Digger | 利基市场挖掘 | Blue Ocean SEO</title>
     <link rel="icon" href="/logo.png" type="image/png" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
-        darkMode: 'class',
+        darkMode: "class",
         theme: {
           extend: {
             fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-              mono: ['JetBrains Mono', 'Courier New', 'monospace'],
-              data: ['JetBrains Mono', 'Courier New', 'monospace'],
+              sans: ["Inter", "sans-serif"],
+              mono: ["JetBrains Mono", "Courier New", "monospace"],
+              data: ["JetBrains Mono", "Courier New", "monospace"],
             },
             colors: {
-              background: 'var(--color-background)',
-              surface: 'var(--color-surface)',
-              border: 'var(--color-border)',
-              'text-primary': 'var(--color-text-primary)',
-              'text-secondary': 'var(--color-text-secondary)',
-              'text-tertiary': 'var(--color-text-tertiary)',
+              background: "var(--color-background)",
+              surface: "var(--color-surface)",
+              border: "var(--color-border)",
+              "text-primary": "var(--color-text-primary)",
+              "text-secondary": "var(--color-text-secondary)",
+              "text-tertiary": "var(--color-text-tertiary)",
               primary: {
-                DEFAULT: '#10b981', // Electric Green
-                dim: 'rgba(16, 185, 129, 0.1)',
-                glow: 'rgba(16, 185, 129, 0.5)',
+                DEFAULT: "#10b981", // Electric Green
+                dim: "rgba(16, 185, 129, 0.1)",
+                glow: "rgba(16, 185, 129, 0.5)",
               },
               accent: {
-                orange: '#FF6B35', // Safety Orange
-                green: '#00FF41', // Matrix Green
-                yellow: '#FFD23F', // Warning Yellow
+                orange: "#FF6B35", // Safety Orange
+                green: "#00FF41", // Matrix Green
+                yellow: "#FFD23F", // Warning Yellow
               },
               secondary: {
-                DEFAULT: '#3f3f46',
+                DEFAULT: "#3f3f46",
               },
               grid: {
-                DEFAULT: 'var(--grid-color)',
-                dim: '#141416',
-              }
+                DEFAULT: "var(--grid-color)",
+                dim: "#141416",
+              },
             },
             backgroundImage: {
-              'grid-pattern': "linear-gradient(to right, #1a1a1d 1px, transparent 1px), linear-gradient(to bottom, #1a1a1d 1px, transparent 1px)",
-              'grid-small': "linear-gradient(to right, #1a1a1d 0.5px, transparent 0.5px), linear-gradient(to bottom, #1a1a1d 0.5px, transparent 0.5px)",
+              "grid-pattern":
+                "linear-gradient(to right, #1a1a1d 1px, transparent 1px), linear-gradient(to bottom, #1a1a1d 1px, transparent 1px)",
+              "grid-small":
+                "linear-gradient(to right, #1a1a1d 0.5px, transparent 0.5px), linear-gradient(to bottom, #1a1a1d 0.5px, transparent 0.5px)",
             },
             animation: {
-              'scan': 'scan 4s linear infinite',
-              'blink': 'blink 1s step-end infinite',
-              'hover-float': 'float 3s ease-in-out infinite',
+              scan: "scan 4s linear infinite",
+              blink: "blink 1s step-end infinite",
+              "hover-float": "float 3s ease-in-out infinite",
             },
             keyframes: {
               scan: {
-                '0%': { transform: 'translateY(-100%)' },
-                '100%': { transform: 'translateY(100%)' },
+                "0%": { transform: "translateY(-100%)" },
+                "100%": { transform: "translateY(100%)" },
               },
               blink: {
-                '0%, 100%': { opacity: '1' },
-                '50%': { opacity: '0' },
+                "0%, 100%": { opacity: "1" },
+                "50%": { opacity: "0" },
               },
               float: {
-                '0%, 100%': { transform: 'translateY(0)' },
-                '50%': { transform: 'translateY(-10px)' },
-              }
-            }
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-10px)" },
+              },
+            },
           },
         },
-      }
+      };
     </script>
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
 
       * {
         border-radius: 0 !important; /* Remove all rounded corners */
@@ -77,13 +79,13 @@
 
       /* CSS Variables for Theming - toUI Style */
       :root {
-        --color-background: #050505;      /* 极深黑背景 */
-        --color-surface: #0a0a0a;         /* 卡片背景 */
-        --color-module-header: #0d0d0d;   /* 模块头部 */
-        --color-border: #1a1a1a;          /* 边框 */
-        --color-text-primary: #ffffff;    /* 主文本 */
-        --color-text-secondary: #9ca3af;  /* 次要文本 gray-400 */
-        --color-text-tertiary: #6b7280;   /* 三��文本 gray-500 */
+        --color-background: #050505; /* 极深黑背景 */
+        --color-surface: #0a0a0a; /* 卡片背景 */
+        --color-module-header: #0d0d0d; /* 模块头部 */
+        --color-border: #1a1a1a; /* 边框 */
+        --color-text-primary: #ffffff; /* 主文本 */
+        --color-text-secondary: #9ca3af; /* 次要文本 gray-400 */
+        --color-text-tertiary: #6b7280; /* 三��文本 gray-500 */
         --grid-color: rgba(16, 185, 129, 0.05); /* emerald网格 */
         --grid-alpha: rgba(16, 185, 129, 0.05);
       }
@@ -102,8 +104,11 @@
       /* Dark Theme (Default) */
       body {
         background-color: var(--color-background);
-        background-image:
-          linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+        background-image: linear-gradient(
+            to right,
+            var(--grid-color) 1px,
+            transparent 1px
+          ),
           linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
         background-size: 20px 20px;
         color: var(--color-text-primary);
@@ -111,16 +116,30 @@
 
       /* Grid Backgrounds - toUI Style */
       .grid-bg {
-        background-image:
-          linear-gradient(to right, rgba(16, 185, 129, 0.05) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+        background-image: linear-gradient(
+            to right,
+            rgba(16, 185, 129, 0.05) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            to bottom,
+            rgba(16, 185, 129, 0.05) 1px,
+            transparent 1px
+          );
         background-size: 40px 40px;
       }
 
       .grid-bg-small {
-        background-image:
-          linear-gradient(to right, rgba(16, 185, 129, 0.05) 0.5px, transparent 0.5px),
-          linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 0.5px, transparent 0.5px);
+        background-image: linear-gradient(
+            to right,
+            rgba(16, 185, 129, 0.05) 0.5px,
+            transparent 0.5px
+          ),
+          linear-gradient(
+            to bottom,
+            rgba(16, 185, 129, 0.05) 0.5px,
+            transparent 0.5px
+          );
         background-size: 10px 10px;
       }
 
@@ -129,10 +148,12 @@
         width: 100%;
         height: 100px;
         z-index: 50;
-        background: linear-gradient(0deg,
+        background: linear-gradient(
+          0deg,
           rgba(0, 0, 0, 0) 0%,
           rgba(16, 185, 129, 0.02) 50%,
-          rgba(0, 0, 0, 0) 100%);
+          rgba(0, 0, 0, 0) 100%
+        );
         opacity: 0.1;
         position: absolute;
         bottom: 100%;
@@ -141,8 +162,12 @@
       }
 
       @keyframes scanline {
-        0% { bottom: 100%; }
-        100% { bottom: -100px; }
+        0% {
+          bottom: 100%;
+        }
+        100% {
+          bottom: -100px;
+        }
       }
 
       /* Custom Scrollbar - toUI Style */
@@ -161,7 +186,7 @@
       }
 
       ::-webkit-scrollbar-thumb:hover {
-        background: #10B981;
+        background: #10b981;
       }
 
       /* Terminal Glow Effect */
@@ -211,30 +236,30 @@
       }
 
       .corner-markers::before {
-        content: '';
+        content: "";
         position: absolute;
         top: -1px;
         left: -1px;
         width: 12px;
         height: 12px;
-        border-top: 2px solid #FF6B35;
-        border-left: 2px solid #FF6B35;
+        border-top: 2px solid #ff6b35;
+        border-left: 2px solid #ff6b35;
       }
 
       .corner-markers::after {
-        content: '';
+        content: "";
         position: absolute;
         bottom: -1px;
         right: -1px;
         width: 12px;
         height: 12px;
-        border-bottom: 2px solid #FF6B35;
-        border-right: 2px solid #FF6B35;
+        border-bottom: 2px solid #ff6b35;
+        border-right: 2px solid #ff6b35;
       }
 
       /* Data Display */
       .data-value {
-        font-family: 'JetBrains Mono', 'Courier New', monospace;
+        font-family: "JetBrains Mono", "Courier New", monospace;
         font-variant-numeric: tabular-nums;
         letter-spacing: -0.02em;
       }
@@ -246,7 +271,7 @@
       }
 
       .sharp-border-accent {
-        border: 1px solid #FF6B35;
+        border: 1px solid #ff6b35;
         box-shadow: 0 0 10px rgba(255, 107, 53, 0.2);
       }
 
@@ -256,7 +281,7 @@
       }
 
       .tech-border::after {
-        content: '';
+        content: "";
         position: absolute;
         top: -1px;
         left: -1px;
@@ -268,7 +293,7 @@
       }
 
       .tech-border::before {
-        content: '';
+        content: "";
         position: absolute;
         bottom: -1px;
         right: -1px;
@@ -291,22 +316,22 @@
       }
 
       .status-indicator::before {
-        content: '█';
+        content: "█";
         margin-right: 6px;
         font-size: 8px;
         animation: blink 1.5s ease-in-out infinite;
       }
 
       .status-active::before {
-        color: #00FF41;
+        color: #00ff41;
       }
 
       .status-warning::before {
-        color: #FFD23F;
+        color: #ffd23f;
       }
 
       .status-error::before {
-        color: #FF6B35;
+        color: #ff6b35;
       }
 
       @keyframes flow {
@@ -342,20 +367,20 @@
         animation: fade-in 0.3s ease-out;
       }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
-    "react/": "https://aistudiocdn.com/react@^19.2.1/",
-    "react": "https://aistudiocdn.com/react@^19.2.1"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
-</head>
+    <script type="importmap">
+      {
+        "imports": {
+          "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+          "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+          "react/": "https://aistudiocdn.com/react@^19.2.1/",
+          "react": "https://aistudiocdn.com/react@^19.2.1"
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="/index.css" />
+  </head>
   <body class="antialiased selection:bg-primary selection:text-black">
     <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
-</body>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>

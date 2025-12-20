@@ -1,7 +1,7 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Pickaxe, Menu, X, Globe, LogIn, LogOut, User } from 'lucide-react';
-import { LanguageContext } from '../App';
-import { useAuth } from '../contexts/AuthContext';
+import React, { useContext, useState, useEffect } from "react";
+import { Pickaxe, Menu, X, Globe, LogIn, LogOut, User } from "lucide-react";
+import { LanguageContext } from "../App";
+import { useAuth } from "../contexts/AuthContext";
 
 const Navbar: React.FC = () => {
   const { lang, setLang, t } = useContext(LanguageContext);
@@ -10,26 +10,27 @@ const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // 检测是否是预览部署
-  const isPreviewDeployment = typeof window !== 'undefined' &&
-    window.location.hostname.includes('vercel.app') &&
-    !window.location.hostname.startsWith('niche-mining-web.vercel.app');
+  const isPreviewDeployment =
+    typeof window !== "undefined" &&
+    window.location.hostname.includes("vercel.app") &&
+    !window.location.hostname.startsWith("niche-mining-web.vercel.app");
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleLogin = () => {
     if (isPreviewDeployment) {
       alert(
-        'OAuth login is disabled in preview deployments.\n\n' +
-        'Reason: Google OAuth does not support dynamic preview URLs.\n\n' +
-        'Please test login on:\n' +
-        '• Production: https://niche-mining-web.vercel.app\n' +
-        '• Local dev: http://localhost:3000'
+        "OAuth login is disabled in preview deployments.\n\n" +
+          "Reason: Google OAuth does not support dynamic preview URLs.\n\n" +
+          "Please test login on:\n" +
+          "• Production: https://niche-mining-web.vercel.app\n" +
+          "• Local dev: http://localhost:3000"
       );
       return;
     }
@@ -37,17 +38,17 @@ const Navbar: React.FC = () => {
   };
 
   const navLinks = [
-    { name: t.nav.features, href: '#features' },
-    { name: t.nav.agents, href: '#agents' },
-    { name: t.nav.howItWorks, href: '#how-it-works' },
+    { name: t.nav.features, href: "#features" },
+    { name: t.nav.agents, href: "#agents" },
+    { name: t.nav.howItWorks, href: "#how-it-works" },
   ];
 
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
         isScrolled
-          ? 'bg-background/95 backdrop-blur-md border-border py-3 shadow-lg'
-          : 'bg-transparent border-transparent py-6'
+          ? "bg-background/95 backdrop-blur-md border-border py-3 shadow-lg"
+          : "bg-transparent border-transparent py-6"
       }`}
     >
       <div className="container mx-auto px-6 flex justify-between items-center">
@@ -57,8 +58,8 @@ const Navbar: React.FC = () => {
             <Pickaxe className="w-6 h-6 transform group-hover:-rotate-12 transition-transform duration-300" />
           </div>
           <div className="flex flex-col">
-             <span className="text-xl font-bold tracking-tighter text-white leading-none">
-              NICHEDIGGER
+            <span className="text-xl font-bold tracking-tighter text-white leading-none">
+              Niche Digger
             </span>
             <span className="text-[10px] text-primary/90 font-mono tracking-[0.2em] uppercase mt-1">
               Blue Ocean Protocol
@@ -80,18 +81,22 @@ const Navbar: React.FC = () => {
               </a>
             ))}
           </div>
-          
+
           <div className="h-6 w-px bg-zinc-800 mx-2"></div>
 
           {/* Language Toggle */}
-          <button 
-            onClick={() => setLang(lang === 'en' ? 'cn' : 'en')}
+          <button
+            onClick={() => setLang(lang === "en" ? "cn" : "en")}
             className="flex items-center gap-2 text-xs font-mono text-zinc-500 hover:text-white transition-colors group"
           >
             <Globe className="w-3 h-3 group-hover:text-primary transition-colors" />
-            <span className={lang === 'en' ? 'text-white font-bold' : ''}>EN</span>
+            <span className={lang === "en" ? "text-white font-bold" : ""}>
+              EN
+            </span>
             <span className="text-zinc-700">/</span>
-            <span className={lang === 'cn' ? 'text-white font-bold' : ''}>CN</span>
+            <span className={lang === "cn" ? "text-white font-bold" : ""}>
+              CN
+            </span>
           </button>
 
           {/* Auth Section */}
@@ -146,8 +151,8 @@ const Navbar: React.FC = () => {
 
         {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center gap-4">
-           <button 
-            onClick={() => setLang(lang === 'en' ? 'cn' : 'en')}
+          <button
+            onClick={() => setLang(lang === "en" ? "cn" : "en")}
             className="text-xs font-mono font-bold text-zinc-400 border border-zinc-800 px-2 py-1 rounded hover:border-primary hover:text-primary transition-colors"
           >
             {lang.toUpperCase()}
@@ -194,7 +199,9 @@ const Navbar: React.FC = () => {
                       <p className="text-white font-bold text-sm truncate">
                         {user.name || user.email}
                       </p>
-                      <p className="text-zinc-500 text-xs truncate">{user.email}</p>
+                      <p className="text-zinc-500 text-xs truncate">
+                        {user.email}
+                      </p>
                     </div>
                   </div>
                   <a

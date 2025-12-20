@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext } from "react";
 import {
   LayoutDashboard,
   Target,
@@ -12,23 +12,30 @@ import {
   Globe,
   Sun,
   Moon,
-  Zap
-} from 'lucide-react';
-import ConsoleDashboard from './console/ConsoleDashboard';
-import ConsoleAgents from './console/ConsoleAgents';
-import ConsoleAPI from './console/ConsoleAPI';
-import ConsoleSubscription from './console/ConsoleSubscription';
-import ConsoleTeam from './console/ConsoleTeam';
-import ConsoleSettings from './console/ConsoleSettings';
-import MiningModes from './console/MiningModes';
-import { useAuth } from '../contexts/AuthContext';
-import { useTheme } from '../contexts/ThemeContext';
-import { LanguageContext } from '../App';
+  Zap,
+} from "lucide-react";
+import ConsoleDashboard from "./console/ConsoleDashboard";
+import ConsoleAgents from "./console/ConsoleAgents";
+import ConsoleAPI from "./console/ConsoleAPI";
+import ConsoleSubscription from "./console/ConsoleSubscription";
+import ConsoleTeam from "./console/ConsoleTeam";
+import ConsoleSettings from "./console/ConsoleSettings";
+import MiningModes from "./console/MiningModes";
+import { useAuth } from "../contexts/AuthContext";
+import { useTheme } from "../contexts/ThemeContext";
+import { LanguageContext } from "../App";
 
-type TabType = 'dashboard' | 'agents' | 'api' | 'subscription' | 'team' | 'settings' | 'modes';
+type TabType =
+  | "dashboard"
+  | "agents"
+  | "api"
+  | "subscription"
+  | "team"
+  | "settings"
+  | "modes";
 
 const Console: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('dashboard');
+  const [activeTab, setActiveTab] = useState<TabType>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user } = useAuth();
   const { theme, toggleTheme } = useTheme();
@@ -36,57 +43,63 @@ const Console: React.FC = () => {
 
   const tabs = [
     {
-      id: 'dashboard' as TabType,
-      name: t.console?.sidebar?.dashboard || (lang === 'cn' ? '仪表板' : 'Dashboard'),
+      id: "dashboard" as TabType,
+      name:
+        t.console?.sidebar?.dashboard ||
+        (lang === "cn" ? "仪表板" : "Dashboard"),
       icon: <LayoutDashboard className="w-5 h-5" />,
     },
     {
-      id: 'modes' as TabType,
-      name: lang === 'cn' ? '挖掘模式' : 'Mining Modes',
+      id: "modes" as TabType,
+      name: lang === "cn" ? "挖掘模式" : "Mining Modes",
       icon: <Zap className="w-5 h-5" />,
     },
     {
-      id: 'agents' as TabType,
-      name: t.console?.sidebar?.agents || 'Agents',
+      id: "agents" as TabType,
+      name: t.console?.sidebar?.agents || "Agents",
       icon: <Target className="w-5 h-5" />,
     },
     {
-      id: 'api' as TabType,
-      name: t.console?.sidebar?.api || (lang === 'cn' ? 'API 密钥' : 'API Keys'),
+      id: "api" as TabType,
+      name:
+        t.console?.sidebar?.api || (lang === "cn" ? "API 密钥" : "API Keys"),
       icon: <Key className="w-5 h-5" />,
     },
     {
-      id: 'subscription' as TabType,
-      name: t.console?.sidebar?.subscription || (lang === 'cn' ? '订阅' : 'Subscription'),
+      id: "subscription" as TabType,
+      name:
+        t.console?.sidebar?.subscription ||
+        (lang === "cn" ? "订阅" : "Subscription"),
       icon: <CreditCard className="w-5 h-5" />,
     },
     {
-      id: 'team' as TabType,
-      name: t.console?.sidebar?.team || (lang === 'cn' ? '团队' : 'Team'),
+      id: "team" as TabType,
+      name: t.console?.sidebar?.team || (lang === "cn" ? "团队" : "Team"),
       icon: <Users className="w-5 h-5" />,
     },
     {
-      id: 'settings' as TabType,
-      name: t.console?.sidebar?.settings || (lang === 'cn' ? '设置' : 'Settings'),
+      id: "settings" as TabType,
+      name:
+        t.console?.sidebar?.settings || (lang === "cn" ? "设置" : "Settings"),
       icon: <Settings className="w-5 h-5" />,
     },
   ];
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'dashboard':
+      case "dashboard":
         return <ConsoleDashboard />;
-      case 'modes':
+      case "modes":
         return <MiningModes />;
-      case 'agents':
+      case "agents":
         return <ConsoleAgents />;
-      case 'api':
+      case "api":
         return <ConsoleAPI />;
-      case 'subscription':
+      case "subscription":
         return <ConsoleSubscription />;
-      case 'team':
+      case "team":
         return <ConsoleTeam />;
-      case 'settings':
+      case "settings":
         return <ConsoleSettings />;
       default:
         return <ConsoleDashboard />;
@@ -106,13 +119,27 @@ const Console: React.FC = () => {
         <div className="p-6 border-b border-[#1a1a1a]">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-emerald-500 flex items-center justify-center rounded-sm">
-              <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              <svg
+                className="w-5 h-5 text-black"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={3}
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                />
               </svg>
             </div>
             <div>
-              <h1 className="text-sm font-bold tracking-tighter text-white uppercase">NicheDigger</h1>
-              <p className="text-[10px] text-emerald-500 font-mono tracking-tighter">BLUE OCEAN PROTOCOL</p>
+              <h1 className="text-sm font-bold tracking-tighter text-white uppercase">
+                Niche Digger
+              </h1>
+              <p className="text-[10px] text-emerald-500 font-mono tracking-tighter">
+                BLUE OCEAN PROTOCOL
+              </p>
             </div>
           </div>
         </div>
@@ -129,16 +156,32 @@ const Console: React.FC = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
                   </svg>
                 )}
               </div>
               <div>
-                <p className="text-xs font-bold text-white">{user?.name || user?.email || (lang === 'cn' ? '本地开发测试用户' : 'Local Dev User')}</p>
+                <p className="text-xs font-bold text-white">
+                  {user?.name ||
+                    user?.email ||
+                    (lang === "cn" ? "本地开发测试用户" : "Local Dev User")}
+                </p>
                 <div className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-                  <p className="text-[10px] text-emerald-500 font-mono">{lang === 'cn' ? '专业版: 有效' : 'Pro: Active'}</p>
+                  <p className="text-[10px] text-emerald-500 font-mono">
+                    {lang === "cn" ? "专业版: 有效" : "Pro: Active"}
+                  </p>
                 </div>
               </div>
             </div>
@@ -153,12 +196,14 @@ const Console: React.FC = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-sm transition-all duration-200 group relative ${
                 activeTab === tab.id
-                  ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
+                  ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
+                  : "text-gray-400 hover:text-white hover:bg-white/5 border border-transparent"
               }`}
             >
               {tab.icon}
-              <span className="text-xs font-medium tracking-wide">{tab.name}</span>
+              <span className="text-xs font-medium tracking-wide">
+                {tab.name}
+              </span>
               {activeTab === tab.id && (
                 <div className="absolute left-0 w-1 h-2/3 bg-emerald-500 rounded-r-full"></div>
               )}
@@ -172,26 +217,36 @@ const Console: React.FC = () => {
             <a
               href="#"
               className="flex flex-col items-center justify-center p-2 rounded-sm bg-[#0a0a0a] border border-[#1a1a1a] text-gray-500 hover:text-emerald-500 hover:border-emerald-500/30 transition-all group"
-              title={lang === 'cn' ? '返回首页' : 'Home'}
+              title={lang === "cn" ? "返回首页" : "Home"}
             >
               <Home className="w-4 h-4" />
-              <span className="text-[8px] font-mono mt-1 opacity-60 group-hover:opacity-100">HOME</span>
+              <span className="text-[8px] font-mono mt-1 opacity-60 group-hover:opacity-100">
+                HOME
+              </span>
             </a>
             <button
-              onClick={() => setLang(lang === 'en' ? 'cn' : 'en')}
+              onClick={() => setLang(lang === "en" ? "cn" : "en")}
               className="flex flex-col items-center justify-center p-2 rounded-sm bg-[#0a0a0a] border border-[#1a1a1a] text-gray-500 hover:text-emerald-500 hover:border-emerald-500/30 transition-all group"
-              title={lang === 'cn' ? '中英切换' : 'Language'}
+              title={lang === "cn" ? "中英切换" : "Language"}
             >
               <Globe className="w-4 h-4" />
-              <span className="text-[8px] font-mono mt-1 opacity-60 group-hover:opacity-100">CN/EN</span>
+              <span className="text-[8px] font-mono mt-1 opacity-60 group-hover:opacity-100">
+                CN/EN
+              </span>
             </button>
             <button
               onClick={toggleTheme}
               className="flex flex-col items-center justify-center p-2 rounded-sm bg-[#0a0a0a] border border-[#1a1a1a] text-gray-500 hover:text-emerald-500 hover:border-emerald-500/30 transition-all group"
-              title={lang === 'cn' ? '夜间模式' : 'Theme'}
+              title={lang === "cn" ? "夜间模式" : "Theme"}
             >
-              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-              <span className="text-[8px] font-mono mt-1 opacity-60 group-hover:opacity-100">NIGHT</span>
+              {theme === "dark" ? (
+                <Sun className="w-4 h-4" />
+              ) : (
+                <Moon className="w-4 h-4" />
+              )}
+              <span className="text-[8px] font-mono mt-1 opacity-60 group-hover:opacity-100">
+                NIGHT
+              </span>
             </button>
           </div>
         </div>
@@ -226,7 +281,7 @@ const Console: React.FC = () => {
       {/* Mobile Sidebar */}
       <aside
         className={`lg:hidden fixed left-0 top-0 bottom-0 w-64 bg-surface border-r border-border z-50 transform transition-transform ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Logo/Header */}
@@ -236,7 +291,7 @@ const Console: React.FC = () => {
               <span className="font-bold text-sm">NM</span>
             </div>
             <div>
-              <h2 className="text-white font-bold text-sm">NICHEDIGGER</h2>
+              <h2 className="text-white font-bold text-sm">Niche Digger</h2>
               <p className="text-xs text-zinc-500 font-mono">CONSOLE</p>
             </div>
           </a>
@@ -269,8 +324,12 @@ const Console: React.FC = () => {
                 {user?.name || user?.email}
               </p>
               <p className="text-xs text-zinc-500 font-mono">
-                {t.console?.userInfo?.currentPlan || (lang === 'cn' ? '当前套餐' : 'Current Plan')}:{' '}
-                <span className="text-primary">{lang === 'cn' ? '免费版' : 'Free'}</span>
+                {t.console?.userInfo?.currentPlan ||
+                  (lang === "cn" ? "当前套餐" : "Current Plan")}
+                :{" "}
+                <span className="text-primary">
+                  {lang === "cn" ? "免费版" : "Free"}
+                </span>
               </p>
             </div>
           </div>
@@ -287,8 +346,8 @@ const Console: React.FC = () => {
               }}
               className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-mono uppercase tracking-wider transition-all border ${
                 activeTab === tab.id
-                  ? 'bg-primary/10 text-primary border-primary'
-                  : 'text-zinc-400 hover:text-white hover:bg-surface/50 border-border hover:border-primary/50'
+                  ? "bg-primary/10 text-primary border-primary"
+                  : "text-zinc-400 hover:text-white hover:bg-surface/50 border-border hover:border-primary/50"
               }`}
             >
               <span className="w-5 h-5">{tab.icon}</span>
@@ -306,18 +365,30 @@ const Console: React.FC = () => {
             }}
             className="w-full flex items-center gap-3 px-4 py-3 text-sm font-mono text-zinc-400 hover:text-white hover:bg-surface/50 border border-border hover:border-primary/50 transition-all"
           >
-            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            <span>{theme === 'dark' ? (lang === 'cn' ? '白天模式' : 'Light Mode') : (lang === 'cn' ? '夜间模式' : 'Dark Mode')}</span>
+            {theme === "dark" ? (
+              <Sun className="w-5 h-5" />
+            ) : (
+              <Moon className="w-5 h-5" />
+            )}
+            <span>
+              {theme === "dark"
+                ? lang === "cn"
+                  ? "白天模式"
+                  : "Light Mode"
+                : lang === "cn"
+                ? "夜间模式"
+                : "Dark Mode"}
+            </span>
           </button>
           <button
             onClick={() => {
-              setLang(lang === 'en' ? 'cn' : 'en');
+              setLang(lang === "en" ? "cn" : "en");
               setSidebarOpen(false);
             }}
             className="w-full flex items-center gap-3 px-4 py-3 text-sm font-mono text-zinc-400 hover:text-white hover:bg-surface/50 border border-border hover:border-primary/50 transition-all"
           >
             <Globe className="w-5 h-5" />
-            <span>{lang === 'en' ? 'English' : '中文'}</span>
+            <span>{lang === "en" ? "English" : "中文"}</span>
           </button>
           <a
             href="#"
@@ -325,7 +396,10 @@ const Console: React.FC = () => {
             className="w-full flex items-center gap-3 px-4 py-3 text-sm font-mono text-zinc-400 hover:text-white hover:bg-surface/50 border border-border hover:border-primary/50 transition-all"
           >
             <Home className="w-5 h-5" />
-            <span>{t.console?.sidebar?.backHome || (lang === 'cn' ? '返回首页' : 'Home')}</span>
+            <span>
+              {t.console?.sidebar?.backHome ||
+                (lang === "cn" ? "返回首页" : "Home")}
+            </span>
           </a>
         </div>
       </aside>
@@ -337,13 +411,15 @@ const Console: React.FC = () => {
           <div className="flex items-center gap-4">
             <div className="flex flex-col">
               <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                {lang === 'cn' ? '仪表板' : 'Dashboard'}
+                {lang === "cn" ? "仪表板" : "Dashboard"}
                 <span className="text-[10px] bg-white/5 border border-white/10 px-1.5 py-0.5 rounded text-gray-500 font-mono">
                   DASHBOARD_V2
                 </span>
               </h2>
               <p className="text-[10px] text-gray-500 font-mono uppercase tracking-widest">
-                {lang === 'cn' ? '账户活动和性能概览' : 'Overview of your account activity and performance'}
+                {lang === "cn"
+                  ? "账户活动和性能概览"
+                  : "Overview of your account activity and performance"}
               </p>
             </div>
           </div>
@@ -351,7 +427,9 @@ const Console: React.FC = () => {
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/20 rounded-sm">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
-              <span className="text-[10px] font-mono text-emerald-500">SYSTEM_ONLINE // STABLE</span>
+              <span className="text-[10px] font-mono text-emerald-500">
+                SYSTEM_ONLINE // STABLE
+              </span>
             </div>
           </div>
         </header>
@@ -370,7 +448,9 @@ const Console: React.FC = () => {
                 <span className="font-bold text-sm font-mono">NM</span>
               </div>
               <div>
-                <h2 className="text-white font-bold text-sm font-mono">NICHEDIGGER</h2>
+                <h2 className="text-white font-bold text-sm font-mono">
+                  Niche Digger
+                </h2>
                 <p className="text-xs text-zinc-500 font-mono">CONSOLE</p>
               </div>
             </div>
@@ -390,9 +470,12 @@ const Console: React.FC = () => {
           <div className="flex-1"></div>
           <div className="flex gap-4">
             <span className="flex items-center gap-1">
-              <span className="w-1 h-1 rounded-full bg-emerald-500"></span> LATENCY: 24ms
+              <span className="w-1 h-1 rounded-full bg-emerald-500"></span>{" "}
+              LATENCY: 24ms
             </span>
-            <span className="flex items-center gap-1 text-emerald-500">SECURE_PROTOCOL: ACTIVE</span>
+            <span className="flex items-center gap-1 text-emerald-500">
+              SECURE_PROTOCOL: ACTIVE
+            </span>
           </div>
         </footer>
       </main>
