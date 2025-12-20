@@ -16,32 +16,50 @@ const PaymentSuccess: React.FC = () => {
   const verifyPayment = async () => {
     try {
       console.log('========== PaymentSuccess: Starting verifyPayment ==========');
+      console.log('📍 Current full URL:', window.location.href);
 
-      // 从 URL 获取 checkout_id（hash 路由后的 query 参数）
-      console.log('📍 Current URL:', window.location.href);
-      const hashParts = window.location.hash.split('?');
-      console.log('📍 Hash parts:', hashParts);
+      // 从 URL 获取 checkout_id（支持多种格式）
+      let checkout_id, signature
 
-      if (hashParts.length < 2) {
-        console.log('❌ Missing query parameters in hash');
-        setStatus('error');
-        setMessage('Missing payment parameters');
-        return;
+      // 格式 1: ?payment_order=xxxxx#payment/success (302.AI 实际返回)
+      const urlParams = new URLSearchParams(window.location.search)
+      if (urlParams.has('payment_order')) {
+        checkout_id = urlParams.get('payment_order')
+        console.log('✅ Found payment_order in URL params:', checkout_id)
       }
 
-      const params = new URLSearchParams(hashParts[1]);
-      const checkout_id = params.get('checkout_id');
-      const signature = params.get('302_signature');
+      // 格式 2: #payment/success?checkout_id=xxxxx (我们期望的格式)
+      if (!checkout_id) {
+        const hashParts = window.location.hash.split('?')
+        if (hashParts.length >= 2) {
+          const hashParams = new URLSearchParams(hashParts[1])
+          checkout_id = hashParams.get('checkout_id')
+          signature = hashParams.get('302_signature')
+          console.log('✅ Found checkout_id in hash params:', checkout_id)
+        }
+      }
 
-      console.log('📍 checkout_id:', checkout_id);
+      // 格式 3: 双保险，尝试从整个 URL 中提取
+      if (!checkout_id) {
+        const urlMatch = window.location.href.match(/payment_order=([a-zA-Z0-9]+)/)
+        if (urlMatch) {
+          checkout_id = urlMatch[1]
+          console.log('✅ Extracted checkout_id from URL:', checkout_id)
+        }
+      }
+
+      console.log('📍 Final checkout_id:', checkout_id);
       console.log('📍 302_signature:', signature);
 
+      // 关键修复：只要找到 checkout_id 就继续，不要求 hash 有参数
       if (!checkout_id) {
-        console.log('❌ checkout_id is missing');
+        console.error('❌ checkout_id not found in any format');
         setStatus('error');
-        setMessage('Missing checkout_id');
+        setMessage('Missing payment parameters - checkout_id not found');
         return;
       }
+
+      console.log('✅ checkout_id found:', checkout_id);
 
       const token = getToken();
       console.log('📍 Token:', token ? `${token.substring(0, 10)}...` : 'No token');
