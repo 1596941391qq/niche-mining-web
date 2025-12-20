@@ -15,17 +15,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const { checkout_id, '302_signature': signature } = req.query;
 
+    console.log('========== verify-checkout START ==========');
+    console.log('📍 Query params - checkout_id:', checkout_id);
+    console.log('📍 Query params - 302_signature:', signature);
+
     if (!checkout_id) {
+      console.log('❌ checkout_id is missing in query params');
       return res.status(400).json({ error: 'checkout_id is required' });
     }
 
     console.log('🔍 Verifying checkout:', checkout_id);
 
     // 从数据库查找订单
+    console.log('🗄️  Looking up order in database...');
     const orderResult = await sql`
       SELECT * FROM payment_orders
       WHERE checkout_id = ${checkout_id as string}
     `;
+
+    console.log('✅ DB query executed');
+    console.log('📊 Found records:', orderResult.rows.length);
 
     if (orderResult.rows.length === 0) {
       return res.status(404).json({ error: 'Order not found' });
@@ -54,6 +63,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       throw new Error('PAYMENT_302_API_KEY not configured');
     }
 
+    // 调试：检查 checkout_id
+    console.log('🔍 Querying 302.AI checkout API for:', checkout_id);
+
     const verifyResponse = await fetch(`https://api.302.ai/v1/checkout/${checkout_id}`, {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
@@ -63,7 +75,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (!verifyResponse.ok) {
       const errorText = await verifyResponse.text();
-      console.error('302.AI verify error:', errorText);
+      console.error('❌ 302.AI verify error:', verifyResponse.status, errorText);
       return res.status(500).json({
         error: 'Failed to verify payment',
         details: errorText
@@ -72,11 +84,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const checkoutData = await verifyResponse.json();
 
-    console.log('📊 Checkout status:', checkoutData.status);
+    console.log('📊 302.AI Checkout Full Response:', JSON.stringify(checkoutData, null, 2));
+    console.log('📊 Checkout status field:', checkoutData.status || checkoutData.data?.status);
 
-    // 如果支付成功，处理订单
-    if (checkoutData.status === 'completed' || checkoutData.status === 'paid') {
+    // 从 response 中提取 status（可能在 data 对象中）
+    // 302.AI status 返回值: failed, pending, completed
+    const paymentStatus = checkoutData.status || checkoutData.data?.status || 'unknown';
+
+    console.log('📊 Payment status extracted:', paymentStatus);
+
+    // 严格验证：只有 'completed' 状态才算支付成功
+    if (paymentStatus === 'completed') {
+      console.log('✅ Payment verified as COMPLETED, processing...');
       await processPaymentSuccess(order);
+      console.log('✅ processPaymentSuccess completed - credits added and subscription upgraded');
 
       return res.status(200).json({
         success: true,
@@ -87,12 +108,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           amount: order.amount
         }
       });
-    } else {
-      // 支付未完成
+    } else if (paymentStatus === 'pending') {
+      console.log('⏳ Payment still pending, not processed');
       return res.status(200).json({
         success: false,
-        status: checkoutData.status,
-        message: 'Payment not completed yet'
+        status: 'pending',
+        message: 'Payment is still pending'
+      });
+    } else if (paymentStatus === 'failed') {
+      console.log('❌ Payment failed');
+      return res.status(200).json({
+        success: false,
+        status: 'failed',
+        message: 'Payment failed'
+      });
+    } else {
+      // 未知的 status
+      console.log('⚠️  Unknown payment status:', paymentStatus);
+      return res.status(200).json({
+        success: false,
+        status: paymentStatus,
+        message: 'Unknown payment status'
       });
     }
 

@@ -15,13 +15,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const signature = req.headers['302_signature'];
-    console.log('📨 Webhook received, signature:', signature);
+    console.log('========== WEBHOOK RECEIVED ==========');
+    console.log('📨 Signature:', signature);
 
     const webhookData = req.body;
     console.log('📊 Webhook data:', JSON.stringify(webhookData, null, 2));
 
     // 提取 checkout_id（可能在不同字段）
-    const checkout_id = webhookData.checkout_id || webhookData.id || webhookData.data?.id;
+    const checkout_id = webhookData.checkout_id || webhookData.id || webhookData.data?.id || webhookData.data?.payment_order;
+    console.log('📍 checkout_id:', checkout_id);
 
     if (!checkout_id) {
       console.error('❌ No checkout_id in webhook data');
@@ -48,21 +50,38 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // 验证支付状态（从 webhook 数据或重新查询 API）
-    const status = webhookData.status || webhookData.data?.status;
+    // 302.AI status 返回值: failed, pending, completed
+    const status = webhookData.status || webhookData.data?.status || 'unknown';
 
-    if (status === 'completed' || status === 'paid') {
-      // 处理支付成功
+    console.log('📊 Webhook payment status:', status);
+
+    // 严格验证：只有 'completed' 状态才算支付成功
+    if (status === 'completed') {
+      console.log('✅ Webhook verified as COMPLETED, processing payment...');
       await processPaymentSuccess(order);
+      console.log('✅ Webhook processPaymentSuccess completed - credits added and subscription upgraded');
 
       return res.status(200).json({
         success: true,
-        message: 'Payment processed successfully'
+        message: 'Payment processed successfully - credits added and subscription upgraded'
+      });
+    } else if (status === 'pending') {
+      console.log('⏳ Webhook: Payment still pending');
+      return res.status(200).json({
+        success: true,
+        message: 'Webhook received but payment is still pending'
+      });
+    } else if (status === 'failed') {
+      console.log('❌ Webhook: Payment failed');
+      return res.status(200).json({
+        success: true,
+        message: 'Payment failed - no action taken'
       });
     } else {
-      console.log('⏳ Payment not completed, status:', status);
+      console.log('⚠️  Webhook: Unknown payment status:', status);
       return res.status(200).json({
         success: true,
-        message: 'Webhook received but payment not completed'
+        message: 'Webhook received with unknown status'
       });
     }
 

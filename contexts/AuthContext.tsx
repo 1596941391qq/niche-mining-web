@@ -210,12 +210,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const now = Date.now();
           const oneHour = 60 * 60 * 1000;
 
-          // 如果1小时内已经初始化过，跳过
-          if (devUserInitialized === 'true' && lastInitTime && (now - parseInt(lastInitTime)) < oneHour) {
-            console.log('🔧 Dev user already initialized recently, skipping...');
-            await refreshSession();
-            return;
-          }
+          // 如果1小时内已经初始化过，跳过（临时禁用缓存用于调试）
+          // if (devUserInitialized === 'true' && lastInitTime && (now - parseInt(lastInitTime)) < oneHour) {
+          //   console.log('🔧 Dev user already initialized recently, skipping...');
+          //   await refreshSession();
+          //   return;
+          // }
 
           console.log('🔧 Development Mode: Initializing real dev user...');
 

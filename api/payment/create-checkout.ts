@@ -135,11 +135,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // 确保 baseUrl 末尾没有斜杠
     baseUrl = baseUrl.replace(/\/$/, '');
 
+    // 验证必需的配置
     if (!apiKey || !appId) {
       console.error('Missing payment configuration');
       return res.status(500).json({
         error: 'Payment configuration error',
         message: 'Please configure PAYMENT_302_API_KEY and PAYMENT_302_APP_ID'
+      });
+    }
+
+    if (!secret) {
+      console.error('❌ PAYMENT_SECRET is not configured!');
+      return res.status(500).json({
+        error: 'Payment configuration error',
+        message: 'PAYMENT_SECRET environment variable is required. Please configure it in Vercel Dashboard.'
       });
     }
 
@@ -205,9 +214,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // 调试：打印完整响应
     console.log('📦 302.AI Response:', JSON.stringify(checkoutData, null, 2));
 
-    // 获取 checkout_id（可能在不同字段）
-    const checkout_id = checkoutData.id || checkoutData.checkout_id || checkoutData.data?.id;
-    const checkout_url = checkoutData.checkout_url || checkoutData.url || checkoutData.data?.checkout_url;
+    // 根据实际 API 响应格式获取字段（key: url, payment_order）
+    const checkout_id = checkoutData.checkout_id || checkoutData.id || checkoutData.data?.id || checkoutData.data?.payment_order;
+    const checkout_url = checkoutData.checkout_url || checkoutData.url || checkoutData.data?.url;
 
     if (!checkout_id || !checkout_url) {
       console.error('❌ Missing checkout_id or checkout_url in response:', checkoutData);

@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { LanguageContext } from '../../App';
 
 const PaymentSuccess: React.FC = () => {
-  const { getToken } = useAuth();
+  const { getToken, refreshSession } = useAuth();
   const { lang } = useContext(LanguageContext);
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying');
   const [message, setMessage] = useState('');
@@ -15,9 +15,15 @@ const PaymentSuccess: React.FC = () => {
 
   const verifyPayment = async () => {
     try {
+      console.log('========== PaymentSuccess: Starting verifyPayment ==========');
+
       // 从 URL 获取 checkout_id（hash 路由后的 query 参数）
+      console.log('📍 Current URL:', window.location.href);
       const hashParts = window.location.hash.split('?');
+      console.log('📍 Hash parts:', hashParts);
+
       if (hashParts.length < 2) {
+        console.log('❌ Missing query parameters in hash');
         setStatus('error');
         setMessage('Missing payment parameters');
         return;
@@ -27,36 +33,64 @@ const PaymentSuccess: React.FC = () => {
       const checkout_id = params.get('checkout_id');
       const signature = params.get('302_signature');
 
+      console.log('📍 checkout_id:', checkout_id);
+      console.log('📍 302_signature:', signature);
+
       if (!checkout_id) {
+        console.log('❌ checkout_id is missing');
         setStatus('error');
         setMessage('Missing checkout_id');
         return;
       }
 
       const token = getToken();
+      console.log('📍 Token:', token ? `${token.substring(0, 10)}...` : 'No token');
+
       if (!token) {
+        console.log('❌ No authentication token');
         setStatus('error');
         setMessage('Please login first');
         return;
       }
 
+      // 构建API URL
+      const apiUrl = `/api/payment/verify-checkout?checkout_id=${checkout_id}${signature ? `&302_signature=${signature}` : ''}`;
+      console.log('🚀 Calling verify API:', apiUrl);
+
       // 调用验证 API
-      const response = await fetch(`/api/payment/verify-checkout?checkout_id=${checkout_id}${signature ? `&302_signature=${signature}` : ''}`, {
+      console.log('⏳ Fetching from verify API...');
+      const response = await fetch(apiUrl, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
 
+      console.log('📥 Response status:', response.status);
       const data = await response.json();
+      console.log('📦 Response data:', JSON.stringify(data, null, 2));
 
       if (data.success) {
         setStatus('success');
-        setMessage(lang === 'cn' ? '支付成功！正在为您升级套餐...' : 'Payment successful! Upgrading your plan...');
+        setMessage(lang === 'cn' ? '支付成功！正在为您升级套餐并充值credits...' : 'Payment successful! Upgrading subscription and adding credits...');
 
-        // 3秒后跳转到订阅页面
+        // 重要：清除缓存，强制刷新用户数据
+        console.log('🔄 Clearing cache and refreshing user data...');
+        localStorage.removeItem('cached_user');
+        localStorage.removeItem('session_last_refresh');
+        localStorage.removeItem('dashboard_cache');
+        localStorage.removeItem('dashboard_preload_time');
+
+        // 刷新用户会话（获取最新订阅和credits数据）
+        await refreshSession();
+        console.log('✅ User session refreshed with latest data');
+
+        // 立即跳转到订阅页面并刷新（显示最新状态）
         setTimeout(() => {
+          console.log('🔄 Redirecting to subscription page with fresh data...');
           window.location.hash = '#console/subscription';
-        }, 3000);
+          // 强制刷新页面
+          window.location.reload();
+        }, 1500);
       } else {
         setStatus('error');
         setMessage(data.message || 'Payment verification failed');

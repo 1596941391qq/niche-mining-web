@@ -111,7 +111,7 @@ const Console: React.FC = () => {
               </svg>
             </div>
             <div>
-              <h1 className="text-sm font-bold tracking-tighter text-white uppercase">Niche Mining</h1>
+              <h1 className="text-sm font-bold tracking-tighter text-white uppercase">NicheDigger</h1>
               <p className="text-[10px] text-emerald-500 font-mono tracking-tighter">BLUE OCEAN PROTOCOL</p>
             </div>
           </div>
@@ -236,7 +236,7 @@ const Console: React.FC = () => {
               <span className="font-bold text-sm">NM</span>
             </div>
             <div>
-              <h2 className="text-white font-bold text-sm">NICHE MINING</h2>
+              <h2 className="text-white font-bold text-sm">NICHEDIGGER</h2>
               <p className="text-xs text-zinc-500 font-mono">CONSOLE</p>
             </div>
           </a>
@@ -370,7 +370,7 @@ const Console: React.FC = () => {
                 <span className="font-bold text-sm font-mono">NM</span>
               </div>
               <div>
-                <h2 className="text-white font-bold text-sm font-mono">NICHE MINING</h2>
+                <h2 className="text-white font-bold text-sm font-mono">NICHEDIGGER</h2>
                 <p className="text-xs text-zinc-500 font-mono">CONSOLE</p>
               </div>
             </div>

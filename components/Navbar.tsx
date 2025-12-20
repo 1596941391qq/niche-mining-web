@@ -58,7 +58,7 @@ const Navbar: React.FC = () => {
           </div>
           <div className="flex flex-col">
              <span className="text-xl font-bold tracking-tighter text-white leading-none">
-              NICHE MINING
+              NICHEDIGGER
             </span>
             <span className="text-[10px] text-primary/90 font-mono tracking-[0.2em] uppercase mt-1">
               Blue Ocean Protocol

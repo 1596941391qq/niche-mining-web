@@ -81,6 +81,9 @@ const ConsoleSubscription: React.FC = () => {
         return;
       }
 
+      // 显示提示：正在创建支付订单（打开新标签页）
+      console.log('🔄 Creating payment order in new tab...');
+
       // 调用创建支付订单 API
       const response = await fetch('/api/payment/create-checkout', {
         method: 'POST',
@@ -91,17 +94,26 @@ const ConsoleSubscription: React.FC = () => {
         body: JSON.stringify({ plan_id })
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to create checkout');
+      // 读取响应
+      let responseData;
+      try {
+        responseData = await response.json();
+      } catch (e) {
+        // 如果不是 JSON，读取文本
+        const text = await response.text();
+        throw new Error(`Server returned non-JSON response: ${text.substring(0, 200)}`);
       }
 
-      const data = await response.json();
+      console.log('📦 Payment API response:', responseData);
 
-      if (data.success && data.checkout_url) {
-        // 跳转到支付页面（在当前页跳转，不要打开新窗口）
-        window.location.href = data.checkout_url;
+      if (response.ok && responseData.success && responseData.checkout_url) {
+        console.log('✅ Payment order created, opening in new tab:', responseData.checkout_url);
+        // 在新标签页打开支付（用户体验更好）
+        window.open(responseData.checkout_url, '_blank');
       } else {
-        throw new Error('No checkout URL returned');
+        // 显示具体的错误信息
+        const errorMsg = responseData.details || responseData.error || responseData.message || 'Unknown error';
+        throw new Error(`Payment failed: ${errorMsg}`);
       }
 
     } catch (error) {

@@ -1,0 +1,13 @@
+/*
+ * NicheDigger - Global Styles
+ * This file exists to prevent 404 errors.
+ * Most styles are defined inline in index.html or via Tailwind CSS.
+ */
+
+/* Placeholder to prevent 404 errors */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Add any global custom styles here if needed */
