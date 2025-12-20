@@ -28,15 +28,35 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // 从数据库查找订单
     console.log('🗄️  Looking up order in database...');
-    const orderResult = await sql`
-      SELECT * FROM payment_orders
-      WHERE checkout_id = ${checkout_id as string}
-    `;
+    console.log('📍 SQL query:', 'SELECT * FROM payment_orders WHERE checkout_id = ?');
+    console.log('📍 Parameters:', { checkout_id });
 
-    console.log('✅ DB query executed');
-    console.log('📊 Found records:', orderResult.rows.length);
+    let orderResult
+    try {
+      // 先测试简单查询
+      console.log('🧪 Testing database connection with simple query...');
+      const testResult = await sql`SELECT 1 as test`
+      console.log('✅ DB connection test successful:', testResult.rows[0])
+
+      orderResult = await sql`
+        SELECT * FROM payment_orders
+        WHERE checkout_id = ${checkout_id as string}
+      `;
+      console.log('✅ DB query executed successfully');
+      console.log('📊 Found records:', orderResult.rows.length);
+    } catch (dbError) {
+      console.error('❌ Database query failed:', dbError);
+      console.error('Error name:', dbError instanceof Error ? dbError.name : 'Unknown')
+      console.error('Error message:', dbError instanceof Error ? dbError.message : 'Unknown')
+      console.error('Error stack:', dbError instanceof Error ? dbError.stack : 'No stack')
+      return res.status(500).json({
+        error: 'Database query failed',
+        details: dbError instanceof Error ? dbError.message : 'Unknown DB error'
+      });
+    }
 
     if (orderResult.rows.length === 0) {
+      console.log('❌ No order found with checkout_id:', checkout_id);
       return res.status(404).json({ error: 'Order not found' });
     }
 
@@ -63,10 +83,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       throw new Error('PAYMENT_302_API_KEY not configured');
     }
 
-    // 调试：检查 checkout_id
+    // 调用 302.AI API 验证支付状态（使用正确的 API 格式）
     console.log('🔍 Querying 302.AI checkout API for:', checkout_id);
 
-    const verifyResponse = await fetch(`https://api.302.ai/v1/checkout/${checkout_id}`, {
+    const verifyResponse = await fetch(`https://api.302.ai/v1/checkout?checkout_id=${checkout_id}`, {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json'
@@ -85,17 +105,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const checkoutData = await verifyResponse.json();
 
     console.log('📊 302.AI Checkout Full Response:', JSON.stringify(checkoutData, null, 2));
-    console.log('📊 Checkout status field:', checkoutData.status || checkoutData.data?.status);
 
-    // 从 response 中提取 status（可能在 data 对象中）
-    // 302.AI status 返回值: failed, pending, completed
-    const paymentStatus = checkoutData.status || checkoutData.data?.status || 'unknown';
+    // 302.AI 响应格式：{ code: 0, msg: "success", data: { payment_status: 1, payment_order: "xxx", ... } }
+    // payment_status 值: 0=未支付, 1=已支付, 2=已退款（根据实际情况可能有其他值）
+    if (checkoutData.code !== 0) {
+      console.error('❌ 302.AI API returned error code:', checkoutData.code, checkoutData.msg);
+      return res.status(500).json({
+        error: 'Payment API error',
+        details: checkoutData.msg || 'Unknown error from payment provider'
+      });
+    }
 
-    console.log('📊 Payment status extracted:', paymentStatus);
+    const paymentStatus = checkoutData.data?.payment_status;
+    console.log('📊 Payment status (payment_status field):', paymentStatus);
 
-    // 严格验证：只有 'completed' 状态才算支付成功
-    if (paymentStatus === 'completed') {
-      console.log('✅ Payment verified as COMPLETED, processing...');
+    // 严格验证：只有 payment_status = 1 才算支付成功
+    if (paymentStatus === 1) {
+      console.log('✅ Payment verified as PAID (payment_status=1), processing...');
       await processPaymentSuccess(order);
       console.log('✅ processPaymentSuccess completed - credits added and subscription upgraded');
 
@@ -108,36 +134,42 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           amount: order.amount
         }
       });
-    } else if (paymentStatus === 'pending') {
-      console.log('⏳ Payment still pending, not processed');
+    } else if (paymentStatus === 0) {
+      console.log('⏳ Payment still pending (payment_status=0)');
       return res.status(200).json({
         success: false,
         status: 'pending',
         message: 'Payment is still pending'
       });
-    } else if (paymentStatus === 'failed') {
-      console.log('❌ Payment failed');
+    } else if (paymentStatus === 2) {
+      console.log('❌ Payment refunded (payment_status=2)');
       return res.status(200).json({
         success: false,
-        status: 'failed',
-        message: 'Payment failed'
+        status: 'refunded',
+        message: 'Payment was refunded'
       });
     } else {
-      // 未知的 status
-      console.log('⚠️  Unknown payment status:', paymentStatus);
+      // 未知的 payment_status
+      console.log('⚠️  Unknown payment_status:', paymentStatus);
       return res.status(200).json({
         success: false,
-        status: paymentStatus,
-        message: 'Unknown payment status'
+        status: 'unknown',
+        message: `Unknown payment status: ${paymentStatus}`
       });
     }
 
   } catch (error) {
-    console.error('Verify checkout error:', error);
+    console.error('========== verify-checkout ERROR ==========');
+    console.error('Error type:', error instanceof Error ? error.constructor.name : typeof error);
+    console.error('Error message:', error instanceof Error ? error.message : String(error));
+    console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace');
+    console.error('==========================================');
+
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return res.status(500).json({
       error: 'Failed to verify checkout',
-      details: errorMessage
+      details: errorMessage,
+      timestamp: new Date().toISOString()
     });
   }
 }
