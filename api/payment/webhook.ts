@@ -159,12 +159,13 @@ async function processPaymentSuccess(order: any) {
         WHERE user_id = ${user_id}
       `;
 
+      const purchaseDescription = `Credits from subscription purchase`;
       await sql`
         INSERT INTO credits_transactions
           (user_id, type, credits_delta, credits_before, credits_after, description, related_entity, related_entity_id)
         VALUES
           (${user_id}, 'purchase', ${creditsToAdd}, ${currentCredits.total_credits}, ${newTotal},
-           'Credits from subscription purchase', 'payment', ${checkout_id})
+           ${purchaseDescription}, 'payment', ${checkout_id})
       `;
     } else {
       const nextReset = new Date();
@@ -178,12 +179,13 @@ async function processPaymentSuccess(order: any) {
           (${user_id}, ${creditsToAdd}, 0, 0, ${new Date()}, ${nextReset})
       `;
 
+      const initialDescription = `Initial credits from subscription purchase`;
       await sql`
         INSERT INTO credits_transactions
           (user_id, type, credits_delta, credits_before, credits_after, description, related_entity, related_entity_id)
         VALUES
           (${user_id}, 'purchase', ${creditsToAdd}, 0, ${creditsToAdd},
-           'Initial credits from subscription purchase', 'payment', ${checkout_id})
+           ${initialDescription}, 'payment', ${checkout_id})
       `;
     }
 

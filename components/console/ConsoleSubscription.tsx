@@ -493,6 +493,8 @@ const ConsoleSubscription: React.FC = () => {
                     ? 'bg-accent-orange text-black hover:bg-accent-orange/90'
                     : plan.popular
                     ? 'bg-primary text-black hover:bg-primary/90'
+                    : plan.id === 'professional'
+                    ? 'bg-primary text-black hover:bg-primary/90'
                     : 'bg-transparent border border-border text-zinc-300 hover:border-primary/50 hover:text-white'
                 }`}
               >
