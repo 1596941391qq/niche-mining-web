@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   LayoutDashboard,
   Target,
@@ -37,9 +37,24 @@ type TabType =
 const Console: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { lang, setLang, t } = useContext(LanguageContext);
+  const [devToolsVisible, setDevToolsVisible] = useState(false);
+
+  // 显示开发工具条
+  useEffect(() => {
+    const isLocalhost =
+      typeof window !== "undefined" &&
+      (window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1");
+
+    if (isLocalhost && !loading && !user) {
+      setDevToolsVisible(true);
+    } else {
+      setDevToolsVisible(false);
+    }
+  }, [user, loading]);
 
   const tabs = [
     {
@@ -90,7 +105,7 @@ const Console: React.FC = () => {
       case "dashboard":
         return <ConsoleDashboard />;
       case "modes":
-        return <MiningModes />;
+        return <MiningModes switchToAgents={() => setActiveTab("agents")} />;
       case "agents":
         return <ConsoleAgents />;
       case "api":
@@ -103,6 +118,27 @@ const Console: React.FC = () => {
         return <ConsoleSettings />;
       default:
         return <ConsoleDashboard />;
+    }
+  };
+
+  const quickLoginDevUser = async () => {
+    try {
+      console.log('🔧 Quick Login Dev User clicked...');
+      const response = await fetch('/api/test/init-dev-user');
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('auth_token', data.token);
+        console.log('✅ Manual dev user login successful:', data.user);
+        window.location.reload(); // 刷新页面以应用新 token
+      } else {
+        const error = await response.json();
+        console.error('❌ Manual login failed:', error);
+        alert(`Login failed: ${error.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('❌ Manual login error:', error);
+      alert('Network error. Please check console.');
     }
   };
 
@@ -462,6 +498,36 @@ const Console: React.FC = () => {
         <div className="p-8 max-w-[1600px] mx-auto w-full">
           {renderContent()}
         </div>
+
+        {/* Development Tools Bar */}
+        {devToolsVisible && (
+          <div className="fixed bottom-0 left-0 right-0 bg-accent-orange/20 border-t-2 border-accent-orange/50 p-3 z-50">
+            <div className="flex items-center justify-between max-w-7xl mx-auto">
+              <div className="flex items-center gap-3">
+                <div className="px-2 py-1 bg-accent-orange/30 text-accent-orange font-mono text-xs font-bold uppercase tracking-wider">
+                  DEV MODE
+                </div>
+                <span className="text-sm text-zinc-300 font-mono">
+                  Not logged in. Quick login for testing:
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={quickLoginDevUser}
+                  className="px-4 py-2 bg-accent-orange text-black font-bold text-sm uppercase tracking-wider hover:bg-accent-orange/90 transition-all"
+                >
+                  Login Dev User
+                </button>
+                <button
+                  onClick={() => window.open('http://localhost:3000/api/test/init-dev-user', '_blank')}
+                  className="px-3 py-1 bg-black text-zinc-400 hover:text-white font-mono text-xs border border-zinc-700 hover:border-zinc-500 transition-all"
+                >
+                  Inspect API
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Footer - toUI Style */}
         <footer className="mt-auto border-t border-[#1a1a1a] bg-[#050505] px-8 py-3 flex items-center gap-4 text-[10px] font-mono text-gray-600">

@@ -20,7 +20,11 @@ interface MiningMode {
   };
 }
 
-const MiningModes: React.FC = () => {
+interface MiningModesProps {
+  switchToAgents: () => void;
+}
+
+const MiningModes: React.FC<MiningModesProps> = ({ switchToAgents }) => {
   const { lang } = useContext(LanguageContext);
   const { getToken } = useAuth();
   const [modes, setModes] = useState<MiningMode[]>([]);
@@ -172,12 +176,15 @@ const MiningModes: React.FC = () => {
               </div>
 
               {/* Action Button */}
-              <div className="flex items-center text-[10px] font-mono text-emerald-500 uppercase tracking-widest gap-2">
+              <button
+                onClick={switchToAgents}
+                className="flex items-center text-[10px] font-mono text-emerald-500 uppercase tracking-widest gap-2 hover:text-emerald-400 transition-colors"
+              >
                 <span>{lang === 'cn' ? '启动任务' : 'Launch Task'}</span>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
-              </div>
+              </button>
             </div>
           );
         })}

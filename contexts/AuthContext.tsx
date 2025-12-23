@@ -204,19 +204,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const existingToken = getToken();
 
         if (!existingToken || existingToken === 'dev_fake_jwt_token_for_local_testing_only') {
-          // 检查是否已经初始化过（缓存）
-          const devUserInitialized = localStorage.getItem('dev_user_initialized');
-          const lastInitTime = localStorage.getItem('dev_user_init_time');
-          const now = Date.now();
-          const oneHour = 60 * 60 * 1000;
-
-          // 如果1小时内已经初始化过，跳过（临时禁用缓存用于调试）
-          // if (devUserInitialized === 'true' && lastInitTime && (now - parseInt(lastInitTime)) < oneHour) {
-          //   console.log('🔧 Dev user already initialized recently, skipping...');
-          //   await refreshSession();
-          //   return;
-          // }
-
           console.log('🔧 Development Mode: Initializing real dev user...');
 
           try {
@@ -229,10 +216,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               // 保存真实的JWT token
               saveToken(data.token);
 
-              // 标记已初始化
-              localStorage.setItem('dev_user_initialized', 'true');
-              localStorage.setItem('dev_user_init_time', now.toString());
-
               console.log('✅ Dev user initialized:', data.user);
               console.log('✅ Real JWT token generated and saved');
 
@@ -240,10 +223,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               await refreshSession();
               return;
             } else {
-              console.error('Failed to initialize dev user');
+              const errorData = await response.json();
+              console.error('❌ Failed to initialize dev user:', response.status, errorData);
             }
           } catch (error) {
-            console.error('Dev user init error:', error);
+            console.error('❌ Dev user init error:', error);
           }
         } else {
           // 已有真实token，直接刷新会话

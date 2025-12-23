@@ -23,32 +23,7 @@ interface TeamMember {
 
 const ConsoleTeam: React.FC = () => {
   const [showInviteModal, setShowInviteModal] = useState(false);
-  const [teamMembers] = useState<TeamMember[]>([
-    {
-      id: '1',
-      name: '锰',
-      email: 'x1596941391@gmail.com',
-      role: 'owner',
-      status: 'active',
-      joinedDate: '2025-12-01',
-    },
-    {
-      id: '2',
-      name: 'John Doe',
-      email: 'john@example.com',
-      role: 'admin',
-      status: 'active',
-      joinedDate: '2025-12-10',
-    },
-    {
-      id: '3',
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      role: 'member',
-      status: 'pending',
-      joinedDate: '2025-12-14',
-    },
-  ]);
+  const [teamMembers] = useState<TeamMember[]>([]);
 
   const getRoleBadge = (role: string) => {
     const styles = {
@@ -83,49 +58,59 @@ const ConsoleTeam: React.FC = () => {
           </p>
         </div>
         <button
-          onClick={() => setShowInviteModal(true)}
-          className="flex items-center gap-2 px-6 py-3 bg-primary text-black font-bold text-sm uppercase tracking-wider hover:bg-primary/90 transition-all"
+          disabled
+          className="flex items-center gap-2 px-6 py-3 bg-zinc-700 text-zinc-500 font-bold text-sm uppercase tracking-wider cursor-not-allowed"
         >
           <UserPlus className="w-4 h-4" />
           Invite Member
         </button>
       </div>
 
-      {/* Team Stats */}
+      {/* Feature Not Available Banner */}
+      <div className="bg-accent-orange/10 border-2 border-accent-orange/30 p-6 text-center">
+        <h3 className="text-lg font-bold text-accent-orange mb-2 font-mono uppercase tracking-wider">
+          Team Management Coming Soon
+        </h3>
+        <p className="text-sm text-zinc-400 font-mono max-w-md mx-auto">
+          Team management feature is currently under development and will be available in a future update.
+        </p>
+      </div>
+
+      {/* Team Stats - All Zero */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-surface border border-border p-6">
+        <div className="bg-surface border border-border p-6 opacity-50">
           <div className="flex items-center justify-between mb-2">
             <Users className="w-5 h-5 text-primary" />
             <span className="text-xs text-zinc-500 font-mono uppercase tracking-wider">
               Total
             </span>
           </div>
-          <p className="text-3xl font-bold text-white data-value">3</p>
+          <p className="text-3xl font-bold text-white data-value">0</p>
           <p className="text-xs text-zinc-500 mt-1 font-mono">Team members</p>
         </div>
-        <div className="bg-surface border border-border p-6">
+        <div className="bg-surface border border-border p-6 opacity-50">
           <div className="flex items-center justify-between mb-2">
             <Check className="w-5 h-5 text-accent-green" />
             <span className="text-xs text-zinc-500 font-mono uppercase tracking-wider">
               Active
             </span>
           </div>
-          <p className="text-3xl font-bold text-white data-value">2</p>
+          <p className="text-3xl font-bold text-white data-value">0</p>
           <p className="text-xs text-zinc-500 mt-1 font-mono">Active members</p>
         </div>
-        <div className="bg-surface border border-border p-6">
+        <div className="bg-surface border border-border p-6 opacity-50">
           <div className="flex items-center justify-between mb-2">
             <Mail className="w-5 h-5 text-accent-yellow" />
             <span className="text-xs text-zinc-500 font-mono uppercase tracking-wider">
               Pending
             </span>
           </div>
-          <p className="text-3xl font-bold text-white data-value">1</p>
+          <p className="text-3xl font-bold text-white data-value">0</p>
           <p className="text-xs text-zinc-500 mt-1 font-mono">Pending invites</p>
         </div>
       </div>
 
-      {/* Team Members List */}
+      {/* Team Members List - Empty State */}
       <div className="bg-surface border border-border">
         <div className="p-6 border-b border-border">
           <h2 className="text-lg font-bold text-white font-mono uppercase tracking-wider">
@@ -133,68 +118,88 @@ const ConsoleTeam: React.FC = () => {
           </h2>
         </div>
 
-        <div className="divide-y divide-border">
-          {teamMembers.map((member) => (
-            <div
-              key={member.id}
-              className="p-6 hover:bg-surface/30 transition-colors"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4 flex-1">
-                  {/* Avatar */}
-                  <div className="w-12 h-12 rounded-full bg-primary/20 border-2 border-primary/30 flex items-center justify-center">
-                    <span className="text-primary font-bold text-lg">
-                      {member.name[0].toUpperCase()}
-                    </span>
-                  </div>
-
-                  {/* Info */}
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-1">
-                      <h3 className="text-white font-bold">{member.name}</h3>
-                      <span
-                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono border ${getRoleBadge(
-                          member.role
-                        )}`}
-                      >
-                        {getRoleIcon(member.role)}
-                        {member.role}
-                      </span>
-                      {member.status === 'pending' && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
-                          <Mail className="w-3 h-3" />
-                          Pending
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-zinc-400 font-mono">{member.email}</p>
-                    <p className="text-xs text-zinc-500 font-mono mt-1">
-                      Joined {member.joinedDate}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Actions */}
-                {member.role !== 'owner' && (
-                  <div className="flex items-center gap-2">
-                    <button className="p-2 text-zinc-400 hover:text-white transition-colors">
-                      <MoreVertical className="w-5 h-5" />
-                    </button>
-                    <button className="p-2 text-zinc-400 hover:text-red-400 transition-colors">
-                      <Trash2 className="w-5 h-5" />
-                    </button>
-                  </div>
-                )}
-              </div>
+        {teamMembers.length === 0 ? (
+          <div className="p-8 text-center">
+            <div className="flex flex-col items-center justify-center">
+              <Users className="w-12 h-12 text-zinc-600 mb-4" />
+              <h3 className="text-lg font-bold text-white mb-2 font-mono uppercase tracking-wider">
+                No Team Members
+              </h3>
+              <p className="text-sm text-zinc-400 font-mono max-w-md mb-6">
+                Team members will appear here once the team management feature is enabled. This feature is currently under development.
+              </p>
+              <button
+                disabled
+                className="px-6 py-3 bg-zinc-800 text-zinc-500 cursor-not-allowed font-mono uppercase tracking-wider text-sm border border-zinc-700"
+              >
+                Invite First Member (Coming Soon)
+              </button>
             </div>
-          ))}
-        </div>
+          </div>
+        ) : (
+          <div className="divide-y divide-border">
+            {teamMembers.map((member) => (
+              <div
+                key={member.id}
+                className="p-6 hover:bg-surface/30 transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4 flex-1">
+                    {/* Avatar */}
+                    <div className="w-12 h-12 rounded-full bg-primary/20 border-2 border-primary/30 flex items-center justify-center">
+                      <span className="text-primary font-bold text-lg">
+                        {member.name[0].toUpperCase()}
+                      </span>
+                    </div>
+
+                    {/* Info */}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-1">
+                        <h3 className="text-white font-bold">{member.name}</h3>
+                        <span
+                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono border ${getRoleBadge(
+                            member.role
+                          )}`}
+                        >
+                          {getRoleIcon(member.role)}
+                          {member.role}
+                        </span>
+                        {member.status === 'pending' && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
+                            <Mail className="w-3 h-3" />
+                            Pending
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-zinc-400 font-mono">{member.email}</p>
+                      <p className="text-xs text-zinc-500 font-mono mt-1">
+                        Joined {member.joinedDate}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Actions - Disabled */}
+                  {member.role !== 'owner' && (
+                    <div className="flex items-center gap-2">
+                      <button disabled className="p-2 text-zinc-600 cursor-not-allowed">
+                        <MoreVertical className="w-5 h-5" />
+                      </button>
+                      <button disabled className="p-2 text-zinc-600 cursor-not-allowed">
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Roles & Permissions */}
-      <div className="bg-surface border border-border p-6">
+      <div className="bg-surface border border-border p-6 opacity-50">
         <h2 className="text-lg font-bold text-white mb-6 font-mono uppercase tracking-wider">
-          Roles & Permissions
+          Roles & Permissions (Preview)
         </h2>
 
         <div className="space-y-4">
@@ -274,55 +279,6 @@ const ConsoleTeam: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Invite Modal */}
-      {showInviteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-surface border border-border p-8 max-w-md w-full mx-4 relative">
-            <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary"></div>
-            <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-primary"></div>
-
-            <h2 className="text-2xl font-bold text-white mb-6 font-mono uppercase tracking-wider">
-              Invite Team Member
-            </h2>
-            <div className="space-y-4 mb-6">
-              <div>
-                <label className="block text-sm text-zinc-400 font-mono uppercase tracking-wider mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  placeholder="colleague@example.com"
-                  className="w-full px-4 py-3 bg-background border border-border text-white placeholder-zinc-600 focus:border-primary/50 focus:outline-none transition-colors"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-zinc-400 font-mono uppercase tracking-wider mb-2">
-                  Role
-                </label>
-                <select className="w-full px-4 py-3 bg-background border border-border text-white focus:border-primary/50 focus:outline-none transition-colors">
-                  <option value="member">Member</option>
-                  <option value="admin">Admin</option>
-                </select>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowInviteModal(false)}
-                className="flex-1 px-6 py-3 bg-transparent border border-border text-zinc-300 hover:border-primary/50 hover:text-white text-sm font-mono uppercase tracking-wider transition-all"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => setShowInviteModal(false)}
-                className="flex-1 px-6 py-3 bg-primary text-black font-bold text-sm uppercase tracking-wider hover:bg-primary/90 transition-all"
-              >
-                Send Invite
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
