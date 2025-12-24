@@ -13,7 +13,7 @@ const Navbar: React.FC = () => {
   const isPreviewDeployment =
     typeof window !== "undefined" &&
     window.location.hostname.includes("vercel.app") &&
-    !window.location.hostname.startsWith("niche-mining-web.vercel.app");
+    !window.location.hostname.includes("nichedigger.ai");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,7 +29,7 @@ const Navbar: React.FC = () => {
         "OAuth login is disabled in preview deployments.\n\n" +
           "Reason: Google OAuth does not support dynamic preview URLs.\n\n" +
           "Please test login on:\n" +
-          "• Production: https://niche-mining-web.vercel.app\n" +
+          "• Production: https://www.nichedigger.ai\n" +
           "• Local dev: http://localhost:3000"
       );
       return;

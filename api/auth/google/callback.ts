@@ -10,7 +10,7 @@ function getFrontendUrl(): string {
     return 'http://localhost:3000';
   }
   // 生产环境和预览环境都使用生产域名
-  return 'https://niche-mining-web.vercel.app';
+  return 'https://www.nichedigger.ai';
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
