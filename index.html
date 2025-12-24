@@ -118,28 +118,20 @@
       .grid-bg {
         background-image: linear-gradient(
             to right,
-            rgba(16, 185, 129, 0.05) 1px,
+            var(--grid-color) 1px,
             transparent 1px
           ),
-          linear-gradient(
-            to bottom,
-            rgba(16, 185, 129, 0.05) 1px,
-            transparent 1px
-          );
+          linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
         background-size: 40px 40px;
       }
 
       .grid-bg-small {
         background-image: linear-gradient(
             to right,
-            rgba(16, 185, 129, 0.05) 0.5px,
+            var(--grid-color) 0.5px,
             transparent 0.5px
           ),
-          linear-gradient(
-            to bottom,
-            rgba(16, 185, 129, 0.05) 0.5px,
-            transparent 0.5px
-          );
+          linear-gradient(to bottom, var(--grid-color) 0.5px, transparent 0.5px);
         background-size: 10px 10px;
       }
 
@@ -161,6 +153,16 @@
         pointer-events: none;
       }
 
+      html.light .scanline {
+        background: linear-gradient(
+          0deg,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(16, 185, 129, 0.05) 50%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        opacity: 0.15;
+      }
+
       @keyframes scanline {
         0% {
           bottom: 100%;
@@ -177,11 +179,11 @@
       }
 
       ::-webkit-scrollbar-track {
-        background: #0a0a0a;
+        background: var(--color-surface);
       }
 
       ::-webkit-scrollbar-thumb {
-        background: #1a1a1a;
+        background: var(--color-border);
         border-radius: 0;
       }
 
@@ -202,16 +204,25 @@
       html.light h4,
       html.light h5,
       html.light h6 {
-        color: #1f2937 !important;
+        color: var(--color-text-primary) !important;
       }
 
       html.light .text-zinc-300,
       html.light .text-zinc-400 {
-        color: #6b7280 !important;
+        color: var(--color-text-secondary) !important;
       }
 
-      html.light .text-zinc-500 {
-        color: #9ca3af !important;
+      html.light .text-zinc-500,
+      html.light .text-gray-500 {
+        color: var(--color-text-tertiary) !important;
+      }
+
+      html.light .text-gray-400 {
+        color: var(--color-text-secondary) !important;
+      }
+
+      html.light .text-gray-600 {
+        color: var(--color-text-tertiary) !important;
       }
 
       html.light .bg-background {

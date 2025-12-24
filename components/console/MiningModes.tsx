@@ -137,10 +137,10 @@ const MiningModes: React.FC<MiningModesProps> = ({ switchToAgents }) => {
           return (
             <div
               key={mode.modeId}
-              className={`p-6 bg-[#0a0a0a] border ${borderColor} rounded-sm relative overflow-hidden group hover:scale-[1.02] transition-all cursor-pointer`}
+              className={`p-6 bg-surface border ${borderColor} rounded-sm relative overflow-hidden group hover:scale-[1.02] transition-all cursor-pointer`}
             >
-              <h3 className="text-lg font-bold text-white mb-2">{lang === 'cn' ? mode.nameCn : mode.nameEn}</h3>
-              <p className="text-xs text-gray-500 mb-6">{lang === 'cn' ? mode.descriptionCn : mode.descriptionEn}</p>
+              <h3 className="text-lg font-bold text-text-primary mb-2">{lang === 'cn' ? mode.nameCn : mode.nameEn}</h3>
+              <p className="text-xs text-text-tertiary mb-6">{lang === 'cn' ? mode.descriptionCn : mode.descriptionEn}</p>
 
               {/* Credits Badge */}
               <div className="mb-4">
@@ -152,10 +152,10 @@ const MiningModes: React.FC<MiningModesProps> = ({ switchToAgents }) => {
                   }`}>
                     {mode.creditsPerUse}
                   </span>
-                  <span className="text-[10px] text-gray-600 font-mono">CREDITS/USE</span>
+                  <span className="text-[10px] text-text-tertiary font-mono">CREDITS/USE</span>
                 </div>
                 {(mode.modeId === 'keyword_mining' || mode.modeId === 'batch_translation') && (
-                  <p className="text-[10px] text-gray-500 font-mono">
+                  <p className="text-[10px] text-text-tertiary font-mono">
                     {lang === 'cn' 
                       ? `${mode.creditsPerUse} credit 一轮 = 挖 10 个 keyword` 
                       : `${mode.creditsPerUse} credits per round = mine 10 keywords`}
@@ -164,14 +164,14 @@ const MiningModes: React.FC<MiningModesProps> = ({ switchToAgents }) => {
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-2 gap-3 mb-6 p-3 bg-[#050505] border border-[#1a1a1a] rounded-sm">
+              <div className="grid grid-cols-2 gap-3 mb-6 p-3 bg-background border border-border rounded-sm">
                 <div>
-                  <div className="text-[10px] text-gray-600 font-mono uppercase">Uses</div>
-                  <div className="text-lg font-bold text-white font-mono">{mode.stats.usageCount}</div>
+                  <div className="text-[10px] text-text-tertiary font-mono uppercase">Uses</div>
+                  <div className="text-lg font-bold text-text-primary font-mono">{mode.stats.usageCount}</div>
                 </div>
                 <div>
-                  <div className="text-[10px] text-gray-600 font-mono uppercase">Total</div>
-                  <div className="text-lg font-bold text-white font-mono">{mode.stats.totalCredits}</div>
+                  <div className="text-[10px] text-text-tertiary font-mono uppercase">Total</div>
+                  <div className="text-lg font-bold text-text-primary font-mono">{mode.stats.totalCredits}</div>
                 </div>
               </div>
 

@@ -179,24 +179,24 @@ const ConsoleDashboard: React.FC = () => {
               {
                 label: lang === "cn" ? "总积分" : "Total",
                 value: credits.total.toLocaleString(),
-                color: "text-white",
+                color: "text-text-primary",
               },
               {
                 label: lang === "cn" ? "已使用" : "Used",
                 value: credits.used.toLocaleString(),
-                color: "text-gray-400",
+                color: "text-text-secondary",
               },
               {
                 label: lang === "cn" ? "成功率" : "Success Rate",
                 value: "100%",
-                color: "text-white",
+                color: "text-text-primary",
               },
             ].map((stat, idx) => (
               <div
                 key={idx}
-                className="bg-[#050505] border border-[#1a1a1a] p-5 rounded-sm group hover:border-[#10B981]/20 transition-all"
+                className="bg-surface border border-border p-5 rounded-sm group hover:border-emerald-500/20 transition-all"
               >
-                <p className="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-tighter">
+                <p className="text-[10px] font-mono text-text-tertiary mb-1 uppercase tracking-tighter">
                   {stat.label}
                 </p>
                 <div className="flex items-baseline gap-2">
@@ -305,12 +305,12 @@ const ConsoleDashboard: React.FC = () => {
                             )}
                           </div>
                         ) : (
-                          <div className="w-full h-1 bg-zinc-800 border border-zinc-700" />
+                          <div className="w-full h-1 bg-border border border-border" />
                         )}
 
                         {/* Tooltip */}
-                        <div className="absolute -top-20 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black border border-[#1a1a1a] px-3 py-2 text-xs font-mono whitespace-nowrap z-10 pointer-events-none rounded-sm">
-                          <div className="font-bold text-white mb-1">
+                        <div className="absolute -top-20 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-surface border border-border px-3 py-2 text-xs font-mono whitespace-nowrap z-10 pointer-events-none rounded-sm">
+                          <div className="font-bold text-text-primary mb-1">
                             {day.total} Credits
                           </div>
                           {day.keyword_mining > 0 && (
@@ -332,7 +332,7 @@ const ConsoleDashboard: React.FC = () => {
                       </div>
 
                       {/* Date Label */}
-                      <div className="text-[10px] text-gray-500 font-mono">
+                      <div className="text-[10px] text-text-tertiary font-mono">
                         {dayLabel}
                       </div>
                     </div>
@@ -341,29 +341,29 @@ const ConsoleDashboard: React.FC = () => {
               </div>
 
               {/* Legend */}
-              <div className="flex items-center justify-center gap-6 pt-4 border-t border-[#1a1a1a]">
+              <div className="flex items-center justify-center gap-6 pt-4 border-t border-border">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-blue-500 border border-blue-500"></div>
-                  <span className="text-xs text-zinc-400 font-mono">
+                  <span className="text-xs text-text-secondary font-mono">
                     {lang === "cn" ? "关键词挖掘" : "Keyword Mining"}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-emerald-500 border border-emerald-500"></div>
-                  <span className="text-xs text-zinc-400 font-mono">
+                  <span className="text-xs text-text-secondary font-mono">
                     {lang === "cn" ? "批量翻译" : "Translation"}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-purple-500 border border-purple-500"></div>
-                  <span className="text-xs text-zinc-400 font-mono">
+                  <span className="text-xs text-text-secondary font-mono">
                     {lang === "cn" ? "深度挖掘" : "Deep Mining"}
                   </span>
                 </div>
               </div>
             </>
           ) : (
-            <div className="h-64 flex items-center justify-center text-gray-600 font-mono text-sm">
+            <div className="h-64 flex items-center justify-center text-text-tertiary font-mono text-sm">
               {lang === "cn" ? "暂无数据" : "No data"}
             </div>
           )}
@@ -383,21 +383,21 @@ const ConsoleDashboard: React.FC = () => {
         >
           <div className="space-y-3 font-mono text-[10px] overflow-hidden max-h-[400px] overflow-y-auto">
             <div className="space-y-4">
-              <div className="border-l border-[#1a1a1a] pl-3 py-2">
+              <div className="border-l border-border pl-3 py-2">
                 <div className="text-emerald-500 mb-2 font-bold">
                   {lang === "cn" ? "挖掘模式" : "Mining Modes"}
                 </div>
-                <div className="text-gray-400 leading-relaxed">
+                <div className="text-text-secondary leading-relaxed">
                   {lang === "cn"
                     ? "点击挖掘模式可看不同模式的作用和消耗"
                     : "Click Mining Modes to view the functions and costs of different modes"}
                 </div>
               </div>
-              <div className="border-l border-[#1a1a1a] pl-3 py-2">
+              <div className="border-l border-border pl-3 py-2">
                 <div className="text-emerald-500 mb-2 font-bold">
                   {lang === "cn" ? "搜索引擎 Agent" : "Search Engine Agents"}
                 </div>
-                <div className="text-gray-400 leading-relaxed">
+                <div className="text-text-secondary leading-relaxed">
                   {lang === "cn"
                     ? "点击agent可以进入不同搜索引擎的挖掘agent，目前只有google AGENT功能齐全。后续将更新yandex agent及bing agent，且将能够根据seo策略一键建站"
                     : "Click Agents to access mining agents for different search engines. Currently only Google Agent is fully functional. Yandex Agent and Bing Agent will be updated soon, and you will be able to build sites with one click based on SEO strategies"}

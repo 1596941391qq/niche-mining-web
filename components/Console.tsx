@@ -123,36 +123,36 @@ const Console: React.FC = () => {
 
   const quickLoginDevUser = async () => {
     try {
-      console.log('🔧 Quick Login Dev User clicked...');
-      const response = await fetch('/api/test/init-dev-user');
+      console.log("🔧 Quick Login Dev User clicked...");
+      const response = await fetch("/api/test/init-dev-user");
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('auth_token', data.token);
-        console.log('✅ Manual dev user login successful:', data.user);
+        localStorage.setItem("auth_token", data.token);
+        console.log("✅ Manual dev user login successful:", data.user);
         window.location.reload(); // 刷新页面以应用新 token
       } else {
         const error = await response.json();
-        console.error('❌ Manual login failed:', error);
-        alert(`Login failed: ${error.error || 'Unknown error'}`);
+        console.error("❌ Manual login failed:", error);
+        alert(`Login failed: ${error.error || "Unknown error"}`);
       }
     } catch (error) {
-      console.error('❌ Manual login error:', error);
-      alert('Network error. Please check console.');
+      console.error("❌ Manual login error:", error);
+      alert("Network error. Please check console.");
     }
   };
 
   return (
-    <div className="flex min-h-screen bg-[#050505] font-sans selection:bg-emerald-500/30 selection:text-emerald-500">
+    <div className="flex min-h-screen bg-background font-sans selection:bg-emerald-500/30 selection:text-emerald-500">
       {/* 网格背景 */}
       <div className="fixed inset-0 grid-bg pointer-events-none opacity-40"></div>
       {/* 扫描线动画 */}
       <div className="scanline"></div>
 
       {/* Sidebar - Desktop */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-64 bg-[#050505] border-r border-[#1a1a1a] h-screen sticky top-0 z-40">
+      <aside className="hidden lg:flex lg:flex-col lg:w-64 bg-background border-r border-border h-screen sticky top-0 z-40">
         {/* Logo/Header - toUI Style */}
-        <div className="p-6 border-b border-[#1a1a1a]">
+        <div className="p-6 border-b border-border">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-emerald-500 flex items-center justify-center rounded-sm">
               <svg
@@ -170,7 +170,7 @@ const Console: React.FC = () => {
               </svg>
             </div>
             <div>
-              <h1 className="text-sm font-bold tracking-tighter text-white uppercase">
+              <h1 className="text-sm font-bold tracking-tighter text-text-primary uppercase">
                 Niche Digger
               </h1>
               <p className="text-[10px] text-emerald-500 font-mono tracking-tighter">
@@ -182,9 +182,9 @@ const Console: React.FC = () => {
 
         {/* User Info - toUI Style */}
         <div className="px-4 py-6">
-          <div className="bg-[#0a0a0a] border border-[#1a1a1a] p-3 rounded-sm relative overflow-hidden group">
+          <div className="bg-surface border border-border p-3 rounded-sm relative overflow-hidden group">
             <div className="flex items-center gap-3 relative z-10">
-              <div className="w-10 h-10 bg-[#151515] border border-[#252525] flex items-center justify-center rounded-sm text-emerald-500">
+              <div className="w-10 h-10 bg-surface border border-border flex items-center justify-center rounded-sm text-emerald-500">
                 {user?.picture ? (
                   <img
                     src={user.picture}
@@ -208,7 +208,7 @@ const Console: React.FC = () => {
                 )}
               </div>
               <div>
-                <p className="text-xs font-bold text-white">
+                <p className="text-xs font-bold text-text-primary">
                   {user?.name ||
                     user?.email ||
                     (lang === "cn" ? "本地开发测试用户" : "Local Dev User")}
@@ -233,7 +233,7 @@ const Console: React.FC = () => {
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-sm transition-all duration-200 group relative ${
                 activeTab === tab.id
                   ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
-                  : "text-gray-400 hover:text-white hover:bg-white/5 border border-transparent"
+                  : "text-text-secondary hover:text-text-primary hover:bg-surface/50 border border-transparent"
               }`}
             >
               {tab.icon}
@@ -248,11 +248,11 @@ const Console: React.FC = () => {
         </nav>
 
         {/* Bottom Utility Buttons - toUI Style */}
-        <div className="px-4 py-2 border-t border-[#1a1a1a]">
+        <div className="px-4 py-2 border-t border-border">
           <div className="grid grid-cols-3 gap-2">
             <a
               href="#"
-              className="flex flex-col items-center justify-center p-2 rounded-sm bg-[#0a0a0a] border border-[#1a1a1a] text-gray-500 hover:text-emerald-500 hover:border-emerald-500/30 transition-all group"
+              className="flex flex-col items-center justify-center p-2 rounded-sm bg-surface border border-border text-text-secondary hover:text-emerald-500 hover:border-emerald-500/30 transition-all group"
               title={lang === "cn" ? "返回首页" : "Home"}
             >
               <Home className="w-4 h-4" />
@@ -262,7 +262,7 @@ const Console: React.FC = () => {
             </a>
             <button
               onClick={() => setLang(lang === "en" ? "cn" : "en")}
-              className="flex flex-col items-center justify-center p-2 rounded-sm bg-[#0a0a0a] border border-[#1a1a1a] text-gray-500 hover:text-emerald-500 hover:border-emerald-500/30 transition-all group"
+              className="flex flex-col items-center justify-center p-2 rounded-sm bg-surface border border-border text-text-secondary hover:text-emerald-500 hover:border-emerald-500/30 transition-all group"
               title={lang === "cn" ? "中英切换" : "Language"}
             >
               <Globe className="w-4 h-4" />
@@ -272,7 +272,7 @@ const Console: React.FC = () => {
             </button>
             <button
               onClick={toggleTheme}
-              className="flex flex-col items-center justify-center p-2 rounded-sm bg-[#0a0a0a] border border-[#1a1a1a] text-gray-500 hover:text-emerald-500 hover:border-emerald-500/30 transition-all group"
+              className="flex flex-col items-center justify-center p-2 rounded-sm bg-surface border border-border text-text-secondary hover:text-emerald-500 hover:border-emerald-500/30 transition-all group"
               title={lang === "cn" ? "夜间模式" : "Theme"}
             >
               {theme === "dark" ? (
@@ -288,19 +288,25 @@ const Console: React.FC = () => {
         </div>
 
         {/* Footer Console Stats - toUI Style */}
-        <div className="p-4 border-t border-[#1a1a1a]">
-          <div className="text-[9px] font-mono text-gray-600 space-y-1">
+        <div className="p-4 border-t border-border">
+          <div className="text-[9px] font-mono text-text-tertiary space-y-1">
             <div className="flex justify-between">
               <span>UPTIME</span>
-              <span className="text-emerald-900">99.98%</span>
+              <span className="text-emerald-600 dark:text-emerald-900">
+                99.98%
+              </span>
             </div>
             <div className="flex justify-between">
               <span>NODES</span>
-              <span className="text-emerald-900">ACTIVE: 124</span>
+              <span className="text-emerald-600 dark:text-emerald-900">
+                ACTIVE: 124
+              </span>
             </div>
             <div className="flex justify-between">
               <span>VERSION</span>
-              <span className="text-emerald-900">V2.8.5</span>
+              <span className="text-emerald-600 dark:text-emerald-900">
+                V2.8.5
+              </span>
             </div>
           </div>
         </div>
@@ -309,7 +315,7 @@ const Console: React.FC = () => {
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black/50 z-40"
+          className="lg:hidden fixed inset-0 bg-black/50 dark:bg-black/50 z-40"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -327,13 +333,15 @@ const Console: React.FC = () => {
               <span className="font-bold text-sm">NM</span>
             </div>
             <div>
-              <h2 className="text-white font-bold text-sm">Niche Digger</h2>
-              <p className="text-xs text-zinc-500 font-mono">CONSOLE</p>
+              <h2 className="text-text-primary font-bold text-sm">
+                Niche Digger
+              </h2>
+              <p className="text-xs text-text-tertiary font-mono">CONSOLE</p>
             </div>
           </a>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="text-zinc-400 hover:text-white"
+            className="text-text-secondary hover:text-text-primary"
           >
             <X className="w-6 h-6" />
           </button>
@@ -356,10 +364,10 @@ const Console: React.FC = () => {
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="text-white text-sm font-bold truncate">
+              <p className="text-text-primary text-sm font-bold truncate">
                 {user?.name || user?.email}
               </p>
-              <p className="text-xs text-zinc-500 font-mono">
+              <p className="text-xs text-text-tertiary font-mono">
                 {t.console?.userInfo?.currentPlan ||
                   (lang === "cn" ? "当前套餐" : "Current Plan")}
                 :{" "}
@@ -383,7 +391,7 @@ const Console: React.FC = () => {
               className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-mono uppercase tracking-wider transition-all border ${
                 activeTab === tab.id
                   ? "bg-primary/10 text-primary border-primary"
-                  : "text-zinc-400 hover:text-white hover:bg-surface/50 border-border hover:border-primary/50"
+                  : "text-text-secondary hover:text-text-primary hover:bg-surface/50 border-border hover:border-primary/50"
               }`}
             >
               <span className="w-5 h-5">{tab.icon}</span>
@@ -399,7 +407,7 @@ const Console: React.FC = () => {
               toggleTheme();
               setSidebarOpen(false);
             }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-sm font-mono text-zinc-400 hover:text-white hover:bg-surface/50 border border-border hover:border-primary/50 transition-all"
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm font-mono text-text-secondary hover:text-text-primary hover:bg-surface/50 border border-border hover:border-primary/50 transition-all"
           >
             {theme === "dark" ? (
               <Sun className="w-5 h-5" />
@@ -421,7 +429,7 @@ const Console: React.FC = () => {
               setLang(lang === "en" ? "cn" : "en");
               setSidebarOpen(false);
             }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-sm font-mono text-zinc-400 hover:text-white hover:bg-surface/50 border border-border hover:border-primary/50 transition-all"
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm font-mono text-text-secondary hover:text-text-primary hover:bg-surface/50 border border-border hover:border-primary/50 transition-all"
           >
             <Globe className="w-5 h-5" />
             <span>{lang === "en" ? "English" : "中文"}</span>
@@ -429,7 +437,7 @@ const Console: React.FC = () => {
           <a
             href="#"
             onClick={() => setSidebarOpen(false)}
-            className="w-full flex items-center gap-3 px-4 py-3 text-sm font-mono text-zinc-400 hover:text-white hover:bg-surface/50 border border-border hover:border-primary/50 transition-all"
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm font-mono text-text-secondary hover:text-text-primary hover:bg-surface/50 border border-border hover:border-primary/50 transition-all"
           >
             <Home className="w-5 h-5" />
             <span>
@@ -443,16 +451,16 @@ const Console: React.FC = () => {
       {/* Main Content */}
       <main className="flex-1 relative z-10 flex flex-col">
         {/* Header - toUI Style (Desktop) */}
-        <header className="hidden lg:flex h-16 border-b border-[#1a1a1a] bg-[#050505]/80 backdrop-blur-md sticky top-0 z-30 items-center justify-between px-8">
+        <header className="hidden lg:flex h-16 border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-30 items-center justify-between px-8">
           <div className="flex items-center gap-4">
             <div className="flex flex-col">
-              <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+              <h2 className="text-xl font-bold tracking-tight text-text-primary flex items-center gap-2">
                 {lang === "cn" ? "仪表板" : "Dashboard"}
-                <span className="text-[10px] bg-white/5 border border-white/10 px-1.5 py-0.5 rounded text-gray-500 font-mono">
+                <span className="text-[10px] bg-surface border border-border px-1.5 py-0.5 rounded text-text-tertiary font-mono">
                   DASHBOARD_V2
                 </span>
               </h2>
-              <p className="text-[10px] text-gray-500 font-mono uppercase tracking-widest">
+              <p className="text-[10px] text-text-tertiary font-mono uppercase tracking-widest">
                 {lang === "cn"
                   ? "账户活动和性能概览"
                   : "Overview of your account activity and performance"}
@@ -471,11 +479,11 @@ const Console: React.FC = () => {
         </header>
 
         {/* Top Bar - Mobile */}
-        <div className="lg:hidden sticky top-0 z-30 bg-[#050505] border-b border-[#1a1a1a] p-4">
+        <div className="lg:hidden sticky top-0 z-30 bg-background border-b border-border p-4">
           <div className="flex items-center justify-between">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="text-zinc-300 hover:text-white"
+              className="text-text-secondary hover:text-text-primary"
             >
               <Menu className="w-6 h-6" />
             </button>
@@ -484,10 +492,10 @@ const Console: React.FC = () => {
                 <span className="font-bold text-sm font-mono">NM</span>
               </div>
               <div>
-                <h2 className="text-white font-bold text-sm font-mono">
+                <h2 className="text-text-primary font-bold text-sm font-mono">
                   Niche Digger
                 </h2>
-                <p className="text-xs text-zinc-500 font-mono">CONSOLE</p>
+                <p className="text-xs text-text-tertiary font-mono">CONSOLE</p>
               </div>
             </div>
             <div className="w-6" /> {/* Spacer for centering */}
@@ -519,7 +527,12 @@ const Console: React.FC = () => {
                   Login Dev User
                 </button>
                 <button
-                  onClick={() => window.open('http://localhost:3000/api/test/init-dev-user', '_blank')}
+                  onClick={() =>
+                    window.open(
+                      "http://localhost:3000/api/test/init-dev-user",
+                      "_blank"
+                    )
+                  }
                   className="px-3 py-1 bg-black text-zinc-400 hover:text-white font-mono text-xs border border-zinc-700 hover:border-zinc-500 transition-all"
                 >
                   Inspect API
@@ -530,7 +543,7 @@ const Console: React.FC = () => {
         )}
 
         {/* Footer - toUI Style */}
-        <footer className="mt-auto border-t border-[#1a1a1a] bg-[#050505] px-8 py-3 flex items-center gap-4 text-[10px] font-mono text-gray-600">
+        <footer className="mt-auto border-t border-border bg-background px-8 py-3 flex items-center gap-4 text-[10px] font-mono text-text-tertiary">
           <span className="text-emerald-500">root@miner:~#</span>
           <span className="animate-pulse">_</span>
           <div className="flex-1"></div>
