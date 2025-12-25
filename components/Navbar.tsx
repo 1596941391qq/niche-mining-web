@@ -2,12 +2,14 @@ import React, { useContext, useState, useEffect } from "react";
 import { Pickaxe, Menu, X, Globe, LogIn, LogOut, User } from "lucide-react";
 import { LanguageContext } from "../App";
 import { useAuth } from "../contexts/AuthContext";
+import LoginModal from "./auth/LoginModal";
 
 const Navbar: React.FC = () => {
   const { lang, setLang, t } = useContext(LanguageContext);
-  const { user, authenticated, login, logout, loading } = useAuth();
+  const { user, authenticated, login, loginWithEmail, register, logout, loading } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   // 检测是否是预览部署
   const isPreviewDeployment =
@@ -25,15 +27,16 @@ const Navbar: React.FC = () => {
 
   const handleLogin = () => {
     if (isPreviewDeployment) {
-      alert(
-        "OAuth login is disabled in preview deployments.\n\n" +
-          "Reason: Google OAuth does not support dynamic preview URLs.\n\n" +
-          "Please test login on:\n" +
-          "• Production: https://www.nichedigger.ai\n" +
-          "• Local dev: http://localhost:3000"
-      );
+      // 预览环境显示登录模态框（支持邮箱密码登录）
+      setLoginModalOpen(true);
       return;
     }
+    // 生产环境：显示登录模态框，用户可以选择 Google 或邮箱密码
+    setLoginModalOpen(true);
+  };
+
+  const handleGoogleLogin = () => {
+    setLoginModalOpen(false);
     login();
   };
 
@@ -239,6 +242,15 @@ const Navbar: React.FC = () => {
           )}
         </div>
       )}
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={loginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
+        onGoogleLogin={handleGoogleLogin}
+        onEmailLogin={loginWithEmail}
+        onRegister={register}
+      />
     </nav>
   );
 };

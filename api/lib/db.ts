@@ -60,7 +60,10 @@ export interface User {
   email: string;
   name: string | null;
   picture: string | null;
-  google_id: string;
+  google_id: string | null; // 改为可选，密码用户没有 Google ID
+  password_hash: string | null; // 新增：密码哈希
+  auth_provider: string; // 新增：'google' 或 'email'
+  email_verified: boolean; // 新增：邮箱是否已验证
   created_at: Date;
   updated_at: Date;
   last_login_at: Date | null;
@@ -83,17 +86,66 @@ export async function initUsersTable() {
     // 先测试数据库连接
     await sql`SELECT 1`;
 
+    // 创建表（如果不存在）
     await sql`
       CREATE TABLE IF NOT EXISTS users (
         id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
         email VARCHAR(255) UNIQUE NOT NULL,
         name VARCHAR(255),
         picture VARCHAR(500),
-        google_id VARCHAR(255) UNIQUE NOT NULL,
+        google_id VARCHAR(255) UNIQUE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         last_login_at TIMESTAMP
       );
+    `;
+
+    // 修改 google_id 约束：移除 NOT NULL（如果表已存在且有 NOT NULL 约束）
+    try {
+      // PostgreSQL 中，如果列有 NOT NULL 约束，需要先移除
+      await sql`ALTER TABLE users ALTER COLUMN google_id DROP NOT NULL`;
+    } catch (e: any) {
+      // 如果约束不存在或已经是 NULL，忽略错误
+      // 错误代码 42704 表示列不存在，42804 表示约束不存在
+      if (e?.code !== '42704' && e?.code !== '42804' && e?.code !== '42P01' && e?.code !== '23502') {
+        console.warn('Warning modifying google_id constraint:', e?.message);
+      }
+    }
+
+    // 添加新字段（向后兼容，如果字段已存在会忽略错误）
+    try {
+      await sql`ALTER TABLE users ADD COLUMN password_hash VARCHAR(255)`;
+    } catch (e: any) {
+      // 字段可能已存在（错误代码 42701），忽略错误
+      if (e?.code !== '42701') {
+        console.warn('Warning adding password_hash column:', e?.message);
+      }
+    }
+
+    try {
+      await sql`ALTER TABLE users ADD COLUMN auth_provider VARCHAR(20) DEFAULT 'google'`;
+    } catch (e: any) {
+      // 字段可能已存在，忽略错误
+      if (e?.code !== '42701') {
+        console.warn('Warning adding auth_provider column:', e?.message);
+      }
+    }
+
+    try {
+      await sql`ALTER TABLE users ADD COLUMN email_verified BOOLEAN DEFAULT true`;
+    } catch (e: any) {
+      // 字段可能已存在，忽略错误
+      if (e?.code !== '42701') {
+        console.warn('Warning adding email_verified column:', e?.message);
+      }
+    }
+
+    // 更新现有用户的 auth_provider 和 email_verified（如果还没有设置）
+    await sql`
+      UPDATE users 
+      SET auth_provider = 'google', email_verified = true 
+      WHERE google_id IS NOT NULL 
+        AND (auth_provider IS NULL OR auth_provider = 'google')
     `;
 
     // 创建索引以提高查询性能
@@ -102,6 +154,9 @@ export async function initUsersTable() {
     `;
     await sql`
       CREATE INDEX IF NOT EXISTS idx_users_google_id ON users(google_id);
+    `;
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_users_auth_provider ON users(auth_provider);
     `;
 
     console.log('Users table initialized successfully');
@@ -138,6 +193,8 @@ export async function findOrCreateUser(googleUser: {
           email = ${googleUser.email},
           name = ${googleUser.name || null},
           picture = ${googleUser.picture || null},
+          auth_provider = 'google',
+          email_verified = true,
           updated_at = CURRENT_TIMESTAMP,
           last_login_at = CURRENT_TIMESTAMP
         WHERE google_id = ${googleUser.id}
@@ -148,8 +205,8 @@ export async function findOrCreateUser(googleUser: {
 
     // 创建新用户
     const newUser = await sql<User>`
-      INSERT INTO users (email, name, picture, google_id, last_login_at)
-      VALUES (${googleUser.email}, ${googleUser.name || null}, ${googleUser.picture || null}, ${googleUser.id}, CURRENT_TIMESTAMP)
+      INSERT INTO users (email, name, picture, google_id, auth_provider, email_verified, last_login_at)
+      VALUES (${googleUser.email}, ${googleUser.name || null}, ${googleUser.picture || null}, ${googleUser.id}, 'google', true, CURRENT_TIMESTAMP)
       RETURNING *
     `;
 
@@ -186,6 +243,37 @@ export async function getUserByEmail(email: string): Promise<User | null> {
     return result.rows[0] || null;
   } catch (error) {
     console.error('Error getting user by email:', error);
+    throw error;
+  }
+}
+
+/**
+ * 创建密码注册用户
+ */
+export async function createPasswordUser(userData: {
+  email: string;
+  passwordHash: string;
+  name?: string;
+}): Promise<User> {
+  try {
+    await initUsersTable();
+
+    // 检查邮箱是否已存在
+    const existingUser = await getUserByEmail(userData.email);
+    if (existingUser) {
+      throw new Error('Email already registered');
+    }
+
+    // 创建新用户
+    const newUser = await sql<User>`
+      INSERT INTO users (email, name, password_hash, auth_provider, email_verified, last_login_at)
+      VALUES (${userData.email}, ${userData.name || null}, ${userData.passwordHash}, 'email', false, CURRENT_TIMESTAMP)
+      RETURNING *
+    `;
+
+    return newUser.rows[0];
+  } catch (error) {
+    console.error('Error creating password user:', error);
     throw error;
   }
 }
