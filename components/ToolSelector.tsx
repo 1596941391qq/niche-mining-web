@@ -123,8 +123,8 @@ const ToolSelector: React.FC = () => {
   const handleToolClick = async (e: React.MouseEvent<HTMLAnchorElement>, toolId: string) => {
     e.preventDefault();
 
-    // 检查 agent 是否可用（yandex 和 bing 暂未更新）
-    const availableAgents = ['google'];
+    // 检查 agent 是否可用（bing 暂未更新）
+    const availableAgents = ['google', 'yandex'];
     if (!availableAgents.includes(toolId)) {
       alert(t.tools.action === 'LAUNCH AGENT' ? 'Coming soon' : '暂未更新');
       return;

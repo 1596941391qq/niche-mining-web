@@ -399,8 +399,8 @@ const ConsoleDashboard: React.FC = () => {
                 </div>
                 <div className="text-text-secondary leading-relaxed">
                   {lang === "cn"
-                    ? "点击agent可以进入不同搜索引擎的挖掘agent，目前只有google AGENT功能齐全。后续将更新yandex agent及bing agent，且将能够根据seo策略一键建站"
-                    : "Click Agents to access mining agents for different search engines. Currently only Google Agent is fully functional. Yandex Agent and Bing Agent will be updated soon, and you will be able to build sites with one click based on SEO strategies"}
+                    ? "点击agent可以进入不同搜索引擎的挖掘agent，目前Google和Yandex AGENT功能齐全。Bing Agent即将更新，且将能够根据seo策略一键建站"
+                    : "Click Agents to access mining agents for different search engines. Google and Yandex Agents are fully functional. Bing Agent will be updated soon, and you will be able to build sites with one click based on SEO strategies"}
                 </div>
               </div>
             </div>

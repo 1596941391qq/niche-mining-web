@@ -127,7 +127,7 @@ const ConsoleAgents: React.FC = () => {
         ? "http://localhost:3001"
         : "https://yandex-seo-agents.vercel.app",
       color: "red",
-      available: false,
+      available: true,
       stats: {
         label: lang === "cn" ? "已挖掘关键词" : "Keywords Mined",
         value: "8,234",
