@@ -153,7 +153,7 @@ const ConsoleAgents: React.FC = () => {
         ? "http://localhost:3003"
         : "https://bing-seo-agen-ts-lans.vercel.app",
       color: "blue",
-      available: false,
+      available: true,
       stats: {
         label: lang === "cn" ? "已挖掘关键词" : "Keywords Mined",
         value: "6,721",
