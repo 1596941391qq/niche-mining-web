@@ -470,7 +470,7 @@ export const CONTENT: Record<string, Translations> = {
       ],
     },
     howItWorks: {
-      badge: '核心工作原理和价值总结 (3 秒洞察)',
+      badge: '核心工作原理和价值总结',
       coreValue: {
         title: '核心价值',
         subtitle: '找到并验证"蓝海 SEO 机会"',
