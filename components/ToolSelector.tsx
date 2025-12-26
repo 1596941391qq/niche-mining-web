@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { ExternalLink, ArrowRight, Cpu, Radio, Crosshair } from "lucide-react";
 import { LanguageContext } from "../App";
 import { useAuth } from "../contexts/AuthContext";
+import LoginModal from "./auth/LoginModal";
 
 // --- Custom SVG Droid Illustrations ---
 
@@ -216,6 +217,7 @@ const ToolSelector: React.FC = () => {
   const { t } = useContext(LanguageContext);
   const { authenticated, getToken, login } = useAuth();
   const [loadingTool, setLoadingTool] = useState<string | null>(null); // 追踪正在加载的工具
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   const getGraphic = (id: string) => {
     switch (id) {
@@ -271,14 +273,8 @@ const ToolSelector: React.FC = () => {
 
     // 检查登录状态
     if (!authenticated) {
-      // 可以显示提示或直接跳转登录
-      if (
-        window.confirm(
-          "Please login first to access this tool. Do you want to login now?"
-        )
-      ) {
-        login();
-      }
+      // 弹出登录注册弹窗
+      setLoginModalOpen(true);
       return;
     }
 
@@ -419,21 +415,15 @@ const ToolSelector: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`w-full py-4 bg-transparent border ${
-                      !["google"].includes(tool.id)
-                        ? "border-zinc-800 text-zinc-600 cursor-not-allowed opacity-50"
-                        : !authenticated
-                        ? "border-zinc-800 text-zinc-600 cursor-not-allowed"
+                      !authenticated
+                        ? "border-zinc-600 text-zinc-300 hover:bg-primary hover:text-black hover:border-primary cursor-pointer"
                         : loadingTool === tool.id
                         ? "border-primary/50 text-primary/70 cursor-wait"
                         : "border-zinc-600 text-zinc-300 hover:bg-primary hover:text-black hover:border-primary cursor-pointer"
                     } font-bold text-sm transition-all flex items-center justify-between px-6 uppercase tracking-wider group/btn`}
                   >
                     <span>
-                      {!["google"].includes(tool.id)
-                        ? t.tools.action === "LAUNCH AGENT"
-                          ? "COMING SOON"
-                          : "暂未更新"
-                        : loadingTool === tool.id
+                      {loadingTool === tool.id
                         ? t.tools.action === "LAUNCH AGENT"
                           ? "LAUNCHING..."
                           : "启动中..."
@@ -460,13 +450,13 @@ const ToolSelector: React.FC = () => {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                    ) : ["google"].includes(tool.id) ? (
+                    ) : (
                       <ExternalLink
                         className={`w-4 h-4 transform ${
                           authenticated ? "group-hover/btn:translate-x-1" : ""
                         } transition-transform`}
                       />
-                    ) : null}
+                    )}
                   </a>
                 </div>
               </div>
@@ -474,6 +464,16 @@ const ToolSelector: React.FC = () => {
           })}
         </div>
       </div>
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={loginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
+        onGoogleLogin={() => {
+          setLoginModalOpen(false);
+          login();
+        }}
+      />
     </section>
   );
 };
