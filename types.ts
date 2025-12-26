@@ -61,38 +61,48 @@ export interface Translations {
       subtitle: string;
       description: string;
     };
-      workflow: {
+    workflow: {
+      title: string;
+      description: string;
+      customizable?: {
         title: string;
         description: string;
-        customizable?: {
-          title: string;
-          description: string;
-          features?: string[];
-        };
-        steps: {
-          id: string;
-          title: string;
-          description: string;
-          agents: {
-            name: string;
-            desc: string;
-          }[];
-          tools: {
-            name: string;
-            desc: string;
-          }[];
-          value?: string;
-        }[];
+        features?: string[];
       };
+      steps: {
+        id: string;
+        title: string;
+        description: string;
+        agents: {
+          name: string;
+          desc: string;
+        }[];
+        tools: {
+          name: string;
+          desc: string;
+        }[];
+        value?: string;
+      }[];
+    };
   };
   footer: {
     tagline: string;
     product: string;
     legal: string;
+    about?: string;
     rights: string;
     system: string;
     privacyLink: string;
     termsLink: string;
+    company?: string;
+    email?: string;
+    aboutDescription?: string;
+    companyName?: string;
+    chineseCompanyName?: string;
+    businessRegNo?: string;
+    incorporationDate?: string;
+    companyType?: string;
+    companyStatus?: string;
   };
   privacy: {
     title: string;
@@ -105,6 +115,32 @@ export interface Translations {
     contact: {
       title: string;
       content: string;
+      email: string;
+      company?: string;
+    };
+  };
+  about: {
+    title: string;
+    subtitle: string;
+    back: string;
+    companyInfo: {
+      title: string;
+      content: string[];
+    };
+    companyDetails: {
+      title: string;
+      companyName: string;
+      companyNameValue: string;
+      chineseCompanyName: string;
+      businessRegNo: string;
+      incorporationDate: string;
+      companyType: string;
+      companyStatus: string;
+    };
+    contact: {
+      title: string;
+      content: string;
+      company: string;
       email: string;
     };
   };
@@ -120,6 +156,7 @@ export interface Translations {
       title: string;
       content: string;
       email: string;
+      company?: string;
     };
   };
 }

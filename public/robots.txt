@@ -1,0 +1,11 @@
+# robots.txt for www.nichedigger.ai
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /#console
+Disallow: /#payment/
+
+# Sitemap location
+Sitemap: https://www.nichedigger.ai/sitemap.xml
+

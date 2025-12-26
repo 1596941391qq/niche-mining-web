@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <!-- 首页 -->
+  <url>
+    <loc>https://www.nichedigger.ai/</loc>
+    <lastmod>2025-01-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.nichedigger.ai/?lang=cn" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nichedigger.ai/?lang=en" />
+  </url>
+  
+  <!-- 隐私政策 -->
+  <url>
+    <loc>https://www.nichedigger.ai/#privacy</loc>
+    <lastmod>2025-01-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.nichedigger.ai/#privacy?lang=cn" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nichedigger.ai/#privacy?lang=en" />
+  </url>
+  
+  <!-- 服务条款 -->
+  <url>
+    <loc>https://www.nichedigger.ai/#terms</loc>
+    <lastmod>2025-01-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.nichedigger.ai/#terms?lang=cn" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nichedigger.ai/#terms?lang=en" />
+  </url>
+  
+</urlset>
+

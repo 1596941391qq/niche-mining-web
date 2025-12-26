@@ -1,42 +1,50 @@
-import React, { useState, createContext, useEffect } from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Features from './components/Features';
-import ToolSelector from './components/ToolSelector';
-import HowItWorks from './components/HowItWorks';
-import Footer from './components/Footer';
-import Privacy from './components/Privacy';
-import Terms from './components/Terms';
-import Console from './components/Console';
-import PaymentSuccess from './components/payment/PaymentSuccess';
-import PaymentResult from './components/payment/PaymentResult';
-import { Language, Translations } from './types';
-import { CONTENT } from './constants';
-import { AuthProvider } from './contexts/AuthContext';
-import { ThemeProvider } from './contexts/ThemeContext';
+import React, { useState, createContext, useEffect } from "react";
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import Features from "./components/Features";
+import ToolSelector from "./components/ToolSelector";
+import HowItWorks from "./components/HowItWorks";
+import Footer from "./components/Footer";
+import Privacy from "./components/Privacy";
+import Terms from "./components/Terms";
+import AboutUs from "./components/AboutUs";
+import Console from "./components/Console";
+import PaymentSuccess from "./components/payment/PaymentSuccess";
+import PaymentResult from "./components/payment/PaymentResult";
+import { Language, Translations } from "./types";
+import { CONTENT } from "./constants";
+import { AuthProvider } from "./contexts/AuthContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 export const LanguageContext = createContext<{
   lang: Language;
   t: Translations;
   setLang: (l: Language) => void;
 }>({
-  lang: 'cn',
-  t: CONTENT['cn'],
+  lang: "cn",
+  t: CONTENT["cn"],
   setLang: () => {},
 });
 
 function App() {
-  const [lang, setLang] = useState<Language>('cn');
-  const [currentPage, setCurrentPage] = useState<string>('home');
+  const [lang, setLang] = useState<Language>("cn");
+  const [currentPage, setCurrentPage] = useState<string>("home");
   const t = CONTENT[lang];
 
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.slice(1);
-      if (hash === 'privacy' || hash === 'terms' || hash === 'console' || hash.startsWith('payment/') || hash === 'payresult') {
+      if (
+        hash === "privacy" ||
+        hash === "terms" ||
+        hash === "aboutus" ||
+        hash === "console" ||
+        hash.startsWith("payment/") ||
+        hash === "payresult"
+      ) {
         setCurrentPage(hash);
       } else {
-        setCurrentPage('home');
+        setCurrentPage("home");
       }
     };
 
@@ -44,24 +52,26 @@ function App() {
     handleHashChange();
 
     // Listen for hash changes
-    window.addEventListener('hashchange', handleHashChange);
+    window.addEventListener("hashchange", handleHashChange);
 
     return () => {
-      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener("hashchange", handleHashChange);
     };
   }, []);
 
   const renderPage = () => {
     switch (currentPage) {
-      case 'privacy':
+      case "privacy":
         return <Privacy />;
-      case 'terms':
+      case "terms":
         return <Terms />;
-      case 'console':
+      case "aboutus":
+        return <AboutUs />;
+      case "console":
         return <Console />;
-      case 'payment/success':
+      case "payment/success":
         return <PaymentSuccess />;
-      case 'payresult':
+      case "payresult":
         return <PaymentResult />;
       default:
         return (
@@ -80,11 +90,9 @@ function App() {
       <AuthProvider>
         <LanguageContext.Provider value={{ lang, t, setLang }}>
           <div className="min-h-screen bg-background text-zinc-300 font-sans selection:bg-primary selection:text-black flex flex-col">
-            {currentPage !== 'console' && <Navbar />}
-            <main className="flex-grow flex flex-col">
-              {renderPage()}
-            </main>
-            {currentPage !== 'console' && <Footer />}
+            {currentPage !== "console" && <Navbar />}
+            <main className="flex-grow flex flex-col">{renderPage()}</main>
+            {currentPage !== "console" && <Footer />}
           </div>
         </LanguageContext.Provider>
       </AuthProvider>

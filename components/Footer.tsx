@@ -9,21 +9,21 @@ const Footer: React.FC = () => {
     <footer className="bg-black border-t border-zinc-900 pt-16 pb-8 text-sm">
       <div className="container mx-auto px-6">
         <div className="grid md:grid-cols-4 gap-12 mb-16">
-          <div className="col-span-1 md:col-span-2">
+          <div className="col-span-1">
             <div className="flex items-center gap-2 mb-6">
               <Pickaxe className="w-5 h-5 text-primary" />
               <span className="font-bold text-white tracking-tight">
                 Niche Digger
               </span>
             </div>
-            <p className="text-zinc-500 max-w-sm">{t.footer.tagline}</p>
+            <p className="text-zinc-500 max-w-sm text-xs">{t.footer.tagline}</p>
           </div>
 
           <div>
             <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-xs">
               {t.footer.product}
             </h4>
-            <ul className="space-y-3 text-zinc-500">
+            <ul className="space-y-3 text-zinc-500 text-xs">
               <li>
                 <a href="#" className="hover:text-primary transition-colors">
                   Google Agent
@@ -46,7 +46,15 @@ const Footer: React.FC = () => {
             <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-xs">
               {t.footer.legal}
             </h4>
-            <ul className="space-y-3 text-zinc-500">
+            <ul className="space-y-3 text-zinc-500 text-xs">
+              <li>
+                <a
+                  href="#aboutus"
+                  className="hover:text-primary transition-colors"
+                >
+                  {t.footer.about}
+                </a>
+              </li>
               <li>
                 <a
                   href="#privacy"
@@ -64,6 +72,37 @@ const Footer: React.FC = () => {
                 </a>
               </li>
             </ul>
+          </div>
+
+          <div>
+            <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-xs">
+              {t.footer.about}
+            </h4>
+            <p className="text-zinc-500 text-xs mb-4 leading-relaxed">
+              {t.footer.aboutDescription}
+            </p>
+            <div className="space-y-2 text-zinc-500 text-xs font-mono">
+              <p className="text-white font-semibold">{t.footer.companyName}</p>
+              <p>{t.footer.chineseCompanyName}</p>
+              <p>
+                <span className="text-zinc-400">{t.footer.businessRegNo}:</span>{" "}
+                78413906
+              </p>
+              <p>
+                <span className="text-zinc-400">
+                  {t.footer.incorporationDate}:
+                </span>{" "}
+                05-Jul-2025
+              </p>
+              <p>
+                <span className="text-zinc-400">{t.footer.companyType}:</span>{" "}
+                Private company limited by shares
+              </p>
+              <p>
+                <span className="text-zinc-400">{t.footer.companyStatus}:</span>{" "}
+                <span className="text-green-500">Live</span>
+              </p>
+            </div>
           </div>
         </div>
 
