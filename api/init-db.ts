@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { initUsersTable, initSessionsTable, initSubscriptionTables } from './lib/db.js';
+import { initUsersTable, initSessionsTable, initSubscriptionTables, initApiKeysTable, initWorkflowConfigsTable } from './lib/db.js';
 
 /**
  * 初始化数据库表的 API 端点
@@ -31,10 +31,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await initUsersTable();
     await initSessionsTable();
     await initSubscriptionTables();
+    await initApiKeysTable();
+    await initWorkflowConfigsTable();
 
     return res.status(200).json({
       message: 'Database initialized successfully',
-      tables: ['users', 'sessions', 'subscription_plans', 'user_subscriptions', 'user_credits', 'credits_transactions']
+      tables: ['users', 'sessions', 'subscription_plans', 'user_subscriptions', 'user_credits', 'credits_transactions', 'api_keys', 'workflow_configs']
     });
   } catch (error) {
     console.error('Database initialization error:', error);
