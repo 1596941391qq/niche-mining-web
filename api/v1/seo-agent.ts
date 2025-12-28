@@ -98,7 +98,8 @@ async function consumeCredits(
   userId: string,
   modeId: string,
   description: string,
-  amount: number
+  amount: number,
+  apiKeyId?: string
 ): Promise<{ remaining: number; used: number }> {
   // 1. 获取当前 credits 余额
   const creditsResult = await sql`
@@ -128,12 +129,12 @@ async function consumeCredits(
     WHERE user_id = ${userId}
   `;
 
-  // 4. 记录交易
+  // 4. 记录交易（包含 api_key_id 如果提供）
   await sql`
     INSERT INTO credits_transactions
-      (user_id, type, credits_delta, credits_before, credits_after, description, related_entity, mode_id)
+      (user_id, type, credits_delta, credits_before, credits_after, description, related_entity, mode_id, api_key_id)
     VALUES
-      (${userId}, 'usage', ${-amount}, ${remaining}, ${remaining - amount}, ${description}, 'seo_agent_api', ${modeId})
+      (${userId}, 'usage', ${-amount}, ${remaining}, ${remaining - amount}, ${description}, 'seo_agent_api', ${modeId}, ${apiKeyId || null})
   `;
 
   return {
@@ -406,7 +407,8 @@ async function handleKeywordMining(
           authResult.userId,
           'keyword_mining',
           `Keyword Mining - "${seedKeyword}" (${keywordCount} keywords, ${targetLanguage.toUpperCase()})`,
-          creditsAmount
+          creditsAmount,
+          authResult.apiKeyId
         );
       } catch (creditsError: any) {
         console.error('Failed to consume credits:', creditsError);
@@ -633,7 +635,8 @@ async function handleBatchTranslation(
           authResult.userId,
           'batch_translation',
           `Batch Translation - ${keywordCount} keywords (${targetLanguage.toUpperCase()})`,
-          creditsAmount
+          creditsAmount,
+          authResult.apiKeyId
         );
       } catch (creditsError: any) {
         console.error('Failed to consume credits:', creditsError);
@@ -830,7 +833,8 @@ async function handleDeepDive(
           authResult.userId,
           'deep_dive',
           `Deep Dive Strategy - "${keywordText}" (${targetLanguage.toUpperCase()})`,
-          creditsAmount
+          creditsAmount,
+          authResult.apiKeyId
         );
       } catch (creditsError: any) {
         console.error('Failed to consume credits:', creditsError);

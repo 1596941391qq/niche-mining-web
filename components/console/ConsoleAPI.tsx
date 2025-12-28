@@ -26,6 +26,10 @@ interface APIKey {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  usage?: {
+    requestCount: number;
+    totalCreditsUsed: number;
+  };
 }
 
 const ConsoleAPI: React.FC = () => {
@@ -59,6 +63,9 @@ const ConsoleAPI: React.FC = () => {
       expires: 'Expires',
       neverExpires: 'Never',
       status: 'Status',
+      usage: 'Usage',
+      requests: 'Requests',
+      creditsUsed: 'Credits Used',
       active: 'Active',
       inactive: 'Inactive',
       copy: 'Copy',
@@ -107,6 +114,9 @@ const ConsoleAPI: React.FC = () => {
       expires: '过期时间',
       neverExpires: '永不过期',
       status: '状态',
+      usage: '用量',
+      requests: '请求次数',
+      creditsUsed: '消耗积分',
       active: '激活',
       inactive: '未激活',
       copy: '复制',
@@ -465,7 +475,7 @@ const ConsoleAPI: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <p className="text-xs text-text-tertiary font-mono uppercase tracking-wider mb-1">
                     {tr.lastUsed}
@@ -483,6 +493,33 @@ const ConsoleAPI: React.FC = () => {
                   </p>
                 </div>
               </div>
+
+              {/* Usage Statistics */}
+              {apiKey.usage && (
+                <div className="bg-background border border-border p-3">
+                  <p className="text-xs text-text-tertiary font-mono uppercase tracking-wider mb-2">
+                    {tr.usage}
+                  </p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-[10px] text-text-tertiary font-mono mb-0.5">
+                        {tr.requests}
+                      </p>
+                      <p className="text-sm text-text-primary font-mono font-bold">
+                        {apiKey.usage.requestCount.toLocaleString()}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-text-tertiary font-mono mb-0.5">
+                        {tr.creditsUsed}
+                      </p>
+                      <p className="text-sm text-text-primary font-mono font-bold">
+                        {apiKey.usage.totalCreditsUsed.toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>

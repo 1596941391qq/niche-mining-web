@@ -11,7 +11,10 @@
       "Bash(curl:*)",
       "Bash(python -m json.tool:*)",
       "Bash(dir:*)",
-      "WebFetch(domain:302ai.apifox.cn)"
+      "WebFetch(domain:302ai.apifox.cn)",
+      "Bash(powershell -Command \"\\(Get-Content ''D:\\\\niche-mining\\\\api\\\\docs.ts''\\).Count\")",
+      "Bash(npx tsc:*)",
+      "Bash(powershell:*)"
     ]
   }
 }

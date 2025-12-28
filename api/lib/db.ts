@@ -431,6 +431,22 @@ export async function initSubscriptionTables() {
     await sql`CREATE INDEX IF NOT EXISTS idx_credits_transactions_mode_id ON credits_transactions(mode_id)`;
     await sql`CREATE INDEX IF NOT EXISTS idx_credits_transactions_created_at ON credits_transactions(created_at DESC)`;
 
+    // 添加 api_key_id 字段（如果不存在）
+    await sql`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'credits_transactions' AND column_name = 'api_key_id'
+        ) THEN
+          ALTER TABLE credits_transactions ADD COLUMN api_key_id UUID;
+          CREATE INDEX IF NOT EXISTS idx_credits_transactions_api_key_id ON credits_transactions(api_key_id);
+          ALTER TABLE credits_transactions ADD CONSTRAINT fk_credits_transactions_api_key 
+            FOREIGN KEY (api_key_id) REFERENCES api_keys(id) ON DELETE SET NULL;
+        END IF;
+      END $$;
+    `;
+
     console.log('Subscription tables initialized successfully');
   } catch (error) {
     console.error('Error initializing subscription tables:', error);
