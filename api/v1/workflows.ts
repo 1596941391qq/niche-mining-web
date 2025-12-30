@@ -70,7 +70,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               name: node.name,
               description: node.description,
               configurable: node.configurable,
-              defaultPrompt: node.defaultPrompt
+              ...(node.defaultPrompt && { defaultPrompt: node.defaultPrompt })
             }))
           },
           {
@@ -83,7 +83,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               name: node.name,
               description: node.description,
               configurable: node.configurable,
-              defaultPrompt: node.defaultPrompt
+              ...(node.defaultPrompt && { defaultPrompt: node.defaultPrompt })
             }))
           },
           {
@@ -96,7 +96,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               name: node.name,
               description: node.description,
               configurable: node.configurable,
-              defaultPrompt: node.defaultPrompt
+              ...(node.defaultPrompt && { defaultPrompt: node.defaultPrompt })
             }))
           }
         ]
