@@ -23,7 +23,7 @@ import ConsoleSettings from "./console/ConsoleSettings";
 import MiningModes from "./console/MiningModes";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
-import { LanguageContext } from "../App";
+import { LanguageContext } from "../contexts/LanguageContext";
 
 type TabType =
   | "dashboard"

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Zap, TrendingUp, Languages, Search, ArrowRight, Database, Sparkles, FileText } from 'lucide-react';
-import { LanguageContext } from '../../App';
+import { LanguageContext } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 
 interface MiningMode {

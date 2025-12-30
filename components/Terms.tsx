@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { FileText, ArrowLeft } from 'lucide-react';
-import { LanguageContext } from '../App';
+import { LanguageContext } from '../contexts/LanguageContext';
 
 const Terms: React.FC = () => {
   const { t } = useContext(LanguageContext);

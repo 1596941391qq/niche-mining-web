@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { CheckCircle, Loader, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { LanguageContext } from '../../App';
+import { LanguageContext } from '../../contexts/LanguageContext';
 
 const PaymentSuccess: React.FC = () => {
   const { getToken, refreshSession } = useAuth();

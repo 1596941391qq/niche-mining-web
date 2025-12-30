@@ -8,7 +8,7 @@ import {
   TrendingUp,
   Target,
 } from "lucide-react";
-import { LanguageContext } from "../../App";
+import { LanguageContext } from "../../contexts/LanguageContext";
 import { useAuth } from "../../contexts/AuthContext";
 
 const ConsoleAgents: React.FC = () => {

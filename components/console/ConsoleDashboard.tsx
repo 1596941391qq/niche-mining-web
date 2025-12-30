@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Zap, Key, Activity } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
-import { LanguageContext } from "../../App";
+import { LanguageContext } from "../../contexts/LanguageContext";
 import TerminalWidget from "../ui/TerminalWidget";
 
 interface CreditsData {

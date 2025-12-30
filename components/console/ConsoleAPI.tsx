@@ -14,7 +14,7 @@ import {
   Check
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { LanguageContext } from '../../App';
+import { LanguageContext } from '../../contexts/LanguageContext';
 
 interface APIKey {
   id: string;

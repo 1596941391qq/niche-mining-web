@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Search, Activity, Terminal, ShieldAlert, Cpu, ChevronRight } from 'lucide-react';
-import { LanguageContext } from '../App';
+import { LanguageContext } from '../contexts/LanguageContext';
 
 const Hero: React.FC = () => {
   const { t } = useContext(LanguageContext);

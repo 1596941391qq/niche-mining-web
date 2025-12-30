@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Features from "./components/Features";
@@ -11,34 +11,31 @@ import AboutUs from "./components/AboutUs";
 import Console from "./components/Console";
 import PaymentSuccess from "./components/payment/PaymentSuccess";
 import PaymentResult from "./components/payment/PaymentResult";
-import { Language, Translations } from "./types";
-import { CONTENT } from "./constants";
+import APIDocs from "./components/APIDocs";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
-
-export const LanguageContext = createContext<{
-  lang: Language;
-  t: Translations;
-  setLang: (l: Language) => void;
-}>({
-  lang: "cn",
-  t: CONTENT["cn"],
-  setLang: () => {},
-});
+import { LanguageProvider } from "./contexts/LanguageContext";
 
 function App() {
-  const [lang, setLang] = useState<Language>("cn");
   const [currentPage, setCurrentPage] = useState<string>("home");
-  const t = CONTENT[lang];
 
   useEffect(() => {
-    const handleHashChange = () => {
+    const handleRouteChange = () => {
+      // 优先检查路径路由
+      const path = window.location.pathname;
+      if (path === "/docs") {
+        setCurrentPage("docs");
+        return;
+      }
+      
+      // 然后检查hash路由
       const hash = window.location.hash.slice(1);
       if (
         hash === "privacy" ||
         hash === "terms" ||
         hash === "aboutus" ||
         hash === "console" ||
+        hash === "docs" ||
         hash.startsWith("payment/") ||
         hash === "payresult"
       ) {
@@ -48,14 +45,18 @@ function App() {
       }
     };
 
-    // Check initial hash
-    handleHashChange();
+    // Check initial route
+    handleRouteChange();
 
     // Listen for hash changes
-    window.addEventListener("hashchange", handleHashChange);
+    window.addEventListener("hashchange", handleRouteChange);
+    
+    // Listen for popstate (back/forward button)
+    window.addEventListener("popstate", handleRouteChange);
 
     return () => {
-      window.removeEventListener("hashchange", handleHashChange);
+      window.removeEventListener("hashchange", handleRouteChange);
+      window.removeEventListener("popstate", handleRouteChange);
     };
   }, []);
 
@@ -69,6 +70,8 @@ function App() {
         return <AboutUs />;
       case "console":
         return <Console />;
+      case "docs":
+        return <APIDocs />;
       case "payment/success":
         return <PaymentSuccess />;
       case "payresult":
@@ -86,15 +89,15 @@ function App() {
   };
 
   return (
-    <ThemeProvider>
+    <ThemeProvider isHomePage={currentPage === "home"}>
       <AuthProvider>
-        <LanguageContext.Provider value={{ lang, t, setLang }}>
+        <LanguageProvider>
           <div className="min-h-screen bg-background text-zinc-300 font-sans selection:bg-primary selection:text-black flex flex-col">
-            {currentPage !== "console" && <Navbar />}
+            {currentPage !== "console" && currentPage !== "docs" && <Navbar />}
             <main className="flex-grow flex flex-col">{renderPage()}</main>
-            {currentPage !== "console" && <Footer />}
+            {currentPage !== "console" && currentPage !== "docs" && <Footer />}
           </div>
-        </LanguageContext.Provider>
+        </LanguageProvider>
       </AuthProvider>
     </ThemeProvider>
   );

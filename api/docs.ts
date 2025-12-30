@@ -662,63 +662,90 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // 更新端点配置（统一函数，用于初始化和切换）
-    // 将函数挂载到window对象，以便HTML中的onchange可以调用
-    function updateEndpointConfig() {
+    // 直接挂载到window对象，确保HTML中的onchange可以调用
+    window.updateEndpointConfig = function() {
+      console.log('updateEndpointConfig called!');
       try {
         const endpointEl = document.getElementById('apiEndpoint');
         if (!endpointEl) {
-          console.warn('apiEndpoint element not found');
+          console.error('apiEndpoint element not found');
           return;
         }
-        
+
         const endpoint = endpointEl.value;
+        console.log('Selected endpoint:', endpoint);
+
         if (!endpoint) {
           console.warn('No endpoint selected');
           return;
         }
-        
+
         if (!apiEndpoints || !apiEndpoints[endpoint]) {
-          console.warn('Unknown endpoint:', endpoint, 'Available:', apiEndpoints ? Object.keys(apiEndpoints) : 'apiEndpoints not defined');
+          console.error('Unknown endpoint:', endpoint, 'Available:', apiEndpoints ? Object.keys(apiEndpoints) : 'apiEndpoints not defined');
           return;
         }
-        
+
         const config = apiEndpoints[endpoint];
-        
-        // 更新方法
-        const methodEl = document.getElementById('httpMethod');
-        if (methodEl) {
-          methodEl.textContent = config.method;
-          methodEl.className = 'method-badge ' + config.method.toLowerCase();
-        } else {
-          console.warn('httpMethod element not found');
-        }
-        
-        // 更新URL
-        const urlEl = document.getElementById('apiUrl');
-        if (urlEl) {
-          urlEl.value = config.url;
-        } else {
-          console.warn('apiUrl element not found');
-        }
-        
+        console.log('Config for endpoint:', config);
+
         // 更新请求体
         const bodyEl = document.getElementById('requestBody');
         if (bodyEl) {
           if (config.defaultBody) {
             bodyEl.value = JSON.stringify(config.defaultBody, null, 2);
+            console.log('Updated body with defaultBody');
           } else {
             bodyEl.value = '{}';
+            console.log('Updated body to empty object');
           }
         } else {
-          console.warn('requestBody element not found');
+          console.error('requestBody element not found');
         }
+
+        console.log('Endpoint config updated successfully');
       } catch (error) {
         console.error('Error updating endpoint config:', error);
       }
-    }
-    
-    // 将函数挂载到window对象
-    window.updateEndpointConfig = updateEndpointConfig;
+    };
+
+    // 复制当前URL（挂载到window对象以便HTML调用）
+    window.copyCurrentUrl = function() {
+      try {
+        const endpointEl = document.getElementById('apiEndpoint');
+        if (!endpointEl) {
+          console.error('apiEndpoint element not found');
+          return;
+        }
+
+        const endpoint = endpointEl.value;
+        if (!apiEndpoints || !apiEndpoints[endpoint]) {
+          console.error('Unknown endpoint:', endpoint);
+          return;
+        }
+
+        const config = apiEndpoints[endpoint];
+        const url = config.url;
+        
+        // 复制到剪贴板
+        navigator.clipboard.writeText(url).then(function() {
+          const copyBtn = document.getElementById('copyUrlBtn');
+          if (copyBtn) {
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = currentLang === 'zh' ? '已复制' : 'Copied';
+            copyBtn.classList.add('bg-primary/20', 'border-primary');
+            setTimeout(function() {
+              copyBtn.textContent = originalText;
+              copyBtn.classList.remove('bg-primary/20', 'border-primary');
+            }, 2000);
+          }
+        }).catch(function(err) {
+          console.error('Failed to copy URL:', err);
+          alert(currentLang === 'zh' ? '复制失败，请手动复制' : 'Copy failed, please copy manually');
+        });
+      } catch (error) {
+        console.error('Error copying URL:', error);
+      }
+    };
 
     // 加载示例（保持向后兼容）
     function loadExample() {
@@ -729,26 +756,68 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
-    // 设置 API 端点监听器（作为备用，HTML中已经有onchange）
+    // 设置 API 端点监听器（多种方式确保兼容性）
     function setupApiEndpointListener() {
-      const endpointEl = document.getElementById('apiEndpoint');
-      if (!endpointEl) {
-        console.warn('apiEndpoint element not found');
-        return;
-      }
-      
-      // 添加change事件监听器作为备用
-      endpointEl.addEventListener('change', function() {
-        if (window.updateEndpointConfig) {
-          window.updateEndpointConfig();
+      console.log('Setting up API endpoint listener...');
+
+      // 方式1: 使用事件委托，在document上监听，避免元素不存在的问题
+      document.addEventListener('change', function(e) {
+        const target = e.target;
+        if (target && target.id === 'apiEndpoint') {
+          console.log('Endpoint changed (delegated):', target.value);
+          if (window.updateEndpointConfig) {
+            window.updateEndpointConfig();
+          } else {
+            console.error('updateEndpointConfig not found on window!');
+          }
         }
       });
+
+      // 方式2: 尝试直接在元素上添加事件监听器
+      // 使用 MutationObserver 等待元素出现
+      const observer = new MutationObserver(function(mutations, obs) {
+        const endpointEl = document.getElementById('apiEndpoint');
+        if (endpointEl) {
+          console.log('Found apiEndpoint element, adding direct listener');
+          endpointEl.addEventListener('change', function() {
+            console.log('Endpoint changed (direct):', this.value);
+            if (window.updateEndpointConfig) {
+              window.updateEndpointConfig();
+            }
+          });
+          // 找到元素后停止观察
+          obs.disconnect();
+        }
+      });
+
+      // 开始观察 document.body 的子元素变化
+      if (document.body) {
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+      } else {
+        // 如果 body 还不存在，等待 DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+          const endpointEl = document.getElementById('apiEndpoint');
+          if (endpointEl) {
+            console.log('Found apiEndpoint after DOMContentLoaded');
+            endpointEl.addEventListener('change', function() {
+              console.log('Endpoint changed (DOMContentLoaded):', this.value);
+              if (window.updateEndpointConfig) {
+                window.updateEndpointConfig();
+              }
+            });
+          }
+        });
+      }
+
+      console.log('API endpoint listener setup complete');
     }
 
     // 发送请求
     async function sendRequest() {
-      const methodEl = document.getElementById('httpMethod');
-      const urlEl = document.getElementById('apiUrl');
+      const endpointEl = document.getElementById('apiEndpoint');
       const authEnabledEl = document.getElementById('authEnabled');
       const authTokenEl = document.getElementById('authToken');
       const bodyTextEl = document.getElementById('requestBody');
@@ -759,13 +828,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const responseStatus = document.getElementById('responseStatus');
       const responseTime = document.getElementById('responseTime');
 
-      if (!methodEl || !urlEl || !authEnabledEl || !authTokenEl || !bodyTextEl || !sendBtn) {
+      if (!endpointEl || !authEnabledEl || !authTokenEl || !bodyTextEl || !sendBtn) {
         console.error('Required DOM elements not found');
         return;
       }
 
-      const method = methodEl.textContent || '';
-      const url = urlEl.value || '';
+      const endpoint = endpointEl.value;
+      if (!apiEndpoints || !apiEndpoints[endpoint]) {
+        console.error('Unknown endpoint:', endpoint);
+        return;
+      }
+
+      const config = apiEndpoints[endpoint];
+      const method = config.method;
+      const url = config.url;
       const authEnabled = authEnabledEl.checked;
       const authToken = authTokenEl.value || '';
       const bodyText = bodyTextEl.value || '';
@@ -899,25 +975,33 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // 检查用户登录状态并获取 API Key
     async function checkUserAndLoadApiKey() {
+      console.log('checkUserAndLoadApiKey called');
       try {
         // 检查用户是否登录
+        console.log('Checking user session...');
         const sessionResponse = await fetch(baseUrl + '/api/auth/session', {
           method: 'GET',
           credentials: 'include'
         });
         
+        console.log('Session response status:', sessionResponse.status);
+        
         if (!sessionResponse.ok) {
+          console.log('Session check failed, user not authenticated');
           return;
         }
         
         const sessionData = await sessionResponse.json();
+        console.log('Session data:', sessionData);
         
         if (!sessionData.authenticated || !sessionData.user) {
+          console.log('User not authenticated');
           return;
         }
         
         // 用户已登录，尝试获取 API keys
         try {
+          console.log('Fetching API keys...');
           // 获取 API keys（使用 cookie 中的 JWT token）
           const apiKeysResponse = await fetch(baseUrl + '/api/v1/api-keys', {
             method: 'GET',
@@ -926,6 +1010,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               'Content-Type': 'application/json'
             }
           });
+          
+          console.log('API keys response status:', apiKeysResponse.status);
           
           if (apiKeysResponse.ok) {
             const apiKeysData = await apiKeysResponse.json();
@@ -957,25 +1043,60 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 // 显示下拉框
                 selectEl.classList.remove('hidden');
 
-                // 尝试自动加载已保存的 API key
+                // 自动选中第一个可用的API key
                 const activeKey = apiKeysList.find(function(key) { return key.isActive; }) || apiKeysList[0];
-                const savedApiKey = localStorage.getItem('nichedigger_api_key');
-
-                if (savedApiKey && savedApiKey.startsWith('nm_live_')) {
-                  if (inputEl) {
-                    inputEl.value = savedApiKey;
-                    inputEl.type = 'password';
+                
+                if (activeKey && activeKey.id) {
+                  // 自动选中第一个API key
+                  if (selectEl) {
+                    selectEl.value = activeKey.id;
                   }
 
+                  // 尝试从localStorage获取该key的完整值（如果之前在这个浏览器创建过）
+                  const savedKeyById = localStorage.getItem('nichedigger_api_key_' + activeKey.id);
+                  const savedApiKey = localStorage.getItem('nichedigger_api_key');
+                  
+                  // 优先使用对应ID的key，如果没有则使用通用key
+                  let foundKey = false;
+                  if (savedKeyById && savedKeyById.startsWith('nm_live_')) {
+                    // 找到了对应ID的完整key
+                    if (inputEl) {
+                      inputEl.value = savedKeyById;
+                      inputEl.type = 'password';
+                    }
+                    foundKey = true;
+                  } else if (savedApiKey && savedApiKey.startsWith('nm_live_')) {
+                    // 使用通用的保存key（可能是之前创建的）
+                    if (inputEl) {
+                      inputEl.value = savedApiKey;
+                      inputEl.type = 'password';
+                    }
+                    foundKey = true;
+                  } else {
+                    // 没有保存的完整key，显示前缀提示用户输入
+                    if (inputEl) {
+                      inputEl.value = activeKey.keyPrefix + '...';
+                      inputEl.type = 'text';
+                      inputEl.placeholder = t('pleaseEnterFullKey');
+                    }
+                  }
+
+                  // 显示状态信息
                   if (statusDiv) {
-                    statusDiv.textContent = t('detectedApiKeys') + ' ' + apiKeysData.data.count + ' ' + t('apiKeys') + ' ' + t('apiKeyLoaded');
-                    statusDiv.classList.remove('hidden');
-                    statusDiv.classList.add('text-primary');
+                    if (foundKey) {
+                      statusDiv.textContent = t('detectedApiKeys') + ' ' + apiKeysData.data.count + ' ' + t('apiKeys') + ' ' + t('apiKeyLoaded');
+                      statusDiv.classList.remove('hidden');
+                      statusDiv.classList.add('text-primary');
+                    } else {
+                      statusDiv.textContent = t('detectedApiKeys') + ' ' + apiKeysData.data.count + ' ' + t('apiKeys') + ' - ' + t('pleaseSelectOrCreate');
+                      statusDiv.classList.remove('hidden');
+                      statusDiv.classList.add('text-accent-yellow');
+                    }
                   }
                 } else {
-                  // 没有保存的 key，显示提示
+                  // 没有可用的API key
                   if (statusDiv) {
-                    statusDiv.textContent = t('detectedApiKeys') + ' ' + apiKeysData.data.count + ' ' + t('apiKeys') + ' - ' + t('pleaseSelectOrCreate');
+                    statusDiv.textContent = t('noApiKey');
                     statusDiv.classList.remove('hidden');
                     statusDiv.classList.add('text-accent-yellow');
                   }
@@ -998,14 +1119,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           } else {
             // 其他错误，尝试显示创建按钮
             console.log('API keys request failed with status:', apiKeysResponse.status);
+            const errorText = await apiKeysResponse.text();
+            console.log('API keys error response:', errorText);
             showCreateApiKeyButton();
           }
         } catch (error) {
           console.error('Error fetching API keys:', error);
+          console.error('Error details:', error.message, error.stack);
           // 网络错误等，不显示创建按钮
         }
       } catch (error) {
         console.error('Error checking user session:', error);
+        console.error('Error details:', error.message, error.stack);
       }
     }
     
@@ -1202,32 +1327,65 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // 初始化
     function initializePage() {
       try {
+        console.log('Initializing page...');
+        console.log('updateEndpointConfig available:', typeof window.updateEndpointConfig);
+        console.log('DOM ready state:', document.readyState);
+
         initUIText();
-        // 先设置监听器
         setupApiEndpointListener();
-        // 然后立即更新一次，确保初始状态正确
+
+        // 立即执行一次，确保初始配置正确
+        if (window.updateEndpointConfig) {
+          window.updateEndpointConfig();
+          console.log('Initial endpoint config loaded');
+        }
+
+        // 确保DOM元素存在后再调用
+        const authTokenEl = document.getElementById('authToken');
+        const apiKeySelectEl = document.getElementById('apiKeySelect');
+        console.log('DOM elements check - authToken:', !!authTokenEl, 'apiKeySelect:', !!apiKeySelectEl);
+        
+        // 延迟一点确保DOM完全渲染
         setTimeout(function() {
-          if (window.updateEndpointConfig) {
-            window.updateEndpointConfig();
-          }
+          console.log('Calling checkUserAndLoadApiKey...');
+          checkUserAndLoadApiKey();
         }, 100);
-        checkUserAndLoadApiKey();
+        
+        console.log('Page initialization complete');
       } catch (error) {
         console.error('Error initializing page:', error);
       }
     }
 
-    // 确保函数在全局作用域可用
-    if (typeof window !== 'undefined') {
-      // 函数已经在上面定义了，这里只是确保可用
+    // 页面加载完成后初始化
+    function startInitialization() {
+      console.log('startInitialization called, readyState:', document.readyState);
+      if (document.readyState === 'loading') {
+        console.log('Waiting for DOMContentLoaded...');
+        document.addEventListener('DOMContentLoaded', function() {
+          console.log('DOMContentLoaded fired');
+          initializePage();
+        });
+      } else {
+        // DOM 已经加载完成，直接执行
+        console.log('DOM already loaded, initializing immediately');
+        initializePage();
+      }
     }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initializePage);
-    } else {
-      // DOM 已经加载完成，直接执行
-      initializePage();
-    }
+    
+    // 立即尝试初始化
+    startInitialization();
+    
+    // 也监听window.onload作为备用
+    window.addEventListener('load', function() {
+      console.log('Window load event fired');
+      // 如果之前没有成功初始化，再次尝试
+      const authTokenEl = document.getElementById('authToken');
+      if (authTokenEl && !authTokenEl.value) {
+        console.log('Retrying checkUserAndLoadApiKey on window load');
+        checkUserAndLoadApiKey();
+      }
+    });
   </script>
 </head>
 <body>
@@ -2060,28 +2218,23 @@ result = call_seo_agent(<br>
                 ${t(lang, 'onlineTestDesc')}
               </p>
 
-              <!-- API Selector -->
-              <div class="mb-6">
-                <label class="block text-sm font-bold text-text-primary font-mono mb-2">
-                  ${t(lang, 'selectEndpoint')}
-                </label>
-                <select id="apiEndpoint" onchange="updateEndpointConfig()" class="w-full bg-background border border-border text-text-primary font-mono p-3 focus:outline-none focus:border-primary">
-                  <option value="seo-agent">POST /api/v1/seo-agent</option>
-                  <option value="workflows">GET /api/v1/workflows</option>
-                  <option value="workflow-configs">GET /api/v1/workflow-configs</option>
-                  <option value="workflow-configs-create">POST /api/v1/workflow-configs</option>
-                </select>
-              </div>
-
               <!-- Method and URL -->
               <div class="mb-6">
                 <label class="block text-sm font-bold text-text-primary font-mono mb-2">
                   ${t(lang, 'requestMethodUrl')}
                 </label>
                 <div class="flex items-center gap-2">
-                  <span id="httpMethod" class="method-badge post">POST</span>
-                  <input type="text" id="apiUrl" value="${baseUrl}/api/v1/seo-agent" 
-                    class="flex-1 bg-background border border-border text-text-primary font-mono p-3 focus:outline-none focus:border-primary" />
+                  <select id="apiEndpoint" class="flex-1 bg-background border border-border text-text-primary font-mono px-3 py-3 focus:outline-none focus:border-primary" onchange="window.updateEndpointConfig && window.updateEndpointConfig()">
+                    <option value="seo-agent">POST https://www.nichedigger.ai/api/v1/seo-agent</option>
+                    <option value="workflows">GET https://www.nichedigger.ai/api/v1/workflows</option>
+                    <option value="workflow-configs">GET https://www.nichedigger.ai/api/v1/workflow-configs</option>
+                    <option value="workflow-configs-create">POST https://www.nichedigger.ai/api/v1/workflow-configs</option>
+                  </select>
+                  <button id="copyUrlBtn" onclick="window.copyCurrentUrl && window.copyCurrentUrl()" 
+                    class="px-4 py-3 bg-background border border-border text-text-primary font-mono text-sm hover:bg-surface hover:border-primary transition-colors" 
+                    title="${isZh ? '复制URL' : 'Copy URL'}">
+                    ${isZh ? '复制' : 'Copy'}
+                  </button>
                   <button id="sendBtn" onclick="sendRequest()" 
                     class="px-6 py-3 bg-primary text-black font-mono font-bold hover:bg-primary/80 transition-colors">
                     ${t(lang, 'send')}

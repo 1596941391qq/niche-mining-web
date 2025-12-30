@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Target, Workflow, Sparkles, Bot, Wrench, CheckCircle2, Search, Globe, Zap, ArrowRight } from 'lucide-react';
-import { LanguageContext } from '../App';
+import { LanguageContext } from '../contexts/LanguageContext';
 
 const HowItWorks: React.FC = () => {
   const { t, lang } = useContext(LanguageContext);

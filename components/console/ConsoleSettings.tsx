@@ -13,7 +13,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { LanguageContext } from '../../App';
+import { LanguageContext } from '../../contexts/LanguageContext';
 
 const ConsoleSettings: React.FC = () => {
   const { user } = useAuth();

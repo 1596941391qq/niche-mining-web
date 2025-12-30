@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { ExternalLink, ArrowRight, Cpu, Radio, Crosshair } from "lucide-react";
-import { LanguageContext } from "../App";
+import { LanguageContext } from "../contexts/LanguageContext";
 import { useAuth } from "../contexts/AuthContext";
 import LoginModal from "./auth/LoginModal";
 

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { X, Mail, Lock, User, LogIn, UserPlus } from "lucide-react";
-import { LanguageContext } from "../../App";
+import { LanguageContext } from "../../contexts/LanguageContext";
 
 interface LoginModalProps {
   isOpen: boolean;

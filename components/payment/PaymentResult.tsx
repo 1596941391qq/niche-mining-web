@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { XCircle, ArrowLeft } from 'lucide-react';
-import { LanguageContext } from '../../App';
+import { LanguageContext } from '../../contexts/LanguageContext';
 
 const PaymentResult: React.FC = () => {
   const { lang } = useContext(LanguageContext);

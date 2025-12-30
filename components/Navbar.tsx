@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Pickaxe, Menu, X, Globe, LogIn, LogOut, User } from "lucide-react";
-import { LanguageContext } from "../App";
+import { LanguageContext } from "../contexts/LanguageContext";
 import { useAuth } from "../contexts/AuthContext";
 import LoginModal from "./auth/LoginModal";
 

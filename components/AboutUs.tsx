@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Building2, ArrowLeft } from "lucide-react";
-import { LanguageContext } from "../App";
+import { LanguageContext } from "../contexts/LanguageContext";
 
 const AboutUs: React.FC = () => {
   const { t } = useContext(LanguageContext);

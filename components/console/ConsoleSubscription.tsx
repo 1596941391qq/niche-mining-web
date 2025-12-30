@@ -9,7 +9,7 @@ import {
   X,
   Mail
 } from 'lucide-react';
-import { LanguageContext } from '../../App';
+import { LanguageContext } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 
 interface CreditsData {
