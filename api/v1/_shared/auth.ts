@@ -23,10 +23,19 @@ export async function authenticateRequest(req: VercelRequest): Promise<AuthResul
   const authHeaderValue = Array.isArray(authHeader) ? authHeader[0] : authHeader;
 
   if (!authHeaderValue || typeof authHeaderValue !== 'string' || !authHeaderValue.startsWith('Bearer ')) {
+    console.log('No valid Authorization header found');
     return null;
   }
 
-  const token = authHeaderValue.substring(7);
+  const token = authHeaderValue.substring(7).trim();
+  
+  // 检查 token 是否包含 ...（表示不完整的 API key）
+  if (token.includes('...')) {
+    console.log('Invalid token: contains "..." which indicates incomplete API key');
+    return null;
+  }
+  
+  console.log('Authenticating with token (first 20 chars):', token.substring(0, 20) + '...');
 
   // 尝试作为 JWT token 验证
   try {

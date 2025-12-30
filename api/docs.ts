@@ -846,6 +846,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const authToken = authTokenEl.value || '';
       const bodyText = bodyTextEl.value || '';
 
+      // 检查 API key 是否完整（不能包含 ...）
+      if (authEnabled && authToken && authToken.includes('...')) {
+        responsePlaceholder.style.display = 'none';
+        responseContent.classList.remove('hidden');
+        responseStatus.textContent = 'Error';
+        responseStatus.className = 'method-badge delete';
+        responseTime.textContent = '0ms';
+        responseBody.textContent = 'Error: Please enter the full API key. The key cannot contain "...". If you selected an API key from the dropdown, make sure you have the complete key saved in localStorage.';
+        responseBody.style.color = '#ef4444';
+        sendBtn.classList.remove('loading');
+        sendBtn.textContent = t('send');
+        return;
+      }
+
       // 显示加载状态
       sendBtn.classList.add('loading');
       sendBtn.textContent = t('sending');
@@ -860,8 +874,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           'Content-Type': 'application/json'
         };
 
-        if (authEnabled && authToken) {
-          headers['Authorization'] = 'Bearer ' + authToken;
+        if (authEnabled && authToken && authToken.trim()) {
+          headers['Authorization'] = 'Bearer ' + authToken.trim();
         }
 
         // 构建请求选项
