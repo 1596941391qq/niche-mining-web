@@ -171,15 +171,26 @@ const APIDocs: React.FC = () => {
               `nichedigger_api_key_${firstKey.id}`
             );
             const savedApiKey = localStorage.getItem("nichedigger_api_key");
-            if (savedKey && savedKey.startsWith("nm_live_")) {
+            if (
+              savedKey &&
+              savedKey.startsWith("nm_live_") &&
+              !savedKey.includes("...")
+            ) {
               console.log("APIDocs: Using saved key by ID");
               setAuthToken(savedKey);
-            } else if (savedApiKey && savedApiKey.startsWith("nm_live_")) {
+            } else if (
+              savedApiKey &&
+              savedApiKey.startsWith("nm_live_") &&
+              !savedApiKey.includes("...")
+            ) {
               console.log("APIDocs: Using saved general key");
               setAuthToken(savedApiKey);
             } else {
-              console.log("APIDocs: Using key prefix");
-              setAuthToken(firstKey.keyPrefix + "...");
+              console.log(
+                "APIDocs: No complete key found, leaving empty for user input"
+              );
+              // 不设置包含 ... 的值，让用户手动输入完整 key
+              setAuthToken("");
             }
           } else {
             console.log("APIDocs: No API keys found");
@@ -207,10 +218,15 @@ const APIDocs: React.FC = () => {
         const savedKey = localStorage.getItem(
           `nichedigger_api_key_${selectedKey.id}`
         );
-        if (savedKey && savedKey.startsWith("nm_live_")) {
+        if (
+          savedKey &&
+          savedKey.startsWith("nm_live_") &&
+          !savedKey.includes("...")
+        ) {
           setAuthToken(savedKey);
         } else {
-          setAuthToken(selectedKey.keyPrefix + "...");
+          // 不设置包含 ... 的值，让用户手动输入完整 key
+          setAuthToken("");
         }
       }
     }
@@ -253,8 +269,22 @@ const APIDocs: React.FC = () => {
       };
 
       // 所有接口都支持 API Key 认证
-      if (authEnabled && authToken && authToken.startsWith("nm_live_")) {
+      // 确保 key 完整且不包含 ...（表示不完整的 key）
+      if (
+        authEnabled &&
+        authToken &&
+        authToken.startsWith("nm_live_") &&
+        !authToken.includes("...")
+      ) {
         headers["Authorization"] = `Bearer ${authToken}`;
+      } else if (authEnabled && authToken && authToken.includes("...")) {
+        setResponse({
+          error: isZh
+            ? "API Key 不完整，请输入完整的 API Key（不包含 ...）"
+            : "API Key is incomplete. Please enter the complete API Key (without ...)",
+        });
+        setLoading(false);
+        return;
       }
 
       const options: RequestInit = {
@@ -1744,13 +1774,13 @@ const APIDocs: React.FC = () => {
                           <select className="bg-zinc-950 border border-zinc-800 text-white font-mono px-2 py-1 text-sm">
                             <option value="Bearer">Bearer</option>
                           </select>
-                          {apiKeys.length > 0 ? (
+                          {apiKeys.length > 0 && (
                             <select
                               value={selectedApiKeyId}
                               onChange={(e) =>
                                 setSelectedApiKeyId(e.target.value)
                               }
-                              className="flex-1 bg-zinc-950 border border-zinc-800 text-white font-mono px-3 py-1 text-sm focus:outline-none focus:border-primary"
+                              className="bg-zinc-950 border border-zinc-800 text-white font-mono px-3 py-1 text-sm focus:outline-none focus:border-primary"
                             >
                               {apiKeys.map((key) => (
                                 <option key={key.id} value={key.id}>
@@ -1759,19 +1789,18 @@ const APIDocs: React.FC = () => {
                                 </option>
                               ))}
                             </select>
-                          ) : (
-                            <input
-                              type="text"
-                              value={authToken}
-                              onChange={(e) => setAuthToken(e.target.value)}
-                              placeholder={
-                                isZh
-                                  ? "输入 API Key (nm_live_...)"
-                                  : "Enter API Key (nm_live_...)"
-                              }
-                              className="flex-1 bg-zinc-950 border border-zinc-800 text-white font-mono px-3 py-1 text-sm focus:outline-none focus:border-primary"
-                            />
                           )}
+                          <input
+                            type="text"
+                            value={authToken}
+                            onChange={(e) => setAuthToken(e.target.value)}
+                            placeholder={
+                              isZh
+                                ? "输入完整的 API Key (nm_live_...)"
+                                : "Enter complete API Key (nm_live_...)"
+                            }
+                            className="flex-1 bg-zinc-950 border border-zinc-800 text-white font-mono px-3 py-1 text-sm focus:outline-none focus:border-primary"
+                          />
                         </div>
                       </div>
                     )}

@@ -846,20 +846,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const authToken = authTokenEl.value || '';
       const bodyText = bodyTextEl.value || '';
 
-      // 检查 API key 是否完整（不能包含 ...）
-      if (authEnabled && authToken && authToken.includes('...')) {
-        responsePlaceholder.style.display = 'none';
-        responseContent.classList.remove('hidden');
-        responseStatus.textContent = 'Error';
-        responseStatus.className = 'method-badge delete';
-        responseTime.textContent = '0ms';
-        responseBody.textContent = 'Error: Please enter the full API key. The key cannot contain "...". If you selected an API key from the dropdown, make sure you have the complete key saved in localStorage.';
-        responseBody.style.color = '#ef4444';
-        sendBtn.classList.remove('loading');
-        sendBtn.textContent = t('send');
-        return;
-      }
-
       // 显示加载状态
       sendBtn.classList.add('loading');
       sendBtn.textContent = t('sending');
@@ -874,8 +860,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           'Content-Type': 'application/json'
         };
 
-        if (authEnabled && authToken && authToken.trim()) {
-          headers['Authorization'] = 'Bearer ' + authToken.trim();
+        // 确保 key 完整且不包含 ...（表示不完整的 key）
+        if (authEnabled && authToken) {
+          if (authToken.includes('...')) {
+            throw new Error(isZh 
+              ? 'API Key 不完整，请输入完整的 API Key（不包含 ...）'
+              : 'API Key is incomplete. Please enter the complete API Key (without ...)');
+          }
+          if (authToken.startsWith('nm_live_')) {
+            headers['Authorization'] = 'Bearer ' + authToken;
+          }
         }
 
         // 构建请求选项
@@ -973,10 +967,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           inputEl.value = savedKey;
           inputEl.type = 'password';
         } else {
-          // 如果没有保存的完整 key，显示 keyPrefix 并提示用户
+          // 如果没有保存的完整 key，不设置包含 ... 的值，让用户手动输入完整 key
           const selectedKey = apiKeysList.find(function(k) { return k.id === selectedValue; });
           if (selectedKey) {
-            inputEl.value = selectedKey.keyPrefix + '...';
+            inputEl.value = '';
             inputEl.type = 'text';
             inputEl.placeholder = t('pleaseEnterFullKey');
           }
@@ -1087,9 +1081,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     }
                     foundKey = true;
                   } else {
-                    // 没有保存的完整key，显示前缀提示用户输入
+                    // 没有保存的完整key，不设置包含 ... 的值，让用户手动输入完整 key
                     if (inputEl) {
-                      inputEl.value = activeKey.keyPrefix + '...';
+                      inputEl.value = '';
                       inputEl.type = 'text';
                       inputEl.placeholder = t('pleaseEnterFullKey');
                     }
