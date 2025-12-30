@@ -860,16 +860,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           'Content-Type': 'application/json'
         };
 
-        // 确保 key 完整且不包含 ...（表示不完整的 key）
         if (authEnabled && authToken) {
-          if (authToken.includes('...')) {
-            throw new Error(isZh 
-              ? 'API Key 不完整，请输入完整的 API Key（不包含 ...）'
-              : 'API Key is incomplete. Please enter the complete API Key (without ...)');
-          }
-          if (authToken.startsWith('nm_live_')) {
-            headers['Authorization'] = 'Bearer ' + authToken;
-          }
+          headers['Authorization'] = 'Bearer ' + authToken;
         }
 
         // 构建请求选项
@@ -967,10 +959,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           inputEl.value = savedKey;
           inputEl.type = 'password';
         } else {
-          // 如果没有保存的完整 key，不设置包含 ... 的值，让用户手动输入完整 key
+          // 如果没有保存的完整 key，显示 keyPrefix 并提示用户
           const selectedKey = apiKeysList.find(function(k) { return k.id === selectedValue; });
           if (selectedKey) {
-            inputEl.value = '';
+            inputEl.value = selectedKey.keyPrefix + '...';
             inputEl.type = 'text';
             inputEl.placeholder = t('pleaseEnterFullKey');
           }
@@ -1081,9 +1073,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     }
                     foundKey = true;
                   } else {
-                    // 没有保存的完整key，不设置包含 ... 的值，让用户手动输入完整 key
+                    // 没有保存的完整key，显示前缀提示用户输入
                     if (inputEl) {
-                      inputEl.value = '';
+                      inputEl.value = activeKey.keyPrefix + '...';
                       inputEl.type = 'text';
                       inputEl.placeholder = t('pleaseEnterFullKey');
                     }
