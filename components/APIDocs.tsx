@@ -86,6 +86,35 @@ const APIDocs: React.FC = () => {
         ],
       },
     },
+    "workflow-configs-get": {
+      value: "workflow-configs-get",
+      method: "GET",
+      url: `${baseUrl}/api/v1/workflow-configs/mining-1234567890-abc123`,
+      label: `GET https://www.nichedigger.ai/api/v1/workflow-configs/{id}`,
+    },
+    "workflow-configs-update": {
+      value: "workflow-configs-update",
+      method: "PUT",
+      url: `${baseUrl}/api/v1/workflow-configs/mining-1234567890-abc123`,
+      label: `PUT https://www.nichedigger.ai/api/v1/workflow-configs/{id}`,
+      defaultBody: {
+        name: "Updated Config Name",
+        nodes: [
+          {
+            id: "mining-gen",
+            type: "agent",
+            name: "Keyword Generation Agent",
+            prompt: "Updated prompt here...",
+          },
+        ],
+      },
+    },
+    "workflow-configs-delete": {
+      value: "workflow-configs-delete",
+      method: "DELETE",
+      url: `${baseUrl}/api/v1/workflow-configs/mining-1234567890-abc123`,
+      label: `DELETE https://www.nichedigger.ai/api/v1/workflow-configs/{id}`,
+    },
   };
 
   // 获取API keys
@@ -223,6 +252,7 @@ const APIDocs: React.FC = () => {
         "Content-Type": "application/json",
       };
 
+      // 所有接口都支持 API Key 认证
       if (authEnabled && authToken && authToken.startsWith("nm_live_")) {
         headers["Authorization"] = `Bearer ${authToken}`;
       }
@@ -563,6 +593,39 @@ const APIDocs: React.FC = () => {
                           {isZh
                             ? "获取/创建工作流配置"
                             : "Get/Create Workflow Configurations"}
+                        </td>
+                      </tr>
+                      <tr className="border-b border-zinc-800">
+                        <td className="py-2 text-primary font-mono">
+                          /api/v1/workflow-configs/:id
+                        </td>
+                        <td className="py-2 text-zinc-400 font-mono">GET</td>
+                        <td className="py-2 text-zinc-400">
+                          {isZh
+                            ? "获取特定工作流配置"
+                            : "Get Specific Workflow Configuration"}
+                        </td>
+                      </tr>
+                      <tr className="border-b border-zinc-800">
+                        <td className="py-2 text-primary font-mono">
+                          /api/v1/workflow-configs/:id
+                        </td>
+                        <td className="py-2 text-zinc-400 font-mono">PUT</td>
+                        <td className="py-2 text-zinc-400">
+                          {isZh
+                            ? "更新工作流配置"
+                            : "Update Workflow Configuration"}
+                        </td>
+                      </tr>
+                      <tr className="border-b border-zinc-800">
+                        <td className="py-2 text-primary font-mono">
+                          /api/v1/workflow-configs/:id
+                        </td>
+                        <td className="py-2 text-zinc-400 font-mono">DELETE</td>
+                        <td className="py-2 text-zinc-400">
+                          {isZh
+                            ? "删除工作流配置"
+                            : "Delete Workflow Configuration"}
                         </td>
                       </tr>
                     </tbody>
@@ -1411,6 +1474,33 @@ const APIDocs: React.FC = () => {
                       {isZh
                         ? "获取工作流配置列表"
                         : "Get workflow configuration list"}
+                    </li>
+                    <li>
+                      <code className="text-primary">
+                        GET /api/v1/workflow-configs/:id
+                      </code>{" "}
+                      -{" "}
+                      {isZh
+                        ? "获取特定工作流配置"
+                        : "Get specific workflow configuration"}
+                    </li>
+                    <li>
+                      <code className="text-primary">
+                        PUT /api/v1/workflow-configs/:id
+                      </code>{" "}
+                      -{" "}
+                      {isZh
+                        ? "更新工作流配置"
+                        : "Update workflow configuration"}
+                    </li>
+                    <li>
+                      <code className="text-primary">
+                        DELETE /api/v1/workflow-configs/:id
+                      </code>{" "}
+                      -{" "}
+                      {isZh
+                        ? "删除工作流配置"
+                        : "Delete workflow configuration"}
                     </li>
                   </ul>
                 </div>

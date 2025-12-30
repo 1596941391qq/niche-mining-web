@@ -1,8 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { parseRequestBody, setCorsHeaders, handleOptions, sendErrorResponse } from './_shared/request-handler.js';
 import { WorkflowConfig } from './_shared/types.js';
-import { verifyToken } from '../lib/auth.js';
-import { getUserById } from '../lib/db.js';
+import { authenticateRequest } from './_shared/auth.js';
 import {
   createWorkflowConfig,
   getUserWorkflowConfigs,
@@ -29,55 +28,39 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return handleOptions(res);
     }
 
-    // 认证检查
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    // 认证检查（支持 JWT token 和 API key）
+    const authResult = await authenticateRequest(req);
+    if (!authResult) {
       return res.status(401).json({
         error: 'Unauthorized',
-        message: 'Authorization token required. Please provide Bearer token in Authorization header.',
+        message: 'Authorization required. Please provide Bearer token (JWT) or API key (nm_live_...) in Authorization header.',
       });
     }
 
-    const token = authHeader.substring(7);
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return res.status(401).json({
-        error: 'Unauthorized',
-        message: 'Invalid or expired token.',
-      });
-    }
-
-    const user = await getUserById(payload.userId);
-    if (!user) {
-      return res.status(401).json({
-        error: 'Unauthorized',
-        message: 'User not found.',
-      });
-    }
-
+    const userId = authResult.userId;
     const { method } = req;
     const urlPath = req.url?.split('?')[0] || '';
     const configId = urlPath.split('/').pop();
 
     switch (method) {
       case 'POST':
-        return await createConfig(req, res, user.id);
+        return await createConfig(req, res, userId);
       
       case 'GET':
         if (configId && configId !== 'workflow-configs') {
-          return await getConfig(req, res, configId, user.id);
+          return await getConfig(req, res, configId, userId);
         }
-        return await listConfigs(req, res, user.id);
+        return await listConfigs(req, res, userId);
       
       case 'PUT':
         if (configId && configId !== 'workflow-configs') {
-          return await updateConfig(req, res, configId, user.id);
+          return await updateConfig(req, res, configId, userId);
         }
         return res.status(400).json({ error: 'Config ID required for update' });
       
       case 'DELETE':
         if (configId && configId !== 'workflow-configs') {
-          return await deleteConfig(req, res, configId, user.id);
+          return await deleteConfig(req, res, configId, userId);
         }
         return res.status(400).json({ error: 'Config ID required for delete' });
       
