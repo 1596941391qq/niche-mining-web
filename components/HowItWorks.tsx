@@ -48,10 +48,10 @@ const HowItWorks: React.FC = () => {
               {t.howItWorks.badge}
             </span>
           </div>
-          <h2 className="text-4xl md:text-7xl font-bold text-white mb-6 lg:mb-8 tracking-tighter uppercase font-mono italic">
+          <h2 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 lg:mb-8 tracking-tighter uppercase font-mono italic">
             {t.howItWorks.workflow.title}
           </h2>
-          <p className="text-zinc-500 text-lg lg:text-xl max-w-3xl mx-auto font-mono uppercase tracking-widest mb-10 lg:mb-12">
+          <p className="text-zinc-500 text-base sm:text-lg lg:text-xl max-w-3xl mx-auto font-mono uppercase tracking-widest mb-10 lg:mb-12">
             {t.howItWorks.workflow.description}
           </p>
 
@@ -124,7 +124,7 @@ const HowItWorks: React.FC = () => {
 
                   {/* Card Content */}
                   <div
-                    className={`mt-8 lg:mt-0 p-8 border transition-all duration-500 bg-zinc-900/20 backdrop-blur-sm relative overflow-hidden ${
+                    className={`mt-8 lg:mt-0 p-6 sm:p-8 border transition-all duration-500 bg-zinc-900/20 backdrop-blur-sm relative overflow-hidden ${
                       isHovered
                         ? "border-primary/50 bg-zinc-900/60 -translate-y-2"
                         : "border-zinc-800"
@@ -213,7 +213,7 @@ const HowItWorks: React.FC = () => {
                   }`}
                 >
                   <div
-                    className={`relative h-full bg-zinc-950 p-10 flex flex-col border ${
+                    className={`relative h-full bg-zinc-950 p-6 sm:p-10 flex flex-col border ${
                       idx === 1 ? "border-primary/50" : "border-zinc-800"
                     }`}
                   >

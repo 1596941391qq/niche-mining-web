@@ -100,22 +100,22 @@ const ToolSelector: React.FC = () => {
       <div className="absolute inset-0 bg-[linear-gradient(rgba(39,39,42,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(39,39,42,0.2)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none"></div>
       
       <div className="container mx-auto px-6 relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 lg:mb-8 border border-primary/30 bg-primary/10 rounded-sm">
+        <div className="text-center max-w-3xl mx-auto mb-12 lg:mb-20">
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 border border-primary/30 bg-primary/10 rounded-sm">
             <Zap className="w-3 h-3 text-primary animate-pulse" />
             <span className="text-xs font-mono text-primary uppercase tracking-widest font-bold">
               {t.tools.badge}
             </span>
           </div>
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 lg:mb-8 tracking-tight font-mono uppercase">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight font-mono uppercase">
             {t.tools.heading}
           </h2>
-          <p className="text-zinc-400 text-lg lg:text-xl leading-relaxed border-l-4 border-primary/30 pl-8 text-left max-w-2xl mx-auto italic">
+          <p className="text-zinc-400 text-base sm:text-lg lg:text-xl leading-relaxed border-l-4 border-primary/30 pl-6 sm:pl-8 text-left max-w-2xl mx-auto italic">
             {t.tools.subheading}
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10 max-w-7xl mx-auto">
           {agents.map((agent, index) => (
             <div 
               key={agent.id}
