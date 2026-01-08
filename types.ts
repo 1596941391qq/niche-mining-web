@@ -7,6 +7,7 @@ export interface Translations {
     features: string;
     agents: string;
     howItWorks: string;
+    pricing: string;
     start: string;
   };
   console?: {
@@ -22,6 +23,55 @@ export interface Translations {
     userInfo?: {
       currentPlan?: string;
     };
+    settings?: {
+      profile?: {
+        title?: string;
+        avatar?: string;
+        changeAvatar?: string;
+        fullName?: string;
+        email?: string;
+        save?: string;
+        noSave?: string;
+      };
+      preferences?: {
+        title?: string;
+        language?: string;
+        timezone?: string;
+      };
+      notifications?: {
+        title?: string;
+        email?: string;
+        emailDesc?: string;
+        usage?: string;
+        usageDesc?: string;
+        marketing?: string;
+        marketingDesc?: string;
+      };
+      security?: {
+        title?: string;
+        twoFactor?: string;
+        twoFactorDesc?: string;
+        password?: string;
+        passwordDesc?: string;
+        sessions?: string;
+        sessionsDesc?: string;
+        viewSessions?: string;
+        notAvailable?: string;
+        enable?: string;
+        disable?: string;
+      };
+      danger?: {
+        title?: string;
+        delete?: string;
+        deleteDesc?: string;
+      };
+      deleteModal?: {
+        title?: string;
+        warning?: string;
+        cancel?: string;
+        delete?: string;
+      };
+    };
   };
   hero: {
     badge: string;
@@ -29,7 +79,7 @@ export interface Translations {
     subtitle: string;
     placeholder: string;
     ctaPrimary: string;
-    ctaSecondary: string;
+    ctaSecondary?: string;
     stats_efficiency: string;
     stats_depth: string;
   };
@@ -82,6 +132,30 @@ export interface Translations {
           desc: string;
         }[];
         value?: string;
+      }[];
+    };
+    invincible?: {
+      title: string;
+      items: {
+        title: string;
+        desc: string;
+      }[];
+    };
+    trends?: {
+      title: string;
+      subtitle: string;
+      stats: {
+        label: string;
+        value: string;
+        icon: string;
+      }[];
+    };
+    factors?: {
+      title: string;
+      subtitle: string;
+      items: {
+        category: string;
+        details: string;
       }[];
     };
   };

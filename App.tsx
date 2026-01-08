@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import Features from "./components/Features";
 import ToolSelector from "./components/ToolSelector";
 import HowItWorks from "./components/HowItWorks";
+import AIOExperience from "./components/AIOExperience";
+import Pricing from "./components/Pricing";
 import Footer from "./components/Footer";
 import Privacy from "./components/Privacy";
 import Terms from "./components/Terms";
@@ -80,9 +81,10 @@ function App() {
         return (
           <>
             <Hero />
-            <Features />
             <ToolSelector />
+            <AIOExperience />
             <HowItWorks />
+            <Pricing />
           </>
         );
     }

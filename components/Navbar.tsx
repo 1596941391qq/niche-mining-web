@@ -1,15 +1,16 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Pickaxe, Menu, X, Globe, LogIn, LogOut, User } from "lucide-react";
-import { LanguageContext } from "../contexts/LanguageContext";
+import { useLanguage } from "../contexts/LanguageContext";
 import { useAuth } from "../contexts/AuthContext";
 import LoginModal from "./auth/LoginModal";
 
 const Navbar: React.FC = () => {
-  const { lang, setLang, t } = useContext(LanguageContext);
+  const { lang, setLang, t } = useLanguage();
   const { user, authenticated, login, loginWithEmail, register, logout, loading } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
 
   // 检测是否是预览部署
   const isPreviewDeployment =
@@ -44,6 +45,7 @@ const Navbar: React.FC = () => {
     { name: t.nav.features, href: "#features" },
     { name: t.nav.agents, href: "#agents" },
     { name: t.nav.howItWorks, href: "#how-it-works" },
+    { name: t.nav.pricing, href: "#pricing" },
   ];
 
   return (
@@ -107,17 +109,21 @@ const Navbar: React.FC = () => {
             <>
               {authenticated && user ? (
                 <div className="flex items-center gap-4">
-                  {/* User Info */}
                   <div className="flex items-center gap-2 text-xs font-mono">
-                    {user.picture ? (
+                    {user.picture && !avatarError ? (
                       <img
                         src={user.picture}
                         alt={user.name || user.email}
-                        className="w-8 h-8 rounded-full border border-primary/30"
+                        className="w-8 h-8 rounded-full border border-primary/30 object-cover"
+                        onError={() => setAvatarError(true)}
                       />
                     ) : (
                       <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
-                        <User className="w-4 h-4 text-primary" />
+                        <span className="text-primary font-bold text-[10px]">
+                          {(user.name || user.email || "U")
+                            .charAt(0)
+                            .toUpperCase()}
+                        </span>
                       </div>
                     )}
                     <span className="text-zinc-300 hidden lg:block max-w-[120px] truncate">
@@ -140,13 +146,21 @@ const Navbar: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <button
-                  onClick={handleLogin}
-                  className="flex items-center gap-2 px-6 py-2.5 bg-zinc-100 text-black hover:bg-primary hover:text-black rounded-sm text-xs font-bold transition-all shadow-[0_0_10px_rgba(255,255,255,0.1)] hover:shadow-[0_0_20px_rgba(16,185,129,0.6)] uppercase tracking-wider"
-                >
-                  <LogIn className="w-4 h-4" />
-                  <span>Login</span>
-                </button>
+                <div className="flex items-center gap-4">
+                  <a
+                    href="#pricing"
+                    className="hidden lg:flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/30 text-orange-500 hover:bg-orange-500 hover:text-black rounded-sm text-[10px] font-bold transition-all uppercase tracking-widest animate-pulse"
+                  >
+                    <span>Claim 200 Free Credits</span>
+                  </a>
+                  <button
+                    onClick={handleLogin}
+                    className="flex items-center gap-2 px-6 py-2.5 bg-zinc-100 text-black hover:bg-primary hover:text-black rounded-sm text-xs font-bold transition-all shadow-[0_0_10px_rgba(255,255,255,0.1)] hover:shadow-[0_0_20px_rgba(16,185,129,0.6)] uppercase tracking-wider"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    <span>Login</span>
+                  </button>
+                </div>
               )}
             </>
           )}
@@ -187,15 +201,20 @@ const Navbar: React.FC = () => {
               {authenticated && user ? (
                 <div className="mt-6 space-y-3">
                   <div className="flex items-center gap-3 px-4 py-3 bg-surface/50 rounded-sm border border-border">
-                    {user.picture ? (
+                    {user.picture && !avatarError ? (
                       <img
                         src={user.picture}
                         alt={user.name || user.email}
-                        className="w-10 h-10 rounded-full border border-primary/30"
+                        className="w-10 h-10 rounded-full border border-primary/30 object-cover"
+                        onError={() => setAvatarError(true)}
                       />
                     ) : (
                       <div className="w-10 h-10 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
-                        <User className="w-5 h-5 text-primary" />
+                        <span className="text-primary font-bold">
+                          {(user.name || user.email || "U")
+                            .charAt(0)
+                            .toUpperCase()}
+                        </span>
                       </div>
                     )}
                     <div className="flex-1 min-w-0">

@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import { RefreshCcw, FileText, Target, Layers, Box } from 'lucide-react';
+import { Target, Cpu, Box, Activity, Layers } from 'lucide-react';
 import { LanguageContext } from '../contexts/LanguageContext';
 
 const Features: React.FC = () => {
   const { t } = useContext(LanguageContext);
 
-  const icons = [RefreshCcw, Layers, Box, Target];
+  const icons = [Target, Cpu, Layers, Activity];
 
   return (
     <section id="features" className="py-24 bg-surface border-y border-border relative">
@@ -29,7 +29,7 @@ const Features: React.FC = () => {
           </div>
           <div className="h-px bg-zinc-800 flex-1 md:mx-12 self-center hidden md:block"></div>
           <div className="text-primary font-mono text-sm whitespace-nowrap bg-primary/10 px-3 py-1 border border-primary/20 rounded">
-            ALGORITHM: RECURSIVE_DEPTH_V2
+            ALGORITHM: ASYMMETRIC_V3
           </div>
         </div>
 

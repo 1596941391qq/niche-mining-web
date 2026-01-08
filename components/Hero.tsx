@@ -1,19 +1,20 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Search, Activity, Terminal, ShieldAlert, Cpu, ChevronRight } from 'lucide-react';
-import { LanguageContext } from '../contexts/LanguageContext';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Hero: React.FC = () => {
-  const { t } = useContext(LanguageContext);
+  const { t } = useLanguage();
   const [termLine, setTermLine] = useState(0);
   
   // Simulated terminal logs
   const logs = [
-    '> Initializing crawler protocol...',
-    '> Target: Low competition / High Intent',
-    '> Scanning SERP: Depth 10...',
-    '> DETECTED: "Weak Forum" in Pos #3',
-    '> STATUS: Opportunity Verified.',
-    '> PREPARING REPORT...'
+    'INTEL: Scanning for market vacuums... FOUND [12]',
+    'FACTORY: Engineering AIO optimized content... OK',
+    'STUDIO: Synthesizing visual fingerprints... DONE',
+    'RADAR: Linking to Revenue stream... ACTIVE',
+    'SYSTEM: Industrial production protocol active.',
+    'ASSET: Generating unique visual DNA...',
+    'STATUS: Production line at 100% capacity.'
   ];
 
   useEffect(() => {
@@ -21,39 +22,39 @@ const Hero: React.FC = () => {
       setTermLine((prev) => (prev + 1) % logs.length);
     }, 1200);
     return () => clearInterval(interval);
-  }, []);
+  }, [logs.length]);
 
   return (
-    <div className="relative pt-36 pb-24 lg:pt-52 lg:pb-40 overflow-hidden bg-grid-pattern grid-bg">
+    <div className="relative pt-24 pb-16 lg:pt-40 lg:pb-24 overflow-hidden bg-grid-pattern grid-bg">
       <div className="container mx-auto px-6 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
           
           {/* Left Column: Copy */}
           <div className="text-left relative">
-            <div className="inline-flex items-center gap-2 px-3 py-1 mb-8 border border-primary/30 bg-primary/10 rounded-sm backdrop-blur-sm">
-              <span className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_#10b981]"></span>
-              <span className="text-xs font-mono text-primary tracking-[0.2em] uppercase font-bold">{t.hero.badge}</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 border border-orange-500/30 bg-orange-500/10 rounded-sm backdrop-blur-sm relative group overflow-hidden">
+              <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse shadow-[0_0_10px_#f97316]"></span>
+              <span className="text-xs font-mono text-orange-500 tracking-wider font-bold">
+                [ 🎁 {t.hero.badge} ]
+              </span>
+              <div className="absolute inset-0 bg-orange-500/5 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 leading-[1] text-white whitespace-pre-line drop-shadow-lg">
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-[1] text-white whitespace-pre-line drop-shadow-lg">
               {t.hero.title}
             </h1>
 
-            <p className="text-lg text-zinc-400 mb-12 max-w-xl leading-relaxed border-l-2 border-primary/50 pl-6">
+            <p className="text-lg text-zinc-400 mb-8 max-w-xl leading-relaxed border-l-2 border-primary/50 pl-6 italic">
               {t.hero.subtitle}
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4">
-              <a href="#agents" className="w-full sm:w-auto px-8 py-4 bg-primary text-black font-bold text-sm uppercase tracking-wider rounded-sm hover:bg-[#34d399] transition-all flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)]">
+              <a href="#console" className="w-full sm:w-auto px-8 py-4 bg-primary text-black font-bold text-sm uppercase tracking-widest rounded-sm hover:bg-[#34d399] transition-all flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)]">
                 {t.hero.ctaPrimary}
                 <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </a>
-              <button className="w-full sm:w-auto px-8 py-4 bg-transparent border border-zinc-700 text-zinc-300 font-bold text-sm uppercase tracking-wider rounded-sm hover:bg-zinc-800 transition-all hover:border-zinc-500">
-                {t.hero.ctaSecondary}
-              </button>
             </div>
 
-            <div className="mt-16 flex items-center gap-8 text-xs font-mono text-zinc-500 uppercase tracking-wider">
+            <div className="mt-12 flex items-center gap-8 text-xs font-mono text-zinc-500 uppercase tracking-wider">
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 bg-primary"></div>
                 {t.hero.stats_efficiency}
@@ -80,7 +81,7 @@ const Hero: React.FC = () => {
                     <div className="w-3 h-3 rounded-full bg-yellow-900/50 border border-yellow-800"></div>
                     <div className="w-3 h-3 rounded-full bg-green-900/50 border border-green-800"></div>
                  </div>
-                 <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Target_Acquisition.sh</span>
+                 <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Production_Queue_Monitor.v2</span>
               </div>
 
               <div className="bg-black/90 p-6 font-mono text-sm min-h-[400px] flex flex-col relative">

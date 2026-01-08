@@ -150,6 +150,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         credentials: "include",
       });
 
+      if (response.status === 401) {
+        console.warn("🔒 Session expired or unauthorized");
+        clearToken();
+        setUser(null);
+        localStorage.removeItem("cached_user");
+        localStorage.removeItem("session_last_refresh");
+        return;
+      }
+
       const data = await response.json();
 
       if (data.authenticated && data.user) {

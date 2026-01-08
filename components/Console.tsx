@@ -18,7 +18,6 @@ import ConsoleDashboard from "./console/ConsoleDashboard";
 import ConsoleAgents from "./console/ConsoleAgents";
 import ConsoleAPI from "./console/ConsoleAPI";
 import ConsoleSubscription from "./console/ConsoleSubscription";
-import ConsoleTeam from "./console/ConsoleTeam";
 import ConsoleSettings from "./console/ConsoleSettings";
 import MiningModes from "./console/MiningModes";
 import { useAuth } from "../contexts/AuthContext";
@@ -41,6 +40,7 @@ const Console: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
   const { lang, setLang, t } = useContext(LanguageContext);
   const [devToolsVisible, setDevToolsVisible] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
 
   // 显示开发工具条
   useEffect(() => {
@@ -88,11 +88,6 @@ const Console: React.FC = () => {
       icon: <CreditCard className="w-5 h-5" />,
     },
     {
-      id: "team" as TabType,
-      name: t.console?.sidebar?.team || (lang === "cn" ? "团队" : "Team"),
-      icon: <Users className="w-5 h-5" />,
-    },
-    {
       id: "settings" as TabType,
       name:
         t.console?.sidebar?.settings || (lang === "cn" ? "设置" : "Settings"),
@@ -112,8 +107,6 @@ const Console: React.FC = () => {
         return <ConsoleAPI />;
       case "subscription":
         return <ConsoleSubscription />;
-      case "team":
-        return <ConsoleTeam />;
       case "settings":
         return <ConsoleSettings />;
       default:
@@ -174,7 +167,7 @@ const Console: React.FC = () => {
                 Niche Digger
               </h1>
               <p className="text-[10px] text-emerald-500 font-mono tracking-tighter">
-                BLUE OCEAN PROTOCOL
+                Mine Hidden Alpha
               </p>
             </div>
           </div>
@@ -184,27 +177,18 @@ const Console: React.FC = () => {
         <div className="px-4 py-6">
           <div className="bg-surface border border-border p-3 rounded-sm relative overflow-hidden group">
             <div className="flex items-center gap-3 relative z-10">
-              <div className="w-10 h-10 bg-surface border border-border flex items-center justify-center rounded-sm text-emerald-500">
-                {user?.picture ? (
+              <div className="w-10 h-10 bg-surface border border-border flex items-center justify-center rounded-sm text-emerald-500 overflow-hidden">
+                {user?.picture && !avatarError ? (
                   <img
                     src={user.picture}
                     alt={user.name || user.email}
                     className="w-full h-full object-cover"
+                    onError={() => setAvatarError(true)}
                   />
                 ) : (
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
+                  <div className="w-full h-full flex items-center justify-center bg-primary/10 text-primary font-bold text-sm">
+                    {(user?.name || user?.email || "U").charAt(0).toUpperCase()}
+                  </div>
                 )}
               </div>
               <div>
@@ -262,26 +246,36 @@ const Console: React.FC = () => {
             </a>
             <button
               onClick={() => setLang(lang === "en" ? "cn" : "en")}
-              className="flex flex-col items-center justify-center p-2 rounded-sm bg-surface border border-border text-text-secondary hover:text-emerald-500 hover:border-emerald-500/30 transition-all group"
+              className={`flex flex-col items-center justify-center p-2 rounded-sm border transition-all group ${
+                lang === "cn"
+                  ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-500"
+                  : "bg-surface border-border text-text-secondary hover:text-emerald-500 hover:border-emerald-500/30"
+              }`}
               title={lang === "cn" ? "中英切换" : "Language"}
             >
-              <Globe className="w-4 h-4" />
-              <span className="text-[8px] font-mono mt-1 opacity-60 group-hover:opacity-100">
-                CN/EN
+              <Globe
+                className={`w-4 h-4 ${lang === "cn" ? "animate-pulse" : ""}`}
+              />
+              <span className="text-[8px] font-mono mt-1 font-bold">
+                {lang === "en" ? "EN" : "CN"}
               </span>
             </button>
             <button
               onClick={toggleTheme}
-              className="flex flex-col items-center justify-center p-2 rounded-sm bg-surface border border-border text-text-secondary hover:text-emerald-500 hover:border-emerald-500/30 transition-all group"
-              title={lang === "cn" ? "夜间模式" : "Theme"}
+              className={`flex flex-col items-center justify-center p-2 rounded-sm border transition-all group ${
+                theme === "light"
+                  ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-500"
+                  : "bg-surface border-border text-text-secondary hover:text-emerald-500 hover:border-emerald-500/30"
+              }`}
+              title={lang === "cn" ? "切换主题" : "Theme"}
             >
               {theme === "dark" ? (
                 <Sun className="w-4 h-4" />
               ) : (
                 <Moon className="w-4 h-4" />
               )}
-              <span className="text-[8px] font-mono mt-1 opacity-60 group-hover:opacity-100">
-                NIGHT
+              <span className="text-[8px] font-mono mt-1 font-bold">
+                {theme === "dark" ? "NIGHT" : "DAY"}
               </span>
             </button>
           </div>
@@ -350,16 +344,17 @@ const Console: React.FC = () => {
         {/* User Info */}
         <div className="p-4 border-b border-border">
           <div className="flex items-center gap-3 px-3 py-2 bg-surface rounded-sm border border-border">
-            {user?.picture ? (
+            {user?.picture && !avatarError ? (
               <img
                 src={user.picture}
                 alt={user.name || user.email}
-                className="w-10 h-10 rounded-full border border-primary/30"
+                className="w-10 h-10 rounded-full border border-primary/30 object-cover"
+                onError={() => setAvatarError(true)}
               />
             ) : (
               <div className="w-10 h-10 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
                 <span className="text-primary font-bold">
-                  {user?.name?.[0] || user?.email?.[0]}
+                  {(user?.name || user?.email || "U").charAt(0).toUpperCase()}
                 </span>
               </div>
             )}
@@ -417,11 +412,11 @@ const Console: React.FC = () => {
             <span>
               {theme === "dark"
                 ? lang === "cn"
-                  ? "白天模式"
-                  : "Light Mode"
+                  ? "切换为白天"
+                  : "Switch to Day"
                 : lang === "cn"
-                ? "夜间模式"
-                : "Dark Mode"}
+                ? "切换为黑夜"
+                : "Switch to Night"}
             </span>
           </button>
           <button
@@ -432,7 +427,9 @@ const Console: React.FC = () => {
             className="w-full flex items-center gap-3 px-4 py-3 text-sm font-mono text-text-secondary hover:text-text-primary hover:bg-surface/50 border border-border hover:border-primary/50 transition-all"
           >
             <Globe className="w-5 h-5" />
-            <span>{lang === "en" ? "English" : "中文"}</span>
+            <span>
+              {lang === "en" ? "Switch to 中文" : "Switch to English"}
+            </span>
           </button>
           <a
             href="#"

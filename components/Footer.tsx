@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { Pickaxe } from "lucide-react";
-import { LanguageContext } from "../contexts/LanguageContext";
+import { useLanguage } from "../contexts/LanguageContext";
 
 const Footer: React.FC = () => {
-  const { t } = useContext(LanguageContext);
+  const { t } = useLanguage();
 
   return (
     <footer className="bg-black border-t border-zinc-900 pt-16 pb-8 text-sm">

@@ -21,6 +21,7 @@ const ConsoleSettings: React.FC = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
 
   // 检查哪些功能未开放（没有任何处理逻辑）
   const isFeatureDisabled = true; // 目前所有保存功能都未开放
@@ -54,11 +55,18 @@ const ConsoleSettings: React.FC = () => {
             </label>
             <div className="flex items-center gap-4">
               <div className="w-20 h-20 rounded-full bg-primary/20 border-2 border-primary/30 flex items-center justify-center overflow-hidden">
-                {user?.picture ? (
-                  <img src={user.picture} alt={user.name || 'User'} className="w-full h-full object-cover" />
+                {user?.picture && !avatarError ? (
+                  <img
+                    src={user.picture}
+                    alt={user.name || "User"}
+                    className="w-full h-full object-cover"
+                    onError={() => setAvatarError(true)}
+                  />
                 ) : (
                   <span className="text-primary font-bold text-2xl">
-                    {(user?.name || user?.email || 'U').charAt(0).toUpperCase()}
+                    {(user?.name || user?.email || "U")
+                      .charAt(0)
+                      .toUpperCase()}
                   </span>
                 )}
               </div>

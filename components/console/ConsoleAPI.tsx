@@ -329,7 +329,8 @@ const ConsoleAPI: React.FC = () => {
 
   // 跳转到文档页面
   const handleViewDocs = () => {
-    window.open('/docs', '_blank');
+    // 传递当前语言参数
+    window.open(`/docs?lang=${lang}`, '_blank');
   };
 
   return (
@@ -351,17 +352,21 @@ const ConsoleAPI: React.FC = () => {
         </button>
       </div>
 
-      {/* Success/Error Messages */}
-      {success && (
-        <div className="bg-primary/10 border border-primary/30 p-3 flex items-center gap-2">
-          <Check className="w-4 h-4 text-primary flex-shrink-0" />
-          <p className="text-sm text-primary font-mono">{success}</p>
-        </div>
-      )}
-      {error && (
-        <div className="bg-accent-red/10 border border-accent-red/30 p-3 flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-accent-red flex-shrink-0" />
-          <p className="text-sm text-accent-red font-mono">{error}</p>
+      {/* Success/Error Messages - Fixed position to be above modal */}
+      {(success || error) && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[60] w-full max-w-md animate-in slide-in-from-top-4">
+          {success && (
+            <div className="bg-primary/90 backdrop-blur-md border border-primary/30 p-3 flex items-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+              <Check className="w-4 h-4 text-white flex-shrink-0" />
+              <p className="text-sm text-white font-mono font-bold">{success}</p>
+            </div>
+          )}
+          {error && (
+            <div className="bg-accent-red/90 backdrop-blur-md border border-accent-red/30 p-3 flex items-center gap-2 shadow-[0_0_20px_rgba(255,107,53,0.2)]">
+              <AlertTriangle className="w-4 h-4 text-white flex-shrink-0" />
+              <p className="text-sm text-white font-mono font-bold">{error}</p>
+            </div>
+          )}
         </div>
       )}
 
@@ -450,28 +455,8 @@ const ConsoleAPI: React.FC = () => {
               <div className="bg-background border border-border p-4 mb-4 font-mono">
                 <div className="flex items-center justify-between gap-4">
                   <code className="text-sm text-text-primary flex-1 overflow-x-auto">
-                    {apiKey.keyPrefix}
+                    {apiKey.keyPrefix}...
                   </code>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => toggleKeyVisibility(apiKey.id)}
-                      className="p-2 text-text-tertiary hover:text-text-primary transition-colors"
-                      title={visibleKeys.has(apiKey.id) ? tr.hide : tr.show}
-                    >
-                      {visibleKeys.has(apiKey.id) ? (
-                        <EyeOff className="w-4 h-4" />
-                      ) : (
-                        <Eye className="w-4 h-4" />
-                      )}
-                    </button>
-                    <button
-                      onClick={() => copyToClipboard(apiKey.keyPrefix)}
-                      className="p-2 text-text-tertiary hover:text-text-primary transition-colors"
-                      title={tr.copy}
-                    >
-                      <Copy className="w-4 h-4" />
-                    </button>
-                  </div>
                 </div>
               </div>
 

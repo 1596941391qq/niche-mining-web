@@ -1,291 +1,299 @@
-import React, { useContext, useState } from 'react';
-import { Target, Workflow, Sparkles, Bot, Wrench, CheckCircle2, Search, Globe, Zap, ArrowRight } from 'lucide-react';
-import { LanguageContext } from '../contexts/LanguageContext';
+import React, { useContext, useState } from "react";
+import {
+  Target,
+  Workflow,
+  Sparkles,
+  Bot,
+  Wrench,
+  CheckCircle2,
+  Search,
+  Cpu,
+  Box,
+  Activity,
+  ArrowRight,
+  Factory,
+  Zap,
+  ShieldCheck,
+  Microscope,
+  LineChart,
+  Globe,
+} from "lucide-react";
+import { useLanguage } from "../contexts/LanguageContext";
 
 const HowItWorks: React.FC = () => {
-  const { t, lang } = useContext(LanguageContext);
+  const { t, lang } = useLanguage();
   const [activeStep, setActiveStep] = useState<number | null>(null);
 
-  const stepIcons = [Search, Globe, Zap];
+  const stepIcons = [Microscope, Factory, Zap, LineChart];
 
   return (
-    <section id="how-it-works" className="py-24 bg-background relative">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.05)_0%,transparent_70%)]"></div>
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(39,39,42,0.4)_1px,transparent_1px),linear-gradient(90deg,rgba(39,39,42,0.4)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)]"></div>
+    <section
+      id="how-it-works"
+      className="py-20 lg:py-28 bg-background relative overflow-hidden"
+    >
+      {/* Industrial Background Grid */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.03)_0%,transparent_70%)]"></div>
+      <div className="absolute inset-0 bg-grid-zinc-900/[0.1] bg-[size:40px_40px]"></div>
+
+      {/* Decorative vertical lines */}
+      <div className="absolute left-1/4 top-0 bottom-0 w-px bg-zinc-800/50 hidden lg:block"></div>
+      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-zinc-800/50 hidden lg:block"></div>
+      <div className="absolute left-3/4 top-0 bottom-0 w-px bg-zinc-800/50 hidden lg:block"></div>
 
       <div className="container mx-auto px-6 relative z-10">
-        {/* Core Value Section */}
-        <div className="max-w-4xl mx-auto mb-20">
+        <div className="text-center mb-16 lg:mb-20">
           <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 border border-primary/20 bg-primary/5 rounded-sm">
-            <Sparkles className="w-3 h-3 text-primary" />
-            <span className="text-xs font-mono text-primary uppercase tracking-widest">{t.howItWorks.badge}</span>
+            <ShieldCheck className="w-4 h-4 text-primary" />
+            <span className="text-xs font-mono text-primary uppercase tracking-[0.3em] font-bold">
+              {t.howItWorks.badge}
+            </span>
           </div>
-          
-          <div className="bg-surface border border-border p-8 md:p-12 tech-border">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="w-12 h-12 bg-primary/10 border border-primary/30 flex items-center justify-center flex-shrink-0">
-                <Target className="w-6 h-6 text-primary" />
-              </div>
-              <div className="flex-1">
-                <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 font-mono">
-                  {t.howItWorks.coreValue.title}
-                </h2>
-                <h3 className="text-xl text-primary mb-4 font-semibold">
-                  {t.howItWorks.coreValue.subtitle}
-                </h3>
-                <p className="text-zinc-400 text-lg leading-relaxed">
-                  {t.howItWorks.coreValue.description}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+          <h2 className="text-4xl md:text-7xl font-bold text-white mb-6 lg:mb-8 tracking-tighter uppercase font-mono italic">
+            {t.howItWorks.workflow.title}
+          </h2>
+          <p className="text-zinc-500 text-lg lg:text-xl max-w-3xl mx-auto font-mono uppercase tracking-widest mb-10 lg:mb-12">
+            {t.howItWorks.workflow.description}
+          </p>
 
-        {/* Workflow Section */}
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 font-mono">
-              {t.howItWorks.workflow.title}
-            </h2>
-            <p className="text-zinc-400 text-lg max-w-3xl mx-auto">
-              {t.howItWorks.workflow.description}
-            </p>
-          </div>
-
-          {/* Workflow Visualization */}
-          <div className="relative mb-20">
-            {/* Flow Chart Container */}
-            <div className="relative pb-8 pt-16">
-              <div className="flex flex-col md:flex-row items-stretch md:items-stretch justify-center gap-4 md:gap-4 px-4 w-full">
-                {t.howItWorks.workflow.steps.map((step, index) => {
-                  const StepIcon = stepIcons[index] || Workflow;
-                  const isActive = activeStep === index;
-                  const isHovered = activeStep !== null && activeStep === index;
-                  
-                  return (
-                    <React.Fragment key={step.id}>
-                      {/* Step Card */}
-                      <div
-                        className="relative group"
-                        onMouseEnter={() => setActiveStep(index)}
-                        onMouseLeave={() => setActiveStep(null)}
-                      >
-                        <div className={`
-                          relative bg-surface border tech-border p-6 md:p-6 w-full md:w-80 md:h-full md:flex flex-col
-                          transition-all duration-300 cursor-pointer z-10
-                          ${isHovered ? 'border-primary md:scale-105 shadow-[0_0_30px_rgba(16,185,129,0.3)] z-20' : 'border-border'}
-                        `}>
-                          {/* Step Number Badge */}
-                          <div className="absolute -top-4 -left-4 w-12 h-12 bg-zinc-900 border-2 border-primary rounded-full flex items-center justify-center z-30 shadow-lg">
-                            <span className="text-xl font-bold text-primary font-mono">{step.id}</span>
-                          </div>
-                          
-                          {/* Icon */}
-                          <div className={`
-                            w-16 h-16 mb-4 border-2 rounded-sm flex items-center justify-center flex-shrink-0
-                            transition-all duration-300
-                            ${isHovered 
-                              ? 'bg-primary/20 border-primary shadow-[0_0_20px_rgba(16,185,129,0.4)]' 
-                              : 'bg-zinc-900 border-zinc-700'
-                            }
-                          `}>
-                            <StepIcon className={`
-                              w-8 h-8 transition-all duration-300
-                              ${isHovered ? 'text-primary scale-110' : 'text-zinc-400'}
-                            `} />
-                          </div>
-                          
-                          {/* Title */}
-                          <h3 className="text-lg font-bold text-white mb-4 font-mono line-clamp-2 min-h-[3.5rem]">
-                            {step.title.split('(')[0].trim()}
-                          </h3>
-                          
-                          {/* Agents & Tools Count */}
-                          <div className="flex gap-4 mb-4 text-xs flex-shrink-0">
-                            <div className="flex items-center gap-2 text-zinc-400">
-                              <Bot className="w-4 h-4 flex-shrink-0" />
-                              <span>{step.agents.length} AI 代理</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-zinc-400">
-                              <Wrench className="w-4 h-4 flex-shrink-0" />
-                              <span>{step.tools.length} 工具</span>
-                            </div>
-                          </div>
-                          
-                          {/* Value Badge - 使用flex-grow确保底部对齐 */}
-                          <div className="mt-auto">
-                            {step.value && (
-                              <div className="p-3 bg-primary/10 border-l-2 border-primary">
-                                <p className="text-primary text-xs font-medium line-clamp-3">
-                                  {step.value}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                          
-                          {/* Hover Glow Effect */}
-                          {isHovered && (
-                            <div className="absolute inset-0 bg-primary/5 pointer-events-none rounded-sm"></div>
-                          )}
-                        </div>
-                      </div>
-                      
-                      {/* Connector Arrow - Desktop */}
-                      {index < t.howItWorks.workflow.steps.length - 1 && (
-                        <>
-                          <div className="hidden md:flex items-center justify-center relative w-12 flex-shrink-0">
-                            {/* Animated Arrow Line */}
-                            <div className="relative w-full h-0.5 bg-zinc-800 overflow-hidden">
-                              <div className={`
-                                absolute inset-0 bg-gradient-to-r from-primary/0 via-primary to-primary/0
-                                transition-all duration-500
-                                ${isHovered || activeStep === index + 1 ? 'opacity-100 animate-pulse' : 'opacity-0'}
-                              `}></div>
-                            </div>
-                            
-                            {/* Arrow Head */}
-                            <ArrowRight className={`
-                              w-4 h-4 transition-all duration-300 flex-shrink-0
-                              ${isHovered || activeStep === index + 1 ? 'text-primary' : 'text-zinc-700'}
-                            `} />
-                            
-                            {/* Flow Animation Dots */}
-                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                              {[...Array(3)].map((_, i) => (
-                                <div
-                                  key={i}
-                                  className={`
-                                    absolute w-1.5 h-1.5 bg-primary rounded-full
-                                    transition-all duration-300
-                                    ${isHovered || activeStep === index + 1 
-                                      ? 'opacity-100' 
-                                      : 'opacity-0'
-                                    }
-                                  `}
-                                  style={{
-                                    left: `${i * 6 + 8}px`,
-                                    animationDelay: `${i * 0.2}s`,
-                                    animation: isHovered || activeStep === index + 1 
-                                      ? 'flow 1.5s ease-in-out infinite' 
-                                      : 'none'
-                                  }}
-                                ></div>
-                              ))}
-                            </div>
-                          </div>
-                          
-                          {/* Connector Arrow - Mobile */}
-                          <div className="md:hidden flex flex-col items-center justify-center my-6">
-                            <ArrowRight className="w-6 h-6 text-zinc-700 rotate-90" />
-                          </div>
-                        </>
-                      )}
-                    </React.Fragment>
-                  );
-                })}
-              </div>
-            </div>
-            
-            {/* Detailed Info Panel (appears on hover) */}
-            {activeStep !== null && (
-              <div className="mt-16 max-w-4xl mx-auto animate-in z-30 relative">
-                <div className="bg-surface border border-primary/30 tech-border p-6 md:p-8 shadow-xl">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-primary/10 border border-primary/30 flex items-center justify-center">
-                      <span className="text-xl font-bold text-primary font-mono">
-                        {t.howItWorks.workflow.steps[activeStep].id}
-                      </span>
-                    </div>
-                    <h3 className="text-xl font-bold text-white font-mono">
-                      {t.howItWorks.workflow.steps[activeStep].title}
-                    </h3>
+          {/* Detailed Creation Chain (Based on Image 3 logic) */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto text-left">
+            {t.howItWorks.factors &&
+              t.howItWorks.factors.items.map((factor, idx) => (
+                <div
+                  key={idx}
+                  className="bg-zinc-900/40 border border-zinc-800 p-6 rounded-sm hover:bg-zinc-900 transition-all"
+                >
+                  <div className="text-primary font-mono text-[10px] uppercase tracking-widest mb-3">
+                    Ranking Dim // 0{idx + 1}
                   </div>
-                  
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {/* AI Agents */}
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2 mb-3">
-                        <Bot className="w-5 h-5 text-primary" />
-                        <h4 className="text-sm font-bold text-zinc-300 uppercase tracking-wider font-mono">AI 代理</h4>
-                      </div>
-                      {t.howItWorks.workflow.steps[activeStep].agents.map((agent, idx) => (
-                        <div
-                          key={idx}
-                          className="bg-zinc-900/50 border border-zinc-800 p-3 hover:border-zinc-700 transition-all"
-                        >
-                          <p className="text-white font-semibold text-sm mb-1">{agent.name}</p>
-                          <p className="text-zinc-400 text-xs leading-relaxed">{agent.desc}</p>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    {/* Tools */}
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2 mb-3">
-                        <Wrench className="w-5 h-5 text-primary" />
-                        <h4 className="text-sm font-bold text-zinc-300 uppercase tracking-wider font-mono">工具</h4>
-                      </div>
-                      {t.howItWorks.workflow.steps[activeStep].tools.map((tool, idx) => (
-                        <div
-                          key={idx}
-                          className="bg-zinc-900/50 border border-zinc-800 p-3 hover:border-zinc-700 transition-all"
-                        >
-                          <p className="text-white font-semibold text-sm mb-1">{tool.name}</p>
-                          <p className="text-zinc-400 text-xs leading-relaxed">{tool.desc}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            {/* Hint Text */}
-            <div className="text-center mt-12 mb-4">
-              <div className="inline-flex items-center gap-3 px-6 py-3 bg-primary/10 border border-primary/30 rounded-sm">
-                <Sparkles className="w-4 h-4 text-primary animate-pulse" />
-                <p className="text-primary text-sm font-mono font-semibold tracking-wide">
-                  {lang === 'cn' ? '悬停卡片查看详细信息' : 'Hover over cards to see details'}
-                </p>
-                <Sparkles className="w-4 h-4 text-primary animate-pulse" style={{ animationDelay: '0.5s' }} />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Customizable Workflow Section */}
-        {t.howItWorks.workflow.customizable && (
-          <div className="max-w-6xl mx-auto mt-20">
-            <div className="bg-surface border border-border tech-border p-8 md:p-10">
-              <div className="flex items-start gap-6 mb-6">
-                <div className="w-16 h-16 bg-zinc-900 border border-zinc-700 flex items-center justify-center flex-shrink-0">
-                  <Workflow className="w-8 h-8 text-primary" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-xl md:text-2xl font-bold text-white mb-4 font-mono">
-                    {t.howItWorks.workflow.customizable.title}
-                  </h3>
-                  <p className="text-zinc-400 text-lg leading-relaxed mb-6">
-                    {t.howItWorks.workflow.customizable.description}
+                  <h4 className="text-white font-bold mb-2 font-mono uppercase">
+                    {factor.category}
+                  </h4>
+                  <p className="text-zinc-500 text-xs leading-relaxed">
+                    {factor.details}
                   </p>
-                  {t.howItWorks.workflow.customizable.features && (
-                    <div className="grid md:grid-cols-2 gap-4">
-                      {t.howItWorks.workflow.customizable.features.map((feature, idx) => (
-                        <div
-                          key={idx}
-                          className="bg-zinc-900/50 border border-zinc-800 p-4 hover:border-zinc-700 transition-all"
-                        >
-                          <div className="flex items-start gap-3">
-                            <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                            <p className="text-zinc-300 text-sm">{feature}</p>
-                          </div>
-                        </div>
-                      ))}
+                </div>
+              ))}
+          </div>
+        </div>
+
+        {/* The Pipeline Visualization */}
+        <div className="relative max-w-7xl mx-auto">
+          <div className="flex flex-col lg:flex-row items-stretch gap-8 relative">
+            {/* Horizontal progress bar background */}
+            <div className="absolute top-[80px] left-0 right-0 h-1 bg-zinc-900 hidden lg:block"></div>
+
+            {t.howItWorks.workflow.steps.map((step, index) => {
+              const StepIcon = stepIcons[index] || Workflow;
+              const isHovered = activeStep === index;
+
+              return (
+                <div
+                  key={step.id}
+                  className="relative flex-1 group"
+                  onMouseEnter={() => setActiveStep(index)}
+                  onMouseLeave={() => setActiveStep(null)}
+                >
+                  {/* Step Connector - Desktop */}
+                  {index < t.howItWorks.workflow.steps.length - 1 && (
+                    <div className="absolute top-[80px] left-1/2 w-full h-1 bg-primary/20 hidden lg:block overflow-hidden">
+                      <div
+                        className={`h-full bg-primary transition-all duration-1000 ${
+                          isHovered ? "translate-x-0" : "-translate-x-full"
+                        }`}
+                      ></div>
                     </div>
                   )}
+
+                  {/* Node Circle */}
+                  <div
+                    className={`relative z-20 w-16 h-16 mx-auto lg:mb-12 rounded-sm border-2 flex items-center justify-center transition-all duration-500 ${
+                      isHovered
+                        ? "bg-primary border-primary rotate-45 shadow-[0_0_30px_rgba(16,185,129,0.5)]"
+                        : "bg-zinc-950 border-zinc-800"
+                    }`}
+                  >
+                    <StepIcon
+                      className={`w-8 h-8 transition-all duration-500 ${
+                        isHovered
+                          ? "text-black -rotate-45 scale-110"
+                          : "text-zinc-700"
+                      }`}
+                    />
+                  </div>
+
+                  {/* Card Content */}
+                  <div
+                    className={`mt-8 lg:mt-0 p-8 border transition-all duration-500 bg-zinc-900/20 backdrop-blur-sm relative overflow-hidden ${
+                      isHovered
+                        ? "border-primary/50 bg-zinc-900/60 -translate-y-2"
+                        : "border-zinc-800"
+                    }`}
+                  >
+                    {/* Background number */}
+                    <div className="absolute -right-4 -bottom-8 text-8xl font-bold text-zinc-800/10 font-mono select-none">
+                      0{index + 1}
+                    </div>
+
+                    <h3 className="text-lg font-bold text-white mb-4 font-mono uppercase tracking-wider">
+                      {step.title}
+                    </h3>
+
+                    <p className="text-zinc-500 text-sm mb-6 leading-relaxed min-h-[40px]">
+                      <span className="text-primary font-mono text-[10px] mr-2">
+                        CAPABILITY:
+                      </span>
+                      {index === 0 &&
+                        (lang === "cn"
+                          ? "全平台 SERP 意图探测与多维语义缺口挖掘"
+                          : "Multi-platform SERP Intent Detection & Semantic Gap Discovery")}
+                      {index === 1 &&
+                        (lang === "cn"
+                          ? "基于Information Gain的 AIO 架构化工程"
+                          : "AIO Structured Engineering based on Information Gain")}
+                      {index === 2 &&
+                        (lang === "cn"
+                          ? "嵌入视觉指纹 (Visual Fingerprinting) 的资产级多媒体合成"
+                          : "Visual Fingerprinting & Asset-grade Media Synthesis")}
+                      {index === 3 &&
+                        (lang === "cn"
+                          ? "全频谱 ROI 归因与排名实时异动监控"
+                          : "Full-spectrum ROI Attribution & Rank Fluctuation Monitoring")}
+                    </p>
+
+                    <div
+                      className={`p-4 border-l-2 transition-all duration-500 ${
+                        isHovered
+                          ? "bg-primary/10 border-primary"
+                          : "bg-zinc-800/30 border-zinc-700"
+                      }`}
+                    >
+                      <p
+                        className={`text-[10px] font-mono font-bold uppercase tracking-widest mb-2 ${
+                          isHovered ? "text-primary" : "text-zinc-600"
+                        }`}
+                      >
+                        {index === 2 ? "Unique Visual SEO Asset" : "OUTPUT"}
+                      </p>
+                      <p
+                        className={`text-sm transition-colors duration-500 ${
+                          isHovered ? "text-white" : "text-zinc-400"
+                        }`}
+                      >
+                        {step.value}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Invincible Comparison Section */}
+        {t.howItWorks.invincible && (
+          <div className="mt-24 lg:mt-32 max-w-6xl mx-auto">
+            <div className="text-center mb-12 lg:mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 lg:mb-6 font-mono tracking-tight uppercase">
+                {t.howItWorks.invincible.title}
+              </h2>
+              <p className="text-zinc-500 font-mono uppercase tracking-widest text-sm">
+                Deterministic Dominance vs Manual Inefficiency
+              </p>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-12">
+              {t.howItWorks.invincible.items.map((item, idx) => (
+                <div
+                  key={idx}
+                  className={`relative p-1 rounded-sm group overflow-hidden ${
+                    idx === 1
+                      ? "bg-gradient-to-br from-primary/40 via-primary/5 to-primary/40 shadow-[0_0_50px_rgba(16,185,129,0.15)]"
+                      : "bg-zinc-800/30"
+                  }`}
+                >
+                  <div
+                    className={`relative h-full bg-zinc-950 p-10 flex flex-col border ${
+                      idx === 1 ? "border-primary/50" : "border-zinc-800"
+                    }`}
+                  >
+                    {/* Header */}
+                    <div className="flex justify-between items-center mb-10">
+                      <span
+                        className={`font-mono text-xs uppercase tracking-[0.3em] font-bold ${
+                          idx === 1 ? "text-primary" : "text-zinc-600"
+                        }`}
+                      >
+                        {idx === 0
+                          ? "TRADITIONAL MODEL"
+                          : "NICHEDIGGER PROTOCOL"}
+                      </span>
+                      {idx === 1 && (
+                        <div className="px-3 py-1 bg-primary/10 border border-primary/30 text-primary text-[10px] font-bold uppercase animate-pulse">
+                          Asymmetric Adv.
+                        </div>
+                      )}
+                    </div>
+
+                    <h3
+                      className={`text-3xl font-bold mb-10 font-mono ${
+                        idx === 1 ? "text-white" : "text-zinc-500"
+                      }`}
+                    >
+                      {item.title}
+                    </h3>
+
+                    {/* Steps List */}
+                    <div className="space-y-6 flex-grow">
+                      {item.desc.split(" -> ").map((step, sIdx) => (
+                        <div
+                          key={sIdx}
+                          className="flex items-start gap-4 group/step"
+                        >
+                          <div
+                            className={`mt-1.5 w-2 h-2 rounded-full transition-all duration-300 ${
+                              idx === 1
+                                ? "bg-primary shadow-[0_0_10px_#10b981]"
+                                : "bg-zinc-800"
+                            }`}
+                          ></div>
+                          <span
+                            className={`text-sm font-mono transition-colors duration-300 ${
+                              idx === 1
+                                ? "text-zinc-300 group-hover/step:text-primary"
+                                : "text-zinc-600"
+                            }`}
+                          >
+                            {step}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Footer Stats for NicheDigger */}
+                    {idx === 1 && (
+                      <div className="mt-12 pt-8 border-t border-zinc-900 grid grid-cols-2 gap-4">
+                        <div className="bg-zinc-900/50 p-4 border border-zinc-800">
+                          <p className="text-[10px] text-zinc-500 font-mono uppercase mb-1">
+                            Production Rate
+                          </p>
+                          <p className="text-xl font-bold text-primary font-mono">
+                            10X FASTER
+                          </p>
+                        </div>
+                        <div className="bg-zinc-900/50 p-4 border border-zinc-800">
+                          <p className="text-[10px] text-zinc-500 font-mono uppercase mb-1">
+                            Success Probability
+                          </p>
+                          <p className="text-xl font-bold text-primary font-mono">
+                            DETERMINISTIC
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -295,4 +303,3 @@ const HowItWorks: React.FC = () => {
 };
 
 export default HowItWorks;
-

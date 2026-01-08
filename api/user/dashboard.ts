@@ -1,59 +1,36 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { sql } from '../lib/db.js';
-import { verifyToken } from '../lib/auth.js';
+import { withAuth, type AppJWTPayload } from '../lib/auth.js';
 
 /**
  * Dashboard API - 返回仪表板所需的所有数据
  * GET /api/user/dashboard
- *
- * ✅ 支持 CORS - 允许子应用调用
  */
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // 设置 CORS 头 - 允许子应用跨域访问
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Max-Age', '86400');
-
-  // 处理 CORS 预检请求
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
+export default withAuth(async function handler(
+  req: VercelRequest, 
+  res: VercelResponse, 
+  payload: AppJWTPayload
+) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  try {
-    // 验证 token
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
+  const userId = payload.userId;
 
-    const token = authHeader.substring(7);
-    const payload = await verifyToken(token);
+  // 获取当前时间范围
+  const now = new Date();
+  const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-    if (!payload || !payload.userId) {
-      return res.status(401).json({ error: 'Invalid token' });
-    }
-
-    const userId = payload.userId;
-
-    // 获取当前时间范围
-    const now = new Date();
-    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-
-    // **性能优化：并发执行所有查询**
-    const [
-      creditsResult,
-      subscriptionResult,
-      recentActivityResult,
-      modeStatsResult,
-      sevenDayStatsResult
-    ] = await Promise.all([
-      // 1. 获取 Credits 信息
+  // **性能优化：并发执行所有查询**
+  const [
+    creditsResult,
+    subscriptionResult,
+    recentActivityResult,
+    modeStatsResult,
+    sevenDayStatsResult
+  ] = await Promise.all([
+    // ... 保持原有 SQL 查询不变 ...
       sql`
         SELECT
           total_credits,
@@ -213,17 +190,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       modeStats,
       sevenDayStats: sevenDayArray
     });
-
-  } catch (error) {
-    console.error('Dashboard API error:', error);
-
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    return res.status(500).json({
-      error: 'Failed to fetch dashboard data',
-      details: errorMessage
-    });
-  }
-}
+});
 
 /**
  * 根据交易类型生成描述

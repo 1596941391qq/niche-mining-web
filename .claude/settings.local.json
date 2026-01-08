@@ -14,7 +14,9 @@
       "WebFetch(domain:302ai.apifox.cn)",
       "Bash(powershell -Command \"\\(Get-Content ''D:\\\\niche-mining\\\\api\\\\docs.ts''\\).Count\")",
       "Bash(npx tsc:*)",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "Bash(npm info:*)",
+      "Bash(npm install:*)"
     ]
   }
 }
