@@ -13,13 +13,13 @@ const ToolSelector: React.FC = () => {
   const getAgentUrl = (id: string) => {
     switch (id) {
       case "google":
-        return "https://google-seo-agen-ts-lans.vercel.app/";
+        return "https://google.nichedigger.ai/";
       case "yandex":
         return "https://yandex-seo-agents.vercel.app/";
       case "bing":
         return "https://bing-seo-agen-ts-lans.vercel.app/";
       default:
-        return "https://google-seo-agen-ts-lans.vercel.app/";
+        return "https://google.nichedigger.ai/";
     }
   };
 

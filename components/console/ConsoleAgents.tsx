@@ -103,7 +103,7 @@ const ConsoleAgents: React.FC = () => {
             ],
       url: isDevelopment
         ? "http://localhost:3002"
-        : "https://google-seo-agen-ts-lans.vercel.app",
+        : "https://google.nichedigger.ai",
       color: "primary",
       available: true,
       stats: {
