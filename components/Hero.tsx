@@ -45,7 +45,7 @@ const Hero: React.FC = () => {
               <div className="absolute inset-0 bg-orange-500/5 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-bold tracking-tight mb-6 leading-[1.1] text-white whitespace-pre-line drop-shadow-lg">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-bold tracking-tight mb-6 leading-[1.1] text-white whitespace-pre-line drop-shadow-lg">
               {t.hero.title}
             </h1>
 

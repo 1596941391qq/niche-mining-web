@@ -58,44 +58,16 @@ const AboutUs: React.FC = () => {
               </h2>
               <div className="text-zinc-300 leading-relaxed space-y-4">
                 <div className="bg-background/50 border border-border p-6 rounded-sm font-mono text-sm">
-                  <div className="space-y-3">
-                    <div>
-                      <span className="text-zinc-400">
-                        {t.about.companyDetails.companyName}:
-                      </span>
-                      <p className="text-white font-semibold mt-1">
-                        {t.about.companyDetails.companyNameValue}
-                      </p>
-                      <p className="text-zinc-300 mt-1">
-                        {t.about.companyDetails.chineseCompanyName}
-                      </p>
-                    </div>
-                    <div className="pt-3 border-t border-border">
-                      <span className="text-zinc-400">
-                        {t.about.companyDetails.businessRegNo}:
-                      </span>
-                      <p className="text-white mt-1">78413906</p>
-                    </div>
-                    <div>
-                      <span className="text-zinc-400">
-                        {t.about.companyDetails.incorporationDate}:
-                      </span>
-                      <p className="text-white mt-1">05-Jul-2025</p>
-                    </div>
-                    <div>
-                      <span className="text-zinc-400">
-                        {t.about.companyDetails.companyType}:
-                      </span>
-                      <p className="text-white mt-1">
-                        Private company limited by shares
-                      </p>
-                    </div>
-                    <div>
-                      <span className="text-zinc-400">
-                        {t.about.companyDetails.companyStatus}:
-                      </span>
-                      <p className="text-green-500 mt-1">Live</p>
-                    </div>
+                  <div>
+                    <span className="text-zinc-400">
+                      {t.about.companyDetails.companyName}:
+                    </span>
+                    <p className="text-white font-semibold mt-1">
+                      {t.about.companyDetails.companyNameValue}
+                    </p>
+                    <p className="text-zinc-300 mt-1">
+                      {t.about.companyDetails.chineseCompanyName}
+                    </p>
                   </div>
                 </div>
               </div>

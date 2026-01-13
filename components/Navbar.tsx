@@ -42,7 +42,7 @@ const Navbar: React.FC = () => {
   };
 
   const navLinks = [
-    { name: t.nav.features, href: "#features" },
+    { name: t.nav.features, href: "#ai-search-era" },
     { name: t.nav.agents, href: "#agents" },
     { name: t.nav.howItWorks, href: "#how-it-works" },
     { name: t.nav.pricing, href: "#pricing" },

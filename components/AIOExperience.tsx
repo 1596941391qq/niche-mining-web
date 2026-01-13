@@ -51,7 +51,10 @@ const AIOExperience: React.FC = () => {
   if (!t.howItWorks.trends) return null;
 
   return (
-    <section className="py-16 lg:py-24 bg-zinc-950 relative overflow-hidden border-y border-zinc-900">
+    <section
+      id="ai-search-era"
+      className="py-16 lg:py-24 bg-zinc-950 relative overflow-hidden border-y border-zinc-900"
+    >
       <div className="absolute inset-0 bg-grid-zinc-900/[0.2] bg-[size:30px_30px]"></div>
 
       <div className="container mx-auto px-6 relative z-10">

@@ -78,30 +78,9 @@ const Footer: React.FC = () => {
             <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-xs">
               {t.footer.about}
             </h4>
-            <p className="text-zinc-500 text-xs mb-4 leading-relaxed">
-              {t.footer.aboutDescription}
-            </p>
             <div className="space-y-2 text-zinc-500 text-xs font-mono">
               <p className="text-white font-semibold">{t.footer.companyName}</p>
               <p>{t.footer.chineseCompanyName}</p>
-              <p>
-                <span className="text-zinc-400">{t.footer.businessRegNo}:</span>{" "}
-                78413906
-              </p>
-              <p>
-                <span className="text-zinc-400">
-                  {t.footer.incorporationDate}:
-                </span>{" "}
-                05-Jul-2025
-              </p>
-              <p>
-                <span className="text-zinc-400">{t.footer.companyType}:</span>{" "}
-                Private company limited by shares
-              </p>
-              <p>
-                <span className="text-zinc-400">{t.footer.companyStatus}:</span>{" "}
-                <span className="text-green-500">Live</span>
-              </p>
             </div>
           </div>
         </div>

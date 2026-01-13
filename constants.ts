@@ -207,27 +207,17 @@ export const CONTENT: Record<string, Translations> = {
         ],
       },
       invincible: {
-        title: 'Automated Growth vs Traditional Struggles',
+        title: 'Intelligent Growth vs Growth Bottlenecks',
         items: [
           {
-            title: 'The Legacy Struggle',
-            desc: 'Expensive Ads -> Unpredictable CAC -> Algorithm Penalties -> Generic Content -> Customers hijacked by Competitors.',
+            title: 'Legacy Growth Bottlenecks',
+            desc: 'High Ad Dependency -> Unstable CAC -> Missing pSEO Framework -> Algo Volatility (HCU/Spam) -> De-indexing Risks.',
           },
           {
-            title: 'The NicheDigger Fast-track',
-            desc: 'Find Low-competition Keywords -> Auto Expert Writing -> Instant Site Posting -> High Authority Growth -> Reliable Profits.',
+            title: 'NicheDigger Resilience',
+            desc: 'Search Vacuum Discovery -> Expert AI Synthesis -> Built-in Algorithm Resilience -> pSEO Industrial Scale -> Deterministic ROI.',
           },
         ],
-      },
-      complianceMatrix: {
-        title: 'Authority Protection Protocol (2026)',
-        description: 'We don\'t just write content; we use advanced strategies to ensure Google loves your site and you lead the AI search era.',
-        items: [
-          { title: "Originality Guard", desc: "Inject unique empirical data to ensure your content is irreplaceable by generic AI.", status: "ACTIVE" },
-          { title: "Expert Backing (EEAT)", desc: "Automate high-authority citation patterns to build instant trust with search engines.", status: "VERIFIED" },
-          { title: "Intent Fulfillment", desc: "Answer user queries precisely to earn top marks in relevance algorithms.", status: "READY" },
-          { title: "Knowledge Graph Mapping", desc: "Deep anchor your brand as a leader within Google\'s Knowledge Graph infrastructure.", status: "SYNCED" }
-        ]
       },
       trends: {
         title: 'The AI Search Era is Here',
@@ -455,8 +445,8 @@ export const CONTENT: Record<string, Translations> = {
   },
   cn: {
     nav: {
-      features: '核心算法',
-      agents: '挖掘工具',
+      features: '时代前瞻2026',
+      agents: 'AI代理',
       howItWorks: '工作原理',
       pricing: '定价方案',
       start: '开始挖掘',
@@ -659,27 +649,17 @@ export const CONTENT: Record<string, Translations> = {
         ],
       },
       invincible: {
-        title: '自动化增长 vs 传统流量困局',
+        title: '智能增长 vs 传统流量困局',
         items: [
           {
-            title: '传统模式的“泥潭”',
-            desc: '广告费越来越贵 -> 流量成本不可控 -> 容易被算法惩罚 -> 内容同质化 -> 客户被对手截胡。',
+            title: '传统增长瓶颈',
+            desc: '高度依赖广告 -> CAC 长期不可控 -> pSEO 体系缺失 -> 算法频繁更新 (HCU/Spam) -> 排名大起大落。',
           },
           {
-            title: 'NicheDigger 的“快车道”',
-            desc: '精准发现蓝海词 -> 全自动专家写作 -> 一键同步上站发布 -> 自动获得高权重引用 -> 确定的赚钱回报。',
+            title: 'NicheDigger 增长大脑',
+            desc: '探测搜索真空 -> 专家级 AI 创作 -> 内置算法对冲协议 -> 规模化 pSEO 引擎 -> 确定性的商业回报。',
           },
         ],
-      },
-      complianceMatrix: {
-        title: '高权重保障协议 (2026)',
-        description: '我们不只是写稿，更是通过一系列手段确保你的内容被谷歌喜爱，且在 AI 搜索时代站稳脚跟。',
-        items: [
-          { title: "原创性保障", desc: "通过深度数据注入，确保内容具备独一无二的参考价值，规避 AI 降权。", status: "ACTIVE" },
-          { title: "专家背书 (EEAT)", desc: "自动化模拟高权威领域专家引用，快速建立站点在谷歌眼中的信任度。", status: "VERIFIED" },
-          { title: "意图缺口填充", desc: "精准回答用户最想看的问题，确保内容在相关性评分中获得满分。", status: "READY" },
-          { title: "权威地图锚定", desc: "通过结构化数据深埋，让谷歌知识图谱把你的品牌当作该领域的领头羊。", status: "SYNCED" }
-        ]
       },
       trends: {
         title: 'AI 搜索时代全面来临',

@@ -4,6 +4,7 @@ import Hero from "./components/Hero";
 import ToolSelector from "./components/ToolSelector";
 import HowItWorks from "./components/HowItWorks";
 import AIOExperience from "./components/AIOExperience";
+import Comparison from "./components/Comparison";
 import Pricing from "./components/Pricing";
 import Footer from "./components/Footer";
 import Privacy from "./components/Privacy";
@@ -81,9 +82,10 @@ function App() {
         return (
           <>
             <Hero />
-            <ToolSelector />
             <AIOExperience />
             <HowItWorks />
+            <ToolSelector />
+            <Comparison />
             <Pricing />
           </>
         );
