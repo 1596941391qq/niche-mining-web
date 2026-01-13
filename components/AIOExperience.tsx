@@ -65,12 +65,12 @@ const AIOExperience: React.FC = () => {
         </div>
 
         {/* AI Stats Cards */}
-         <div className="grid md:grid-cols-3 gap-8 mb-16 lg:mb-24">
-           {t.howItWorks.trends.stats.map((stat, idx) => (
-             <div
-               key={idx}
-               className="bg-zinc-900/50 border border-zinc-800 p-6 sm:p-8 rounded-sm hover:border-primary/50 transition-all group"
-             >
+        <div className="grid md:grid-cols-3 gap-8 mb-16 lg:mb-24">
+          {t.howItWorks.trends.stats.map((stat, idx) => (
+            <div
+              key={idx}
+              className="bg-zinc-900/50 border border-zinc-800 p-6 sm:p-8 rounded-sm hover:border-primary/50 transition-all group"
+            >
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-10 h-10 flex items-center justify-center rounded-full border border-zinc-700 transition-all overflow-hidden bg-zinc-800">
                   <img
@@ -109,8 +109,8 @@ const AIOExperience: React.FC = () => {
                   AI_Recommendation_Engine
                 </div>
               </div>
-               <div className="p-4 sm:p-8 font-sans text-zinc-300">
-                 <div className="flex items-start gap-4 mb-6 sm:mb-8">
+              <div className="p-4 sm:p-8 font-sans text-zinc-300">
+                <div className="flex items-start gap-4 mb-6 sm:mb-8">
                   <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center shrink-0 border border-zinc-700 overflow-hidden">
                     <Users className="w-4 h-4 text-zinc-500" />
                   </div>
@@ -182,8 +182,8 @@ const AIOExperience: React.FC = () => {
                   SERP_Dominance_Analyzer
                 </div>
               </div>
-               <div className="p-6 sm:p-8">
-                 <div className="flex items-center gap-4 mb-6 sm:mb-8 bg-zinc-900 p-3 rounded-sm border border-zinc-800">
+              <div className="p-6 sm:p-8">
+                <div className="flex items-center gap-4 mb-6 sm:mb-8 bg-zinc-900 p-3 rounded-sm border border-zinc-800">
                   <Search className="w-4 h-4 text-zinc-500" />
                   <span className="text-sm text-zinc-500 font-mono">
                     best solution for industry transformation 2026

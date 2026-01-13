@@ -193,9 +193,7 @@ const Console: React.FC = () => {
               </div>
               <div>
                 <p className="text-xs font-bold text-text-primary">
-                  {user?.name ||
-                    user?.email ||
-                    (lang === "cn" ? "本地开发测试用户" : "Local Dev User")}
+                  {user?.name || user?.email || (lang === "cn" ? "用户" : "User")}
                 </p>
                 <div className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>

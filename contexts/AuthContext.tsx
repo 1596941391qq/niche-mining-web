@@ -22,7 +22,7 @@ interface AuthContextType {
   loginWithEmail: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, name?: string) => Promise<void>;
   logout: () => Promise<void>;
-  refreshSession: () => Promise<void>;
+  refreshSession: (forceRefresh?: boolean) => Promise<void>;
   getToken: () => string | null;
 }
 
@@ -115,12 +115,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   // 刷新会话信息
-  const refreshSession = async () => {
+  const refreshSession = async (forceRefresh: boolean = false) => {
     try {
       const token = getToken();
       if (!token) {
         setUser(null);
         setLoading(false);
+        // 清除所有可能过期的缓存
+        localStorage.removeItem("cached_user");
+        localStorage.removeItem("session_last_refresh");
         return;
       }
 
@@ -130,15 +133,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const now = Date.now();
       const fiveMinutes = 5 * 60 * 1000;
 
+      // 只有在非强制刷新且缓存有效时才使用缓存
       if (
+        !forceRefresh &&
         lastRefresh &&
         cachedUser &&
         now - parseInt(lastRefresh) < fiveMinutes
       ) {
-        console.log("✅ Using cached user session");
-        setUser(JSON.parse(cachedUser));
-        setLoading(false);
-        return;
+        try {
+          const parsedUser = JSON.parse(cachedUser);
+          // 验证缓存的用户数据有效性（必须有 id 和 email）
+          if (parsedUser && parsedUser.id && parsedUser.email) {
+            console.log("✅ Using cached user session");
+            setUser(parsedUser);
+            setLoading(false);
+            return;
+          } else {
+            console.warn("⚠️ Cached user data is invalid, forcing refresh");
+            // 缓存数据无效，清除并继续验证
+            localStorage.removeItem("cached_user");
+            localStorage.removeItem("session_last_refresh");
+          }
+        } catch (parseError) {
+          console.error("❌ Failed to parse cached user:", parseError);
+          localStorage.removeItem("cached_user");
+          localStorage.removeItem("session_last_refresh");
+        }
       }
 
       const response = await fetch("/api/auth/session", {
@@ -269,6 +289,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } finally {
       clearToken();
       setUser(null);
+      // 清除所有相关缓存
+      localStorage.removeItem("cached_user");
+      localStorage.removeItem("session_last_refresh");
+      localStorage.removeItem("dashboard_cache");
+      localStorage.removeItem("dashboard_preload_time");
+      localStorage.removeItem("mining_modes_cache");
+      localStorage.removeItem("mining_modes_preload_time");
     }
   };
 
@@ -384,7 +411,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       refreshSession();
     }, 30 * 60 * 1000);
 
-    return () => clearInterval(interval);
+    // 监听跨标签页的登录/登出事件
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === "auth_token") {
+        if (!event.newValue) {
+          // token 被清除（在另一个标签页登出）
+          console.log("🔄 Token cleared in another tab, syncing state...");
+          setUser(null);
+          localStorage.removeItem("cached_user");
+          localStorage.removeItem("session_last_refresh");
+        } else if (event.newValue !== event.oldValue) {
+          // token 变化（在另一个标签页登录）
+          console.log("🔄 Token changed in another tab, refreshing session...");
+          refreshSession(true); // 强制刷新
+        }
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
   const value: AuthContextType = {

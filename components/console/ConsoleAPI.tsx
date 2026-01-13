@@ -16,6 +16,24 @@ import {
 import { useAuth } from '../../contexts/AuthContext';
 import { LanguageContext } from '../../contexts/LanguageContext';
 
+// 认证状态过期提示组件
+const AuthExpiredBanner: React.FC<{ lang: string; onRefresh: () => void }> = ({ lang, onRefresh }) => (
+  <div className="bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 px-4 py-3 rounded-sm mb-4 flex items-center justify-between">
+    <div className="flex items-center gap-2">
+      <AlertTriangle className="w-4 h-4" />
+      <span className="text-sm">
+        {lang === 'cn' ? '会话已过期，请刷新页面或重新登录' : 'Session expired. Please refresh or login again.'}
+      </span>
+    </div>
+    <button
+      onClick={onRefresh}
+      className="text-xs bg-yellow-500/20 hover:bg-yellow-500/30 px-3 py-1 rounded-sm transition-colors"
+    >
+      {lang === 'cn' ? '刷新' : 'Refresh'}
+    </button>
+  </div>
+);
+
 interface APIKey {
   id: string;
   name: string;
@@ -33,7 +51,7 @@ interface APIKey {
 }
 
 const ConsoleAPI: React.FC = () => {
-  const { getToken } = useAuth();
+  const { getToken, refreshSession } = useAuth();
   const { lang, t } = useContext(LanguageContext);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [visibleKeys, setVisibleKeys] = useState<Set<string>>(new Set());
@@ -46,6 +64,7 @@ const ConsoleAPI: React.FC = () => {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [authExpired, setAuthExpired] = useState(false);
 
   // 翻译文本
   const translations = {
@@ -160,9 +179,11 @@ const ConsoleAPI: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
+      setAuthExpired(false);
       const token = getToken();
       if (!token) {
         setLoading(false);
+        setAuthExpired(true);
         return;
       }
 
@@ -177,17 +198,18 @@ const ConsoleAPI: React.FC = () => {
         const data = await response.json();
         setApiKeys(data.data?.apiKeys || []);
         setError(null); // 成功时清除错误
+        setAuthExpired(false);
+      } else if (response.status === 401) {
+        // 认证过期，显示提示并触发重新认证
+        console.warn('🔒 API key fetch failed: unauthorized');
+        setAuthExpired(true);
+        setError(null);
+        // 强制刷新会话
+        await refreshSession(true);
       } else {
         // 只在真正的错误时显示错误消息（不是空列表）
         const errorData = await response.json().catch(() => ({}));
-        // 如果是 401 或其他真正的错误，才显示错误
-        if (response.status !== 200) {
-          setError(errorData.message || tr.failedToLoad);
-        } else {
-          // 空列表不是错误
-          setApiKeys([]);
-          setError(null);
-        }
+        setError(errorData.message || tr.failedToLoad);
       }
     } catch (err) {
       console.error('Failed to fetch API keys:', err);
@@ -214,7 +236,8 @@ const ConsoleAPI: React.FC = () => {
       setError(null);
       const token = getToken();
       if (!token) {
-        setError(lang === 'cn' ? '请先登录' : 'Please login first');
+        setAuthExpired(true);
+        setError(null);
         return;
       }
 
@@ -243,7 +266,13 @@ const ConsoleAPI: React.FC = () => {
         setSuccess(tr.createSuccess);
         setNewKeyName('');
         setNewKeyExpiresAt('');
+        setAuthExpired(false);
         await fetchApiKeys();
+      } else if (response.status === 401) {
+        console.warn('🔒 API key creation failed: unauthorized');
+        setAuthExpired(true);
+        setError(null);
+        await refreshSession(true);
       } else {
         const errorData = await response.json().catch(() => ({}));
         setError(errorData.message || tr.failedToCreate);
@@ -333,8 +362,20 @@ const ConsoleAPI: React.FC = () => {
     window.open(`/docs?lang=${lang}`, '_blank');
   };
 
+  // 处理刷新认证
+  const handleRefreshAuth = async () => {
+    setLoading(true);
+    await refreshSession(true);
+    await fetchApiKeys();
+  };
+
   return (
     <div className="space-y-6">
+      {/* Auth Expired Banner */}
+      {authExpired && (
+        <AuthExpiredBanner lang={lang} onRefresh={handleRefreshAuth} />
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="border-l-2 border-primary pl-3">
@@ -345,7 +386,12 @@ const ConsoleAPI: React.FC = () => {
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/80 text-white font-bold text-xs uppercase tracking-wider transition-colors"
+          disabled={authExpired}
+          className={`flex items-center gap-2 px-4 py-2 font-bold text-xs uppercase tracking-wider transition-colors ${
+            authExpired 
+              ? 'bg-gray-500 cursor-not-allowed text-gray-300' 
+              : 'bg-primary hover:bg-primary/80 text-white'
+          }`}
         >
           <Plus className="w-3 h-3" />
           {tr.createNew}

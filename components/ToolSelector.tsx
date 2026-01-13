@@ -1,5 +1,18 @@
 import React, { useContext, useState } from "react";
-import { ExternalLink, ArrowRight, Cpu, Radio, Crosshair, UserCheck, Search, Layout, Image as ImageIcon, Zap, Shield, BarChart3 } from "lucide-react";
+import {
+  ExternalLink,
+  ArrowRight,
+  Cpu,
+  Radio,
+  Crosshair,
+  UserCheck,
+  Search,
+  Layout,
+  Image as ImageIcon,
+  Zap,
+  Shield,
+  BarChart3,
+} from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useAuth } from "../contexts/AuthContext";
 import LoginModal from "./auth/LoginModal";
@@ -25,35 +38,38 @@ const ToolSelector: React.FC = () => {
 
   const agents = [
     {
-      id: 'google',
+      id: "google",
       name: t.tools.items[0].name,
-      role: lang === 'cn' ? '战略大脑' : 'Strategic Brain',
+      role: lang === "cn" ? "战略大脑" : "Strategic Brain",
       desc: t.tools.items[0].desc,
       icon: Search,
-      color: 'emerald',
+      color: "emerald",
       features: t.tools.items[0].features,
-      avatar: "https://api.dicebear.com/7.x/bottts-neutral/svg?seed=strategist&backgroundColor=059669"
+      avatar:
+        "https://api.dicebear.com/7.x/bottts-neutral/svg?seed=strategist&backgroundColor=059669",
     },
     {
-      id: 'yandex',
+      id: "yandex",
       name: t.tools.items[1].name,
-      role: lang === 'cn' ? '工程主管' : 'Engineering Lead',
+      role: lang === "cn" ? "工程主管" : "Engineering Lead",
       desc: t.tools.items[1].desc,
       icon: Layout,
-      color: 'blue',
+      color: "blue",
       features: t.tools.items[1].features,
-      avatar: "https://api.dicebear.com/7.x/bottts-neutral/svg?seed=architect&backgroundColor=2563eb"
+      avatar:
+        "https://api.dicebear.com/7.x/bottts-neutral/svg?seed=architect&backgroundColor=2563eb",
     },
     {
-      id: 'bing',
+      id: "bing",
       name: t.tools.items[2].name,
-      role: lang === 'cn' ? '质量主管' : 'Quality Lead',
+      role: lang === "cn" ? "质量主管" : "Quality Lead",
       desc: t.tools.items[2].desc,
       icon: Shield,
-      color: 'orange',
+      color: "orange",
       features: t.tools.items[2].features,
-      avatar: "https://api.dicebear.com/7.x/bottts-neutral/svg?seed=qa&backgroundColor=f97316"
-    }
+      avatar:
+        "https://api.dicebear.com/7.x/bottts-neutral/svg?seed=qa&backgroundColor=f97316",
+    },
   ];
 
   const handleToolClick = async (e: React.MouseEvent, toolId: string) => {
@@ -84,8 +100,12 @@ const ToolSelector: React.FC = () => {
       if (!response.ok) throw new Error("Failed to create transfer token");
       const { transferToken } = await response.json();
       const baseUrl = getAgentUrl(toolId);
-      window.open(`${baseUrl}?tt=${transferToken}`, "_blank", "noopener,noreferrer");
-      
+      window.open(
+        `${baseUrl}?tt=${transferToken}`,
+        "_blank",
+        "noopener,noreferrer"
+      );
+
       setTimeout(() => setLoadingTool(null), 1000);
     } catch (error) {
       console.error("Launch agent error:", error);
@@ -95,10 +115,13 @@ const ToolSelector: React.FC = () => {
   };
 
   return (
-    <section id="agents" className="py-16 lg:py-24 relative bg-background overflow-hidden">
+    <section
+      id="agents"
+      className="py-16 lg:py-24 relative bg-background overflow-hidden"
+    >
       {/* Tech Grid Background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(39,39,42,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(39,39,42,0.2)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none"></div>
-      
+
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-12 lg:mb-20">
           <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 border border-primary/30 bg-primary/10 rounded-sm">
@@ -117,7 +140,7 @@ const ToolSelector: React.FC = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10 max-w-7xl mx-auto">
           {agents.map((agent, index) => (
-            <div 
+            <div
               key={agent.id}
               className="group relative bg-zinc-900/40 border border-zinc-800 rounded-sm overflow-hidden hover:border-primary/50 transition-all duration-500 hover:shadow-[0_0_50px_-10px_rgba(16,185,129,0.2)]"
             >
@@ -125,8 +148,8 @@ const ToolSelector: React.FC = () => {
               <div className="relative h-48 bg-zinc-950 flex items-center justify-center border-b border-zinc-800 group-hover:bg-zinc-900 transition-colors">
                 <div className="absolute inset-0 bg-grid-zinc-800/20 bg-[size:20px_20px]"></div>
                 <div className="relative w-32 h-32 rounded-full border-2 border-zinc-800 p-1 bg-zinc-900 group-hover:border-primary/30 transition-colors">
-                  <img 
-                    src={agent.avatar} 
+                  <img
+                    src={agent.avatar}
                     alt={agent.name}
                     className="w-full h-full rounded-full grayscale group-hover:grayscale-0 transition-all duration-500"
                   />
@@ -153,7 +176,10 @@ const ToolSelector: React.FC = () => {
 
                 <div className="space-y-3 mb-10">
                   {agent.features.map((feat, fIdx) => (
-                    <div key={fIdx} className="flex items-center gap-3 text-xs font-mono text-zinc-500 group-hover:text-zinc-300 transition-colors">
+                    <div
+                      key={fIdx}
+                      className="flex items-center gap-3 text-xs font-mono text-zinc-500 group-hover:text-zinc-300 transition-colors"
+                    >
                       <div className="w-1.5 h-1.5 bg-primary/40 rounded-full"></div>
                       <span>{feat}</span>
                     </div>
@@ -172,14 +198,23 @@ const ToolSelector: React.FC = () => {
           <div className="flex flex-col md:flex-row items-center justify-center gap-8">
             <div className="flex -space-x-4">
               {agents.map((agent) => (
-                <div key={agent.id} className="w-12 h-12 rounded-full border-2 border-zinc-950 overflow-hidden bg-zinc-900">
-                  <img src={agent.avatar} alt="avatar" className="w-full h-full grayscale opacity-70" />
+                <div
+                  key={agent.id}
+                  className="w-12 h-12 rounded-full border-2 border-zinc-950 overflow-hidden bg-zinc-900"
+                >
+                  <img
+                    src={agent.avatar}
+                    alt="avatar"
+                    className="w-full h-full grayscale opacity-70"
+                  />
                 </div>
               ))}
             </div>
             <div className="text-left">
               <p className="text-white font-bold text-lg font-mono">
-                {lang === 'cn' ? '所有专家模块已集成至全能 Agent' : 'All expert modules integrated into the Almighty Agent'}
+                {lang === "cn"
+                  ? "所有专家模块已集成至全能 Agent"
+                  : "All expert modules integrated into the Almighty Agent"}
               </p>
               <p className="text-zinc-500 text-sm font-mono mt-1 uppercase tracking-widest">
                 Autopilot mode enabled // Zero human intervention required
