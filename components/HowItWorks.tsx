@@ -55,7 +55,62 @@ const HowItWorks: React.FC = () => {
             {t.howItWorks.workflow.description}
           </p>
 
-          {/* Detailed Creation Chain (Based on Image 3 logic) */}
+          {/* Dual Mission Layer - Retrieval vs Synthesis */}
+          {t.howItWorks.dualMission && (
+            <div className="grid lg:grid-cols-2 gap-8 mb-20 max-w-6xl mx-auto text-left">
+              <div className="bg-zinc-900/40 border border-zinc-800 p-8 rounded-sm relative group overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                  <Globe className="w-24 h-24 text-primary" />
+                </div>
+                <div className="inline-block px-3 py-1 bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest mb-6">
+                  L1: Retrieval Layer (SEO)
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4 font-mono">
+                  {t.howItWorks.dualMission.retrieval.title}
+                </h3>
+                <p className="text-zinc-400 text-sm leading-relaxed mb-6">
+                  {t.howItWorks.dualMission.retrieval.desc}
+                </p>
+                <div className="flex items-center gap-4 text-[10px] font-mono text-zinc-600 uppercase">
+                  <span className="flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3 text-primary" /> Long-tail
+                    Coverage
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3 text-primary" /> Domain
+                    Authority
+                  </span>
+                </div>
+              </div>
+
+              <div className="bg-zinc-900/40 border border-zinc-800 p-8 rounded-sm relative group overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                  <Sparkles className="w-24 h-24 text-accent-orange" />
+                </div>
+                <div className="inline-block px-3 py-1 bg-accent-orange/10 border border-accent-orange/20 text-accent-orange text-[10px] font-bold uppercase tracking-widest mb-6">
+                  L2: Synthesis Layer (AIO)
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4 font-mono">
+                  {t.howItWorks.dualMission.synthesis.title}
+                </h3>
+                <p className="text-zinc-400 text-sm leading-relaxed mb-6">
+                  {t.howItWorks.dualMission.synthesis.desc}
+                </p>
+                <div className="flex items-center gap-4 text-[10px] font-mono text-zinc-600 uppercase">
+                  <span className="flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3 text-accent-orange" /> AI
+                    Citation Rate
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3 text-accent-orange" /> GEO
+                    Optimization
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Detailed Creation Chain */}
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto text-left">
             {t.howItWorks.factors &&
               t.howItWorks.factors.items.map((factor, idx) => (
@@ -145,20 +200,20 @@ const HowItWorks: React.FC = () => {
                       </span>
                       {index === 0 &&
                         (lang === "cn"
-                          ? "全平台 SERP 意图探测与多维语义缺口挖掘"
-                          : "Multi-platform SERP Intent Detection & Semantic Gap Discovery")}
+                          ? "发现竞争对手还没察觉的蓝海词，锁定容易排名的精准流量。"
+                          : "Discover hidden low-competition keywords for an easy traffic boost.")}
                       {index === 1 &&
                         (lang === "cn"
-                          ? "基于Information Gain的 AIO 架构化工程"
-                          : "AIO Structured Engineering based on Information Gain")}
+                          ? "全自动生成专家级原创内容，完美符合谷歌收录标准，告别 AI 洗稿降权。"
+                          : "Auto-generate expert-level original content that Google loves, avoiding AI penalties.")}
                       {index === 2 &&
                         (lang === "cn"
-                          ? "嵌入视觉指纹 (Visual Fingerprinting) 的资产级多媒体合成"
-                          : "Visual Fingerprinting & Asset-grade Media Synthesis")}
+                          ? "一键全自动同步上站，自动打造高权重博客矩阵。"
+                          : "One-click auto-posting to WordPress and more. Build a high-authority blog matrix instantly.")}
                       {index === 3 &&
                         (lang === "cn"
-                          ? "全频谱 ROI 归因与排名实时异动监控"
-                          : "Full-spectrum ROI Attribution & Rank Fluctuation Monitoring")}
+                          ? "实时查看每一篇文章带来的真实收益，让增长看得见摸得着。"
+                          : "Track real revenue from every single post in real-time.")}
                     </p>
 
                     <div
@@ -294,6 +349,66 @@ const HowItWorks: React.FC = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* Algorithm Compliance Matrix - The Authority Killer */}
+        {t.howItWorks.complianceMatrix && (
+          <div className="mt-32 max-w-6xl mx-auto border border-zinc-800 bg-zinc-950/50 p-8 sm:p-12 relative overflow-hidden group">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+
+            <div className="grid lg:grid-cols-3 gap-12 items-center relative z-10">
+              <div className="lg:col-span-1">
+                <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 border border-primary/30 bg-primary/10 rounded-sm">
+                  <ShieldCheck className="w-4 h-4 text-primary" />
+                  <span className="text-[10px] font-mono text-primary uppercase tracking-[0.2em] font-bold">
+                    Compliance Matrix
+                  </span>
+                </div>
+                <h3 className="text-3xl font-bold text-white mb-6 font-mono leading-tight">
+                  {t.howItWorks.complianceMatrix.title}
+                </h3>
+                <p className="text-zinc-500 text-sm leading-relaxed mb-8">
+                  {t.howItWorks.complianceMatrix.description}
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 text-xs font-mono text-zinc-400">
+                    <div className="w-2 h-2 bg-primary"></div>
+                    Spam Update Resistance: 100%
+                  </div>
+                  <div className="flex items-center gap-3 text-xs font-mono text-zinc-400">
+                    <div className="w-2 h-2 bg-primary"></div>
+                    HCU Helpful Signal: VERIFIED
+                  </div>
+                </div>
+              </div>
+
+              <div className="lg:col-span-2 grid sm:grid-cols-2 gap-4">
+                {t.howItWorks.complianceMatrix.items.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-black/40 border border-zinc-800 p-6 hover:border-primary/30 transition-all"
+                  >
+                    <div className="flex justify-between items-start mb-4">
+                      <h4 className="text-white font-bold text-sm font-mono uppercase">
+                        {item.title}
+                      </h4>
+                      <span className="text-[8px] font-mono px-1.5 py-0.5 border border-primary/20 text-primary bg-primary/5">
+                        {item.status}
+                      </span>
+                    </div>
+                    <p className="text-zinc-500 text-xs leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Background watermark */}
+            <div className="absolute -right-20 -bottom-20 opacity-[0.02] rotate-12 pointer-events-none">
+              <ShieldCheck className="w-96 h-96 text-primary" />
             </div>
           </div>
         )}

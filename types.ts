@@ -111,6 +111,10 @@ export interface Translations {
       subtitle: string;
       description: string;
     };
+    dualMission?: {
+      retrieval: { title: string; desc: string };
+      synthesis: { title: string; desc: string };
+    };
     workflow: {
       title: string;
       description: string;
@@ -140,6 +144,11 @@ export interface Translations {
         title: string;
         desc: string;
       }[];
+    };
+    complianceMatrix?: {
+      title: string;
+      description: string;
+      items: { title: string; desc: string; status: string }[];
     };
     trends?: {
       title: string;

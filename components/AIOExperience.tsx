@@ -16,33 +16,33 @@ const AI_LOGOS = {
   chatgpt: {
     color: "#10a37f",
     label: "ChatGPT",
-    url: "https://img.icons8.com/fluent/48/chatgpt.png",
+    url: "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
   },
   gemini: {
     color: "#4285F4",
     label: "Gemini",
-    url: "https://img.icons8.com/color/48/google-logo.png",
+    url: "https://img.icons8.com/?size=100&id=iBkBIBWE6tfT&format=png&color=000000",
   },
   grok: {
     color: "#ffffff",
     label: "Grok",
-    url: "https://img.icons8.com/ios-filled/50/ffffff/x-coordinate.png",
+    url: "https://img.icons8.com/?size=100&id=Z1Bbq5wEAtZh&format=png&color=000000",
   },
   perplexity: {
     color: "#00a8ff",
     label: "Perplexity",
-    url: "https://img.icons8.com/color/48/domain.png",
+    url: "https://img.icons8.com/?size=100&id=kzJWN5jCDzpq&format=png&color=000000",
   },
   claude: {
     color: "#d97757",
     label: "Claude",
-    url: "https://img.icons8.com/color/48/artificial-intelligence.png",
+    url: "https://img.icons8.com/?size=100&id=zQjzFjPpT2Ek&format=png&color=000000",
   },
 };
 
 const SEARCH_LOGOS = {
-  google: "https://img.icons8.com/color/48/google-logo.png",
-  bing: "https://img.icons8.com/color/48/bing.png",
+  google: "https://www.vectorlogo.zone/logos/google/google-icon.svg",
+  bing: "https://www.vectorlogo.zone/logos/bing/bing-icon.svg",
 };
 
 const AIOExperience: React.FC = () => {
@@ -76,7 +76,7 @@ const AIOExperience: React.FC = () => {
                   <img
                     src={(AI_LOGOS as any)[stat.icon]?.url}
                     alt={stat.label}
-                    className="w-6 h-6 object-contain grayscale group-hover:grayscale-0 transition-all"
+                    className="w-6 h-6 object-contain transition-all"
                   />
                 </div>
                 <span className="text-zinc-400 font-bold font-mono text-sm">
@@ -158,7 +158,7 @@ const AIOExperience: React.FC = () => {
                   <img
                     src={data.url}
                     alt={data.label}
-                    className="w-4 h-4 object-contain grayscale hover:grayscale-0 transition-all"
+                    className="w-4 h-4 object-contain transition-all"
                   />
                   <span className="text-[10px] font-mono text-zinc-500 font-bold tracking-tighter uppercase">
                     {data.label}

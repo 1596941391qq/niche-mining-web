@@ -15,12 +15,12 @@ const Hero: React.FC = () => {
 
   // Simulated terminal logs
   const logs = [
-    "INTEL: Scanning for market vacuums... FOUND [12]",
-    "FACTORY: Engineering AIO optimized content... OK",
-    "STUDIO: Synthesizing visual fingerprints... DONE",
-    "RADAR: Linking to Revenue stream... ACTIVE",
-    "SYSTEM: Industrial production protocol active.",
-    "ASSET: Generating unique visual DNA...",
+    "AUDIT: Analyzing SERP for intent gaps... FOUND [12]",
+    "ENGINEERING: Injecting Information Gain markers... OK",
+    "EEAT: Validating citation structures... VERIFIED",
+    "INDEX: Mapping entities to Knowledge Graph... ACTIVE",
+    "GROWTH: Linking pixel data to ROI stream... ON",
+    "SYSTEM: Industrial HCU compliance active.",
     "STATUS: Production line at 100% capacity.",
   ];
 
@@ -123,17 +123,17 @@ const Hero: React.FC = () => {
                         </div>
                         <div>
                           <div className="font-bold text-xs uppercase tracking-widest mb-1 text-primary">
-                            High Value Opportunity
+                            SERP INTENT GAP DETECTED
                           </div>
                           <div className="text-white font-bold text-lg tracking-tight">
                             "best ceramic coatings for diy"
                           </div>
                           <div className="text-xs text-emerald-200/50 mt-2 font-mono flex gap-2">
                             <span className="bg-zinc-800 px-2 py-0.5 rounded text-zinc-400">
-                              Vol: 2.4k
+                              Market Vacuum: YES
                             </span>
                             <span className="bg-zinc-800 px-2 py-0.5 rounded text-zinc-400">
-                              KD: 12
+                              Top 10 Content Gap: 85%
                             </span>
                           </div>
                         </div>

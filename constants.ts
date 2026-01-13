@@ -75,45 +75,45 @@ export const CONTENT: Record<string, Translations> = {
     hero: {
       badge: 'SYSTEM READY // CLAIM 200 FREE CREDITS',
       title: 'Stop Competing.\nStart Domination.',
-      subtitle: 'Stop managing scripts. Start commanding an autonomous SEO production empire. Through multi-platform intelligence and industrial-grade content engineering, we secure deterministic commercial returns.',
+      subtitle: 'Stop managing scripts. Launch your 24/7 AI Growth Engine. Scale high-authority content and dominate Google & AI search automatically.',
       placeholder: 'Enter seed keyword...',
       ctaPrimary: 'Start Production',
-      stats_efficiency: 'Industrial Production',
-      stats_depth: 'Asymmetric Advantage',
+      stats_efficiency: 'Automated Growth',
+      stats_depth: 'Expert Quality',
     },
     features: {
-      heading: 'The Protocol',
-      subheading: 'Our autonomous production line doesn\'t just search; it engineers authority and captures revenue.',
-      description: 'Tested and proven: 10x faster market dominance through strategic intelligence and industrial-grade content generation.',
+      heading: 'The Growth Factory',
+      subheading: 'Our autonomous production line doesn\'t just search; it builds your online presence and captures revenue.',
+      description: 'Tested and proven: Dominate your niche 10x faster with automated high-authority content generation.',
       steps: [
-        { title: 'The Mining', desc: 'Identify "market vacuums" occupied by legacy forums and PDFs for immediate asymmetric takeover.' },
-        { title: 'The Factory', desc: '8-step industrial production engineering high-citation content optimized for AIO/GEO algorithms.' },
-        { title: 'The Studio', desc: 'Synthesize unique visual SEO assets to create a citation moat and dominate visual search results.' },
-        { title: 'The Radar', desc: 'Full-spectrum ROI radar linking every pixel to revenue, turning SEO into a predictable investment.' },
+        { title: 'The Mining', desc: 'Find hidden "low-competition" keywords your competitors missed for an easy traffic boost.' },
+        { title: 'The Content', desc: 'Generate expert-level, original content that Google loves—zero risk of AI content penalties.' },
+        { title: 'The Posting', desc: 'One-click auto-posting to WordPress and more. Build a high-authority blog matrix instantly.' },
+        { title: 'The ROI', desc: 'Track real revenue from every single post. See exactly how your traffic turns into profit.' },
       ],
     },
     tools: {
       badge: 'AUTONOMOUS AGENT TEAM',
       heading: 'Your 24/7 Production Engine',
-      subheading: 'A specialized team of 4 core agents working in an 8-step industrial chain. We don\'t just generate content; we engineer authority based on real-time AI/SERP intelligence.',
+      subheading: 'A specialized team of agents working in an 8-step industrial chain. We don\'t just generate content; we engineer authority based on Information Gain and EEAT principles.',
       action: 'Deploy Agent',
       items: [
         {
           id: 'google',
           name: 'SEO Researcher',
-          desc: 'Analyzes SERP preferences (Google/ChatGPT/Claude), extracts LSI keywords, and reverse-engineers competitor structures.',
+          desc: 'Performs SERP Gap Analysis (Google/ChatGPT/Perplexity), identifying "weak slots" occupied by forums and outdated content.',
           features: ['SERP Intent Mapping', 'Competitor Gap Analysis', 'LSI/Entity Extraction'],
         },
         {
           id: 'yandex',
           name: 'Content Architect',
-          desc: 'Generates structured drafts optimized for AIO (Q&A format, structured answer blocks) and EEAT principles.',
-          features: ['AIO/GEO Optimization', 'EEAT-Driven Writing', 'Citation Architecture'],
+          desc: 'Engineers high-citation content with structural Information Gain, optimized for AIO/GEO and Google HCU standards.',
+          features: ['HCU/AIO Optimization', 'Information Gain Engineering', 'EEAT-Driven Writing'],
         },
         {
           id: 'bing',
           name: 'Quality Controller',
-          desc: 'Trained on 200+ Google ranking factors. Validates keyword density, AI detection, and factual accuracy.',
+          desc: 'Automates 200+ ranking factor audits. Validates factual accuracy, AI detection, and structural integrity.',
           features: ['Ranking Factor Audit', 'Humanization Check', 'Compliance Validation'],
         },
       ],
@@ -122,92 +122,112 @@ export const CONTENT: Record<string, Translations> = {
       badge: 'Industrial Pipeline (Strategic Insight)',
       coreValue: {
         title: 'Core Value',
-        subtitle: 'Engineering "Blue Ocean Dominance"',
-        description: 'We automate the entire lifecycle—from tactical discovery to industrial production and ROI attribution—ensuring your brand becomes the definitive "standard answer" in the AI search era.',
+        subtitle: 'Eliminate Growth Bottlenecks',
+        description: 'Traditional SEO is failing due to high CAC and shifting algorithms. We provide the industrial infrastructure to secure your organic traffic share in the AI era.',
+      },
+      dualMission: {
+        retrieval: {
+          title: 'Establish Search Dominance',
+          desc: 'Flood Google Search with your high-authority content. Use massive pSEO matrices to capture every relevant long-tail search lead.'
+        },
+        synthesis: {
+          title: 'Be the AI Answer',
+          desc: 'Ensure ChatGPT and Perplexity recommend your brand as the definitive source when synthesizing answers for your customers.'
+        }
       },
       workflow: {
-        title: 'The Production Pipeline',
-        description: 'A closed-loop system of AI agents and specialized SEO engineering units working in perfect synchronization.',
+        title: 'Automated Growth Flow',
+        description: 'AI agents and auto-publishing units working in sync to build your 24/7 content production line.',
         customizable: {
-          title: 'Customizable Production Flow',
-          description: 'Configure your own production parameters to match specific market dynamics and vertical requirements.',
+          title: 'Build Your Content Factory',
+          description: 'Customize production parameters to match your niche and specific market growth goals.',
           features: [
-            'Modular workflow sequencing',
-            'Custom AI agent decision logic',
-            'Multi-source SEO API integration',
-            'Proprietary visual asset generation',
-            'Real-time ROI feedback loops',
+            'Customizable workflows',
+            'Tailored AI writing logic',
+            'Full SEO API integration',
+            'Auto-generated unique visuals',
+            'Real-time revenue tracking',
           ],
         },
         steps: [
           {
             id: '1',
-            title: 'Mining (Strategic Intelligence)',
+            title: 'Keyword Mining (Mining)',
             description: '',
             agents: [
-              { name: 'Intelligence Agent', desc: 'Scans for market vacuums and weak competition zones.' },
-              { name: 'Intent Architect', desc: 'Maps seed keywords to high-value user search intent.' },
+              { name: 'Intelligence Agent', desc: 'Discover hidden "low-competition" keywords your competitors missed.' },
+              { name: 'Intent Architect', desc: 'Identify keywords with the highest buying intent for maximum ROI.' },
             ],
             tools: [
-              { name: 'SERP Analyzer', desc: 'Identifies "weak slots" occupied by forums and PDFs.' },
-              { name: 'Volume Validator', desc: 'Calculates real traffic potential and conversion probability.' },
+              { name: 'SERP Analyzer', desc: 'Identify easy-to-rank search slots held by weak content.' },
+              { name: 'Volume Validator', desc: 'Ensure every keyword has the potential to drive real sales.' },
             ],
-            value: 'Input seed keywords or domains, output market vacuums.',
+            value: 'Identify high-value targets for instant ranking and traffic growth.',
           },
           {
             id: '2',
-            title: 'Factory (Content Engineering)',
+            title: 'Expert AI Writing (Factory)',
             description: '',
             agents: [
-              { name: 'Authority Engineer', desc: 'Generates high-citation content structured for AIO/GEO.' },
-              { name: 'Reviewer Agent', desc: 'Ensures 100% human-like quality and factual accuracy.' },
+              { name: 'Content Engineer', desc: 'Generate deep, expert-level content that builds brand authority.' },
+              { name: 'Reviewer Agent', desc: 'Ensure 100% original quality that passes all Google audits.' },
             ],
             tools: [
-              { name: 'AIO Optimizer', desc: 'Injects structural markers favored by AI search engines.' },
-              { name: 'GEO Architect', desc: 'Optimizes content for localized and contextual relevance.' },
+              { name: 'Authority Guard', desc: 'Inject unique data points to stand out from generic AI content.' },
+              { name: 'AIO Optimization Unit', desc: 'Format content to be the top choice for AI search summaries.' },
             ],
-            value: '4 specialized agents injecting AIO/GEO DNA.',
+            value: 'Convert raw keywords into high-authority, original digital assets.',
           },
           {
             id: '3',
-            title: 'Studio (Visual Lab)',
+            title: 'Auto-Sync Posting (Posting)',
             description: '',
             agents: [
-              { name: 'Visual Entity Agent', desc: 'Extracts core visual concepts from content.' },
-              { name: 'Studio Artist', desc: 'Generates industry-standard, unique visual assets.' },
+              { name: 'Publisher Agent', desc: 'Connect to your sites and publish content automatically in seconds.' },
+              { name: 'Matrix Architect', desc: 'Build citation networks across your sites to skyrocket domain trust.' },
             ],
             tools: [
-              { name: 'Visual SEO Unit', desc: 'Embeds visual fingerprinting for image search dominance.' },
+              { name: 'CMS Integrator', desc: 'Full support for WordPress, Shopify, and other major platforms.' },
             ],
-            value: 'Synthesize unique visual assets with industrial quality.',
+            value: 'Dominate search results with a content moat competitors can\'t copy.',
           },
           {
             id: '4',
-            title: 'Radar (Revenue Tracker)',
+            title: 'Revenue Tracker (Radar)',
             description: '',
             agents: [
-              { name: 'Radar Analyst', desc: 'Tracks rank movements and citation rates in real-time.' },
-              { name: 'ROI Strategist', desc: 'Links traffic performance directly to revenue metrics.' },
+              { name: 'Profit Analyst', desc: 'Track rankings, AI citations, and actual lead conversions in real-time.' },
+              { name: 'Growth Strategist', desc: 'Analyze the revenue from every post to optimize your future strategy.' },
             ],
             tools: [
-              { name: 'Full-Spectrum Tracker', desc: 'Monitors main site and visual asset rankings.' },
+              { name: 'Full Transparency Tracker', desc: 'Monitor the performance of all your pages in one dashboard.' },
             ],
-            value: 'Link every pixel to the upward ROI revenue stream.',
+            value: 'Get a clear breakdown of the financial contribution from every article.',
           },
         ],
       },
       invincible: {
-        title: 'Asymmetric Advantage vs. Legacy SEO',
+        title: 'Automated Growth vs Traditional Struggles',
         items: [
           {
-            title: 'Legacy SEO (The Human Way)',
-            desc: 'Lazy Research -> Low Quality Content -> Stock Images -> Static Thinking -> Unpredictable Luck.',
+            title: 'The Legacy Struggle',
+            desc: 'Expensive Ads -> Unpredictable CAC -> Algorithm Penalties -> Generic Content -> Customers hijacked by Competitors.',
           },
           {
-            title: 'NicheDigger Protocol (The Industrial Way)',
-            desc: 'Cross-platform Intel (SERP / Keyword Research) -> 8-Step Autonomous AIO Engineering -> Visual DNA Synthesis -> One-Click Deployment -> Deterministic ROI.',
+            title: 'The NicheDigger Fast-track',
+            desc: 'Find Low-competition Keywords -> Auto Expert Writing -> Instant Site Posting -> High Authority Growth -> Reliable Profits.',
           },
         ],
+      },
+      complianceMatrix: {
+        title: 'Authority Protection Protocol (2026)',
+        description: 'We don\'t just write content; we use advanced strategies to ensure Google loves your site and you lead the AI search era.',
+        items: [
+          { title: "Originality Guard", desc: "Inject unique empirical data to ensure your content is irreplaceable by generic AI.", status: "ACTIVE" },
+          { title: "Expert Backing (EEAT)", desc: "Automate high-authority citation patterns to build instant trust with search engines.", status: "VERIFIED" },
+          { title: "Intent Fulfillment", desc: "Answer user queries precisely to earn top marks in relevance algorithms.", status: "READY" },
+          { title: "Knowledge Graph Mapping", desc: "Deep anchor your brand as a leader within Google\'s Knowledge Graph infrastructure.", status: "SYNCED" }
+        ]
       },
       trends: {
         title: 'The AI Search Era is Here',
@@ -507,45 +527,45 @@ export const CONTENT: Record<string, Translations> = {
     hero: {
       badge: '系统就绪 // 注册即领 200 生产点数',
       title: '停止无效竞争。\n开始蓝海垄断。',
-      subtitle: '停止管理繁琐脚本，开始指挥你的自动化生产帝国。通过全平台情报探测与工业级内容工程，在 AI 搜索时代为您锁定确定性的商业收益。',
+      subtitle: '告别琐碎脚本，启动你的 24/7 AI 增长引擎。全自动产出专家级高权重内容，在谷歌与 AI 搜索中轻松占据地盘。',
       placeholder: '输入核心种子词...',
       ctaPrimary: '启动全链路生产线',
-      stats_efficiency: '工业化生产',
-      stats_depth: '非对称优势',
+      stats_efficiency: '全自动增长',
+      stats_depth: '专家级内容',
     },
     features: {
-      heading: '生产核心',
+      heading: '流量工厂',
       subheading: '我们的全链路自动化生产线不仅仅是搜索，它是在建造权威并收割收益。',
-      description: '经过测试，通过非对称情报与工业级内容生成，市场垄断速度可提升 10 倍以上。',
+      description: '经过测试，通过自动化高权重内容生成，市场垄断速度可提升 10 倍以上。',
       steps: [
-        { title: '挖掘期 | The Mining', desc: '识别被陈旧论坛和 PDF 占据的“市场真空”，在竞争对手察觉前完成降维打击。' },
-        { title: '生成期 | The Factory', desc: '8步透明工业化生产，将 AIO 与 GEO 深度注入内容骨架，确保 AI 搜索的高频引用。' },
-        { title: '视觉期 | The Studio', desc: '自动合成高保真行业质感配图，建立“视觉 SEO”护城河，从视觉维度霸占搜索权重。' },
-        { title: '追踪期 | The Radar', desc: '全频谱 ROI 雷达将每一像素挂钩收益，让 SEO 彻底告别玄学，变成确定性投资。' },
+        { title: '挖掘期 | The Mining', desc: '发现竞争对手还没察觉的蓝海词，锁定容易排名的精准流量，抢占先机。' },
+        { title: '内容期 | The Content', desc: '全自动生成专家级原创内容，完美符合谷歌收录标准，告别 AI 洗稿降权。' },
+        { title: '发布期 | The Posting', desc: '一键全自动同步上站，支持多种内容导出和发布方式，打造高权重博客矩阵。' },
+        { title: '收益期 | The ROI', desc: '实时查看每一篇文章带来的真实收益，让增长看得见摸得着，告别 SEO 玄学。' },
       ],
     },
     tools: {
       badge: '自动化代理人团队',
       heading: '你的 24/7 生产引擎',
-      subheading: '由 4 个核心代理构成的 8 步工业化生产链。我们不仅是生成内容，更是基于实时 AI/SERP 情报构建权威。',
+      subheading: '由专业代理构成的 8 步工业化生产链。我们不仅是生成内容，更是基于信息增益 (Information Gain) 与 EEAT 原则构建权威。',
       action: '启动 Agent',
       items: [
         {
           id: 'google',
           name: 'SEO 研究官',
-          desc: '分析搜索引擎偏好 (Google/ChatGPT/Claude)，提取 LSI 关键词，并逆向工程对手结构。',
-          features: ['SERP 意图映射', '竞争对手缺口分析', 'LSI/关键词提取'],
+          desc: '执行 SERP 竞争缺口分析 (Google/ChatGPT/Perplexity)，识别由陈旧论坛和低质量内容占据的“防守薄弱位”。',
+          features: ['SERP 意图映射', '竞争对手缺口分析', 'LSI/实体提取'],
         },
         {
           id: 'yandex',
           name: '内容架构师',
-          desc: '生成专为 AIO 优化的结构化初稿 (Q&A 格式、结构化答案块)，并注入 EEAT 核心原则。',
-          features: ['AIO/GEO 深度优化', 'EEAT 驱动写作', '引用架构设计'],
+          desc: '通过结构化信息增益工程生成高引用权重内容，深度对冲 Google HCU 算法风险。',
+          features: ['HCU/AIO 深度优化', '信息增益工程', 'EEAT 驱动写作'],
         },
         {
           id: 'bing',
           name: '质量把关官',
-          desc: '基于 200+ 项谷歌排名因素训练。验证关键词密度、AI 痕迹，并确保事实引用的准确性。',
+          desc: '自动化执行 200+ 项谷歌排名因素审计。严苛验证事实准确性、AI 痕迹与结构合规。',
           features: ['排名因素审计', '人类化风格校验', '合规性验证'],
         },
       ],
@@ -554,95 +574,115 @@ export const CONTENT: Record<string, Translations> = {
       badge: '全链路生产线（战略洞察）',
       coreValue: {
         title: '核心价值',
-        subtitle: '工程化实现“蓝海垄断”',
-        description: '我们实现了从战略发现、工业化生产到 ROI 归因的全生命周期自动化，确保您的品牌成为 AI 搜索时代不可撼动的“标准答案”。',
+        subtitle: '粉碎业务增长瓶颈',
+        description: '传统 SEO 正在因高昂的 CAC 和算法波动而失效。我们提供工业级基础设施，确保您在 AI 时代锁定确定性的自然流量份额。',
+      },
+      dualMission: {
+        retrieval: {
+          title: '把 Google 地盘占下来',
+          desc: '让你的网站铺满 Google 搜索首页。通过海量高权重文章矩阵，截获所有相关的潜在客户流量。'
+        },
+        synthesis: {
+          title: '让 AI 引擎主动推荐你',
+          desc: '让 ChatGPT、Perplexity 在生成答案时，将你的品牌作为唯一权威来源引用，占领 AI 搜索心智。'
+        }
       },
       workflow: {
-        title: '工业化工作流',
-        description: '由 AI 代理与专业 SEO 工程单元构成的闭环系统，在完美同步中高效运转。',
+        title: '自动化增长流程',
+        description: 'AI 代理与全自动发布单元完美配合，为你打造不眠不休的内容生产线。',
         customizable: {
-          title: '可自定义生产流程',
-          description: '支持灵活配置生产参数，以适配特定的市场动态和行业垂直需求。',
+          title: '灵活配置你的工厂',
+          description: '支持自定义生产参数，完美适配你的行业特色与市场需求。',
           features: [
-            '模块化工作流编排',
-            '自定义 AI 代理决策逻辑',
-            '多源 SEO API 集成',
-            '独家视觉资产合成系统',
-            '实时 ROI 反馈闭环',
+            '自由编排工作流',
+            '自定义 AI 写作逻辑',
+            '多平台 API 深度集成',
+            '独家视觉资产自动配图',
+            '实时流量收益反馈',
           ],
         },
         steps: [
           {
             id: '1',
-            title: '挖掘期 (非对称情报搜寻)',
+            title: '精准挖词 (Mining)',
             description: '',
             agents: [
-              { name: '情报 Agent', desc: '扫描市场真空地带与弱竞争区域。' },
-              { name: '意图架构师', desc: '将种子词映射为高价值用户搜索意图。' },
+              { name: '情报 Agent', desc: '扫描竞争对手还没发现的流量蓝海词。' },
+              { name: '意图架构师', desc: '精准锁定用户搜索时的真实买单需求。' },
             ],
             tools: [
-              { name: 'SERP 分析仪', desc: '识别由论坛和 PDF 占据的“防守薄弱位”。' },
-              { name: '流量验证器', desc: '计算真实流量潜力和转化概率。' },
+              { name: 'SERP 分析仪', desc: '识别容易排名的“弱防守”搜索位。' },
+              { name: '流量验证器', desc: '计算真实的转化率，确保每一分投入都有回报。' },
             ],
-            value: '寻找阻力最小的路径，实现排名的瞬间爆发。',
+            value: '锁定低阻力切入点，实现排名的瞬间爆发。',
           },
           {
             id: '2',
-            title: '生成期 (内容工程化生产)',
+            title: '专家级写作 (Factory)',
             description: '',
             agents: [
-              { name: '权威工程师', desc: '生成专为 AIO/GEO 优化的高引用权重内容。' },
-              { name: '审查 Agent', desc: '确保 100% 人类级质感与事实准确性。' },
+              { name: '内容工程师', desc: '生成高权重、具备专家深度的高引用内容。' },
+              { name: '审查 Agent', desc: '确保 100% 原创质感，完美通过谷歌合规审计。' },
             ],
             tools: [
-              { name: 'AIO 优化单元', desc: '注入 AI 搜索引擎青睐的结构化标记。' },
-              { name: 'GEO 架构工具', desc: '针对地理位置与语境相关性进行深度优化。' },
+              { name: '高权重保障单元', desc: '确保内容具备优于对手的独特价值，提升收录率。' },
+              { name: 'AI 引用优化工具', desc: '针对 AI 引擎的推荐逻辑进行内容骨架优化。' },
             ],
-            value: '将原始关键词转化为具备极高权威性的数字资产。',
+            value: '将关键词转化为具备商业价值的高权重原创内容。',
           },
           {
             id: '3',
-            title: '视觉期 (原生视觉合成)',
+            title: '自动同步发布 (Deployment)',
             description: '',
             agents: [
-              { name: '视觉实体 Agent', desc: '从内容中提取核心视觉概念。' },
-              { name: 'Studio 艺术家', desc: '生成行业标准且独一无二的视觉资产。' },
+              { name: '发布官 Agent', desc: '全自动打通站点接口，实现内容秒速发布。' },
+              { name: '外链架构师', desc: '自动建立博客矩阵引用，快速推高站点权重。' },
             ],
             tools: [
-              { name: '视觉 SEO 单元', desc: '嵌入视觉指纹，霸占图片搜索权重。' },
+              { name: '多平台对接单元', desc: '支持多种内容导出和发布方式。' },
             ],
-            value: '建立竞争对手无法复制的视觉引用护城河。',
+            value: '自动占领搜索地盘，建立竞争对手无法逾越的内容护城河。',
           },
           {
             id: '4',
-            title: '追踪期 (全频谱收益雷达)',
+            title: '流量收益追踪 (Radar)',
             description: '',
             agents: [
-              { name: '雷达分析员', desc: '实时监控排名异动与 AI 引用率。' },
-              { name: 'ROI 策略师', desc: '将流量表现直接挂钩收入指标。' },
+              { name: '收益分析员', desc: '实时监控排名、AI 引用率与真实的询盘转化。' },
+              { name: '增长策略师', desc: '分析每一篇文章的赚钱能力，优化后续生产。' },
             ],
             tools: [
-              { name: '全频谱追踪器', desc: '同步追踪主站与视觉资产的搜索表现。' },
+              { name: '全透明追踪器', desc: '同步追踪所有页面的综合表现，数据触手可及。' },
             ],
-            value: '为每一篇内容的投资回报率提供绝对透明度。',
+            value: '为每一篇文章的赚钱贡献提供绝对透明的账单分析。',
           },
         ],
       },
       invincible: {
-        title: '2026 降维打击：非对称优势 vs 传统模式',
+        title: '自动化增长 vs 传统流量困局',
         items: [
           {
-            title: '传统 SEO (平庸的人工作业)',
-            desc: '经验主义猜词 -> 低质内容堆砌 -> 侵权/素材图 -> 固化思维 -> 纯看运气的收录。',
+            title: '传统模式的“泥潭”',
+            desc: '广告费越来越贵 -> 流量成本不可控 -> 容易被算法惩罚 -> 内容同质化 -> 客户被对手截胡。',
           },
           {
-            title: 'NicheDigger 协议 (高效的工业引擎)',
-            desc: '全平台情报 (SERP结果 / Keyword Research) -> 8步自动化 AIO 工程化生成 -> 独家视觉 DNA 合成 -> 一键全平台部署 -> 确定性 ROI 实时追踪。',
+            title: 'NicheDigger 的“快车道”',
+            desc: '精准发现蓝海词 -> 全自动专家写作 -> 一键同步上站发布 -> 自动获得高权重引用 -> 确定的赚钱回报。',
           },
         ],
       },
+      complianceMatrix: {
+        title: '高权重保障协议 (2026)',
+        description: '我们不只是写稿，更是通过一系列手段确保你的内容被谷歌喜爱，且在 AI 搜索时代站稳脚跟。',
+        items: [
+          { title: "原创性保障", desc: "通过深度数据注入，确保内容具备独一无二的参考价值，规避 AI 降权。", status: "ACTIVE" },
+          { title: "专家背书 (EEAT)", desc: "自动化模拟高权威领域专家引用，快速建立站点在谷歌眼中的信任度。", status: "VERIFIED" },
+          { title: "意图缺口填充", desc: "精准回答用户最想看的问题，确保内容在相关性评分中获得满分。", status: "READY" },
+          { title: "权威地图锚定", desc: "通过结构化数据深埋，让谷歌知识图谱把你的品牌当作该领域的领头羊。", status: "SYNCED" }
+        ]
+      },
       trends: {
-        title: 'AI 搜索时代已全面降临',
+        title: 'AI 搜索时代全面来临',
         subtitle: '超过 10 亿用户现在在购买前先询问 AI 引擎。出现在结果中，否则就失去这笔交易。',
         stats: [
           { label: 'ChatGPT', value: '8亿用户', icon: 'chatgpt' },
