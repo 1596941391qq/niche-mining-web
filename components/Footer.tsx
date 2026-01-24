@@ -44,7 +44,7 @@ const Footer: React.FC = () => {
 
           <div>
             <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-xs">
-              {t.footer.legal}
+              {t.footer.company}
             </h4>
             <ul className="space-y-3 text-zinc-500 text-xs">
               <li>
@@ -55,6 +55,22 @@ const Footer: React.FC = () => {
                   {t.footer.about}
                 </a>
               </li>
+              <li>
+                <a
+                  href="#faq"
+                  className="hover:text-primary transition-colors"
+                >
+                  {t.footer.faqLink}
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-xs">
+              {t.footer.legal}
+            </h4>
+            <ul className="space-y-3 text-zinc-500 text-xs">
               <li>
                 <a
                   href="#privacy"
@@ -73,23 +89,13 @@ const Footer: React.FC = () => {
               </li>
             </ul>
           </div>
-
-          <div>
-            <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-xs">
-              {t.footer.about}
-            </h4>
-            <div className="space-y-2 text-zinc-500 text-xs font-mono">
-              <p className="text-white font-semibold">{t.footer.companyName}</p>
-              <p>{t.footer.chineseCompanyName}</p>
-            </div>
-          </div>
         </div>
 
         <div className="border-t border-zinc-900 pt-8 flex flex-col md:flex-row justify-between items-center text-zinc-600 font-mono text-xs">
           <div className="flex flex-col gap-1">
             <p>{t.footer.rights}</p>
             <p className="text-zinc-500">
-              {t.footer.company || "Soulcraft Limited"} |{" "}
+              {t.footer.companyName || "Soulcraft Limited"} |{" "}
               <a
                 href={`mailto:${
                   t.footer.email || "soulcraftlimited@galatea.bar"

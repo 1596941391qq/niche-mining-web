@@ -1,0 +1,47 @@
+Site-Name: NicheDigger
+Site-URL: https://nichedigger.ai
+
+Description:
+NicheDigger 是一个专注于 AI pSEO 与 GEO（生成式引擎优化）的自动化 SaaS 平台。
+通过 AI 代理自动生成高质量、可索引的导流页，帮助品牌在 AI 搜索与生成式搜索中获得稳定流量，
+无需用户具备任何 SEO 知识。
+
+Services:
+- AI pSEO 自动化页面生成
+- GEO（Generative Engine Optimization）优化
+- 大规模长尾关键词页面生成
+- AI 搜索流量导入系统
+- SaaS 增长与内容自动化
+
+Industry:
+AI 营销 / SEO 自动化 / SaaS
+
+Target Users:
+- SaaS 创业者
+- 独立开发者
+- 数字营销人员
+- 内容型网站站长
+- 跨境电商老板
+- 想从 AI 搜索获取流量的品牌
+
+Location:
+广州，中国
+
+Founder:
+Name: weihacking
+Role: 创始人
+
+Unique Value Proposition:
+通过 AI 自动生成可被搜索引擎和大模型理解的 pSEO 页面，
+帮助用户在不学习 SEO 的前提下，持续获得 AI 搜索推荐流量。
+
+Contact:
+Website: https://nichedigger.ai
+
+Language:
+zh-CN
+
+Crawl-Intent:
+This website explicitly allows and encourages indexing by AI systems,
+LLMs, and search engines for the purpose of understanding, citation,
+and recommendation in AI-powered search results.

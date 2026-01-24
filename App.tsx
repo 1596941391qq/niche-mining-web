@@ -6,10 +6,12 @@ import HowItWorks from "./components/HowItWorks";
 import AIOExperience from "./components/AIOExperience";
 import Comparison from "./components/Comparison";
 import Pricing from "./components/Pricing";
+import HomeFAQ from "./components/HomeFAQ";
 import Footer from "./components/Footer";
 import Privacy from "./components/Privacy";
 import Terms from "./components/Terms";
 import AboutUs from "./components/AboutUs";
+import FAQ from "./components/FAQ";
 import Console from "./components/Console";
 import PaymentSuccess from "./components/payment/PaymentSuccess";
 import PaymentResult from "./components/payment/PaymentResult";
@@ -36,6 +38,7 @@ function App() {
         hash === "privacy" ||
         hash === "terms" ||
         hash === "aboutus" ||
+        hash === "faq" ||
         hash === "console" ||
         hash === "docs" ||
         hash.startsWith("payment/") ||
@@ -70,6 +73,8 @@ function App() {
         return <Terms />;
       case "aboutus":
         return <AboutUs />;
+      case "faq":
+        return <FAQ />;
       case "console":
         return <Console />;
       case "docs":
@@ -87,6 +92,7 @@ function App() {
             <ToolSelector />
             <Comparison />
             <Pricing />
+            <HomeFAQ />
           </>
         );
     }

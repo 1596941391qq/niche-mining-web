@@ -171,13 +171,14 @@ export interface Translations {
   footer: {
     tagline: string;
     product: string;
+    company: string;
     legal: string;
     about?: string;
     rights: string;
     system: string;
     privacyLink: string;
     termsLink: string;
-    company?: string;
+    faqLink?: string;
     email?: string;
     aboutDescription?: string;
     companyName?: string;
@@ -206,19 +207,9 @@ export interface Translations {
     title: string;
     subtitle: string;
     back: string;
-    companyInfo: {
+    description: {
       title: string;
       content: string[];
-    };
-    companyDetails: {
-      title: string;
-      companyName: string;
-      companyNameValue: string;
-      chineseCompanyName: string;
-      businessRegNo: string;
-      incorporationDate: string;
-      companyType: string;
-      companyStatus: string;
     };
     contact: {
       title: string;
@@ -241,6 +232,15 @@ export interface Translations {
       email: string;
       company?: string;
     };
+  };
+  faq: {
+    title: string;
+    subtitle: string;
+    back: string;
+    questions: {
+      question: string;
+      answer: string;
+    }[];
   };
 }
 

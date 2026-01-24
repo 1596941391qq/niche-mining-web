@@ -2,10 +2,23 @@
 
 User-agent: *
 Allow: /
+Allow: /llm.txt
+Allow: /404.html
+Allow: /blog/
+Allow: /articles/
+
+# SPA Hash Routes (Note: Search engines may not index hash routes without proper server-side rendering)
+# These are included for reference, but consider implementing server-side rendering or static HTML pages
+# for better SEO indexing:
+# - /#faq (FAQ page)
+# - /#aboutus (About page)
+# - /#privacy (Privacy Policy)
+# - /#terms (Terms of Service)
+
 Disallow: /api/
 Disallow: /#console
 Disallow: /#payment/
 
 # Sitemap location
-Sitemap: https://www.nichedigger.ai/sitemap.xml
+Sitemap: https://nichedigger.ai/sitemap.xml
 

@@ -39,37 +39,15 @@ const AboutUs: React.FC = () => {
           </div>
 
           <div className="prose prose-invert max-w-none space-y-8">
-            {/* Company Description */}
+            {/* Description */}
             <div className="border-l-2 border-primary/30 pl-6">
               <h2 className="text-2xl font-bold text-white mb-4">
-                {t.about.companyInfo.title}
+                {t.about.description.title}
               </h2>
               <div className="text-zinc-300 leading-relaxed space-y-4">
-                {t.about.companyInfo.content.map((paragraph, pIndex) => (
+                {t.about.description.content.map((paragraph, pIndex) => (
                   <p key={pIndex}>{paragraph}</p>
                 ))}
-              </div>
-            </div>
-
-            {/* Company Details */}
-            <div className="border-l-2 border-primary/30 pl-6">
-              <h2 className="text-2xl font-bold text-white mb-4">
-                {t.about.companyDetails.title}
-              </h2>
-              <div className="text-zinc-300 leading-relaxed space-y-4">
-                <div className="bg-background/50 border border-border p-6 rounded-sm font-mono text-sm">
-                  <div>
-                    <span className="text-zinc-400">
-                      {t.about.companyDetails.companyName}:
-                    </span>
-                    <p className="text-white font-semibold mt-1">
-                      {t.about.companyDetails.companyNameValue}
-                    </p>
-                    <p className="text-zinc-300 mt-1">
-                      {t.about.companyDetails.chineseCompanyName}
-                    </p>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -81,7 +59,7 @@ const AboutUs: React.FC = () => {
               <p className="text-zinc-300 mb-2">{t.about.contact.content}</p>
               <div className="space-y-2">
                 <p className="text-zinc-300 font-mono">
-                  {t.about.contact.company || "Soulcraft Limited"}
+                  {t.about.contact.company || "NicheDigger"}
                 </p>
                 <a
                   href={`mailto:${t.about.contact.email}`}

@@ -25,11 +25,31 @@
   <!-- 服务条款 -->
   <url>
     <loc>https://www.nichedigger.ai/#terms</loc>
-    <lastmod>2025-01-18</lastmod>
+    <lastmod>2025-01-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.nichedigger.ai/#terms?lang=cn" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.nichedigger.ai/#terms?lang=en" />
+  </url>
+  
+  <!-- 关于我们 -->
+  <url>
+    <loc>https://www.nichedigger.ai/#aboutus</loc>
+    <lastmod>2025-01-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.nichedigger.ai/#aboutus?lang=cn" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nichedigger.ai/#aboutus?lang=en" />
+  </url>
+  
+  <!-- 常见问题 -->
+  <url>
+    <loc>https://www.nichedigger.ai/#faq</loc>
+    <lastmod>2025-01-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.nichedigger.ai/#faq?lang=cn" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nichedigger.ai/#faq?lang=en" />
   </url>
   
 </urlset>
