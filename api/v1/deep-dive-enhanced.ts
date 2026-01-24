@@ -70,7 +70,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
       });
     } catch (serankingError) {
-      console.warn(`[SE Ranking] API call failed: ${serankingError.message}. Proceeding with SERP analysis.`);
+      const errorMessage = serankingError instanceof Error ? serankingError.message : String(serankingError);
+      console.warn(`[SE Ranking] API call failed: ${errorMessage}. Proceeding with SERP analysis.`);
     }
 
     // Step 3: Search SERP for each core keyword
@@ -299,7 +300,7 @@ function generateHTMLContent(report: any, uiLanguage: string): string {
         <h1>${report.pageTitleH1}</h1>
         <div class="meta-description">${report.metaDescription}</div>
 
-        ${report.contentStructure.map(section => `
+        ${report.contentStructure.map((section: { header: string; description: string }) => `
         <h2>${section.header}</h2>
         <p>${section.description}</p>
         `).join('')}
@@ -308,7 +309,7 @@ function generateHTMLContent(report: any, uiLanguage: string): string {
         <div class="long-tail-keywords">
             <h3>${uiLanguage === 'zh' ? '相关关键词' : 'Related Keywords'}</h3>
             <div>
-                ${report.longTailKeywords.map(kw => `<span class="keyword-tag">${kw}</span>`).join('')}
+                ${report.longTailKeywords.map((kw: string) => `<span class="keyword-tag">${kw}</span>`).join('')}
             </div>
         </div>
         ` : ''}
